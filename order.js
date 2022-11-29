@@ -212,8 +212,8 @@ function writingElapsedTime(opeMsg){
 			url:PHP_EN_ROOT_FOLDER + '/measuringElapsedTime.php',
 			data:{
 				table_no:regFlg == '1' ? "reg":table_no,
-				//androidID:androidID,
-				androidID: 'tyousa_12345',
+				androidID:androidID,
+				//androidID: 'tyousa_12345',
 				opeMsg:opeMsg
 			},
 			success:function(data){
