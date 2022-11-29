@@ -12,14 +12,20 @@ if(regFlg == '1'){
 	//androidID = WuicTermInfo.getAndroidId();
 	try {
 		androidID = WuicTermInfo.getAndroidId();
+    additionMessage("[Log       ]", 'WuicTermInfo.getAndroidId: ' + androidID);
 	}
 	catch (error) {
 		if (error instanceof ReferenceError) {
 			console.log(error + ':ブラウザモードで起動します')
 			androidID = 'e2895de3f847f456';
+      additionMessage("[Log       ]", error);
 		} else {
 			console.log(error)
-			throw error;
+			//var FORCED_SEND_ELAPSED_TIME_INTERVAL_ = 10000;
+			//setInterval(forcedSendElapsedTime, FORCED_SEND_ELAPSED_TIME_INTERVAL_);
+      additionMessage("[Log       ]", 'try_elseエラー' + error);
+
+			//throw error;
 		}
 	}
 }
@@ -11229,7 +11235,8 @@ function writingElapsedTime(opeMsg){
 			url:PHP_EN_ROOT_FOLDER + '/measuringElapsedTime.php',
 			data:{
 				table_no:regFlg == '1' ? "reg":table_no,
-				androidID:androidID,
+				//androidID:androidID,
+				androidID: 'tyousa_12345',
 				opeMsg:opeMsg
 			},
 			success:function(data){
