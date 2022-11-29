@@ -7,21 +7,9 @@ if(regFlg == '1'){
 }else{
 	// オーダ端末起動の場合
 	//androidID = 'f44cdd20974f4de3';
-//androidID = 'e2895de3f847f456';
+	//androidID = 'e2895de3f847f456';
 	//androidID = 'e2895dajifgjaifjaie3f847f456';
-	//androidID = WuicTermInfo.getAndroidId();
-	try {
-		androidID = WuicTermInfo.getAndroidId();
-	}
-	catch (error) {
-		if (error instanceof ReferenceError) {
-			console.log(error + ':ブラウザモードで起動します')
-			androidID = 'e2895de3f847f456';
-		} else {
-			console.log(error)
-			throw error;
-		}
-	}
+	androidID = WuicTermInfo.getAndroidId();
 }
 // alert(window.navigator.appVersion);
 
