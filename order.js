@@ -244,14 +244,14 @@ if(regFlg == '1'){
 		if (error instanceof ReferenceError) {
 			console.log(error + ':ブラウザモードで起動します')
 			androidID = 'e2895de3f847f456';
-      additionMessage("[Log       ]", error);
+      additionMessage("[Log       ]", error.name + ' : ブラウザモードで起動します');
 		} else {
 			console.log(error)
 			//var FORCED_SEND_ELAPSED_TIME_INTERVAL_ = 10000;
 			//setInterval(forcedSendElapsedTime, FORCED_SEND_ELAPSED_TIME_INTERVAL_);
-      additionMessage("[Log       ]", 'try_elseエラー' + error);
+      additionMessage("[Log       ]", error.name + ' : androidID不明なエラー');
 
-			//throw error;
+			throw error;
 		}
 	}
 }
