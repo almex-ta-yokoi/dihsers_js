@@ -208,266 +208,42 @@ var generic_all_map = [];
  * 　非同期通信で情報を取得する
  *   php実行処理1~6を連続実行。実行後、テーブル取得データの編集処理を実行。
  */
-function getAllInfoFromDB(pushMenubookChangeFlg) {
-	// getMenuBookMasterと差し替え
-	getGoodsMaster(pushMenubookChangeFlg);
-	getGoodsMasterByText(pushMenubookChangeFlg);
-	getAllGeneralData(pushGoodsStatusChange);
-	getAllGeneralDataByText(pushMenubookChangeFlg);
-	getAlclCheck(pushMenubookChangeFlg);
-	getAlclCheckByText(pushMenubookChangeFlg);
-	getAllergyMaster(pushMenubookChangeFlg);
-	getAllergyMasterByText(pushMenubookChangeFlg);
-	getWithGoods(pushMenubookChangeFlg);
-	getWithGoodsByText(pushMenubookChangeFlg);
-	getLayoutInfo(pushMenubookChangeFlg);
-	getLayoutInfoByText(pushMenubookChangeFlg);
-	getSideLinkInfo(pushMenubookChangeFlg);
-	getSideLinkInfoByText(pushMenubookChangeFlg);
-	if(regFlg == '1'){
-		// レジ起動時
-		getBasedishComboMaster(pushMenubookChangeFlg);
-		getBasedishComboMasterByText(pushMenubookChangeFlg);
-		getLayoutData(pushMenubookChangeFlg);
-		getLayoutDataByText(pushMenubookChangeFlg);
-		getPlasticBagFunc(pushMenubookChangeFlg);
-		getPlasticBagFuncByText(pushMenubookChangeFlg);
-		getAddHbDispTopping(pushMenubookChangeFlg);
-		getAddHbDispToppingByText(pushMenubookChangeFlg);
-		getSubmenuData(pushMenubookChangeFlg);
-		getSubmenuDataByText(pushMenubookChangeFlg);
-		getRegMenuBookCd(pushMenubookChangeFlg);
-		getRegMenuBookCdByText(pushMenubookChangeFlg);
-		if(showTimeoutFlg){
-			getSetTime(pushMenubookChangeFlg);
-    	getGenericMasterByTextIngetSetTime(pushMenubookChangeFlg);
-      geneTime = geneTimeForCashRegister;
-    	getFilePath(pushMenubookChangeFlg);
-    	getGenericMasterByTextIngetFilePath(pushMenubookChangeFlg);
-    	setScreenSaver(); // 中身あり
-    	editAllTableData(pushMenubookChangeFlg); // 中身あり
-		}else{
-			editAllTableData(pushMenubookChangeFlg); // 中身あり
-		}
-	}else{
-		getNgGoodsGroup(pushMenubookChangeFlg);
-		getNgGoodsGroupByText(pushMenubookChangeFlg);
-		getBasedishComboMaster(pushMenubookChangeFlg);
-		getBasedishComboMasterByText(pushMenubookChangeFlg);
-		getLayoutData(pushMenubookChangeFlg);
-		getLayoutDataByText(pushMenubookChangeFlg);
-		getPlasticBagFunc(pushMenubookChangeFlg);
-	getPlasticBagFuncByText(pushMenubookChangeFlg);
-	getAddHbDispTopping(pushMenubookChangeFlg);
-	getAddHbDispToppingByText(pushMenubookChangeFlg);
-	getSubmenuData(pushMenubookChangeFlg);
-	getSubmenuDataByText(pushMenubookChangeFlg);
-		getAccountKbn(pushMenubookChangeFlg);
-	}
-}
-
-function getMenuBookMasterByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getMenuBookMasterStart", "getMenuBookMaster完了");
-	getGoodsMaster(pushMenubookChangeFlg);
-}
-
 function getMenuBookMaster(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getMenuBookMasterStart");
-	getMenuBookMasterByText(pushMenubookChangeFlg);
-	return;
-}
-
-function getGoodsMasterByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getGoodsMasterStart", "getGoodsMaster完了");
-	getAllGeneralData(pushMenubookChangeFlg);
-}
-
-/**
- * php実行処理2(商品マスタ取得)
- * 　非同期通信で情報を取得する
- */
-function getGoodsMaster(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getGoodsMasterStart");
-	outOparationLog("商品マスタ取得開始");
-	getGoodsMasterByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理(汎用マスタデータ全取得)
- * 　非同期通信で情報を取得する
- */
-function getAllGeneralDataByText(pushMenubookChangeFlg) {
-	getAlclCheck(pushMenubookChangeFlg);
-	stopMeasuringElapsedTime("getAllGeneralDataStart", "getAllGeneralData完了");
-}
-
-function getAllGeneralData(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getAllGeneralDataStart");
-	getAllGeneralDataByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理(アルコールポップアップ制限フラグ取得)
- * 　非同期通信で情報を取得する
- */
-function getAlclCheckByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getAlclCheckStart", "getAlclCheck完了");
-	getAllergyMaster(pushMenubookChangeFlg);
-}
-
-function getAlclCheck(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getAlclCheckStart");
-	getAlclCheckByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理(アルコールポップアップ制限フラグ取得)
- * 　非同期通信で情報を取得する
- */
-function getAllergyMasterByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getAllergyMasterStart", "getAllergyMaster完了");
-	getWithGoods(pushMenubookChangeFlg);
-}
-
-function getAllergyMaster(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getAllergyMasterStart");
-	getAllergyMasterByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理3(組み合わせ不可商品マスタ取得)
- * 　非同期通信で情報を取得する
- */
-function getNgGoodsGroupByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getNgGoodsGroupStart",  "getNgGoodsGroup完了");
 	if(regFlg == '1'){
 		// レジ起動時
-		getLayoutData(pushMenubookChangeFlg);
+		if(showTimeoutFlg){
+      geneTime = geneTimeForCashRegister;
+    	setScreenSaver();
+    	editAllTableData(pushMenubookChangeFlg);
+		}else{
+			editAllTableData(pushMenubookChangeFlg);
+		}
 	}else{
-		getBasedishComboMaster(pushMenubookChangeFlg);
+		getAccountKbn(pushMenubookChangeFlg);
 	}
-}
-
-function getNgGoodsGroup(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getNgGoodsGroupStart");
-	getNgGoodsGroupByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理(購入誘導情報取得)
- * 　非同期通信で情報を取得する
- */
-function getWithGoodsByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getWithGoodsStart", "getWithGoods完了");
-	getLayoutInfo(pushMenubookChangeFlg);
-}
-
-function getWithGoods(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getWithGoodsStart");
-	getWithGoodsByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理3(レイアウト調整情報取得)
- * 　非同期通信で情報を取得する
- */
-function getLayoutInfoByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getLayoutInfoStart", "getLayoutInfo完了");
-	getSideLinkInfo(pushMenubookChangeFlg);
-}
-
-function getLayoutInfo(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getLayoutInfoStart");
-	getLayoutInfoByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理(サイドリンクバー情報取得)
- * 　非同期通信で情報を取得する
- */
-function getSideLinkInfoByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getSideLinkInfoStart", "getSideLinkInfo完了");
-	if(regFlg == '1'){
-		// レジ起動時
-		getBasedishComboMaster(pushMenubookChangeFlg);
-	}else{
-		getNgGoodsGroup(pushMenubookChangeFlg);
-	}
-}
-
-function getSideLinkInfo(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getSideLinkInfoStart");
-	getSideLinkInfoByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理4(基本形ディッシュ組合せマスタ取得)
- * 　非同期通信で情報を取得する
- */
-function getBasedishComboMasterByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getBasedishComboMasterStart", "getBasedishComboMaster完了");
-	getLayoutData(pushMenubookChangeFlg);
-}
-
-function getBasedishComboMaster(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getBasedishComboMasterStart");
-	getBasedishComboMasterByText(pushMenubookChangeFlg);
-	return;
-}
-
-/**
- * php実行処理5(レイアウトデータパス取得)
- * 　非同期通信で情報を取得する
- */
-function getLayoutDataByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getLayoutDataStart", "getLayoutData完了");
-	getPlasticBagFunc(pushMenubookChangeFlg);
-}
-
-function getLayoutData(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getLayoutDataStart");
-	getLayoutDataByText(pushMenubookChangeFlg);
 	return;
 }
 
 var plasticBagFlg_reg = false;
 var plasticBagFlg_tto = false;
-/**
- * php実行処理12(レジ袋機能ONOFF取得)
- * 　非同期通信で情報を取得する
- */
-function getPlasticBagFuncByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getPlasticBagFuncStart", "getPlasticBagFunc完了");
-	getAddHbDispTopping(pushMenubookChangeFlg);
-}
-
-function getPlasticBagFunc(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getPlasticBagFuncStart");
-	getPlasticBagFuncByText(pushMenubookChangeFlg);
-	return;
-}
 
 /**
  * php実行処理(追加ハンバーグのトッピング欄表示機能ONOFF取得)
  * 　非同期通信で情報を取得する
  */
 function getAddHbDispToppingByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getAddHbDispToppingStart", "getAddHbDispTopping完了");
-	getSubmenuData(pushMenubookChangeFlg);
-}
-
-function getAddHbDispTopping(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getAddHbDispToppingStart");
-	getAddHbDispToppingByText(pushMenubookChangeFlg);
-	return;
+	if(regFlg == '1'){
+		if(showTimeoutFlg){
+      geneTime = geneTimeForCashRegister;
+    	setScreenSaver();
+    	editAllTableData(pushMenubookChangeFlg);
+		}else{
+			editAllTableData(pushMenubookChangeFlg);
+		}
+	}else{
+		getAccountKbn(pushMenubookChangeFlg);
+	}
 }
 
 /**
@@ -515,31 +291,22 @@ function getOrdMadeImg(pushMenubookChangeFlg) {
 		outOparationLog("オーダーメイドディッシュ完成画像名取得終了");
 		stopMeasuringElapsedTime("getOrdMadeImgStart", "getOrdMadeImg完了");
 		if(ordmadeImg_json != false && !(timeoutFlg)){
+			if(regFlg == '1'){
+				if(showTimeoutFlg){
+        	geneTime = geneTimeForCashRegister;
+    			setScreenSaver();
+    			editAllTableData(pushMenubookChangeFlg);
+				}else{
+					editAllTableData(pushMenubookChangeFlg);
+				}
+			}else{
+				getAccountKbn(pushMenubookChangeFlg);
+			}
 			timeoutFlg = true;
-			getSubmenuData(pushMenubookChangeFlg);
 		}else{
 			timeoutFlg = true;
 		}
 	})
-}
-
-/**
- * php実行処理8(サブメニュー情報取得)
- * 　非同期通信で情報を取得する
- */
-function getSubmenuDataByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getSubmenuDataStart", "getSubmenuData完了");
-	if(regFlg == '1'){
-		getRegMenuBookCd(pushMenubookChangeFlg);
-	}else{
-		getAccountKbn(pushMenubookChangeFlg);
-	}
-}
-
-function getSubmenuData(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getSubmenuDataStart");
-	getSubmenuDataByText(pushMenubookChangeFlg);
-	return;
 }
 
 /**
@@ -607,26 +374,6 @@ function getAccountKbn(pushMenubookChangeFlg) {
 				}
 			}
 		})
-}
-
-/**
- * php実行処理11(精算機用-メニューブックコード取得)
- * 　非同期通信で情報を取得する
- */
-function getRegMenuBookCdByText(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getRegMenuBookCdStart", "getRegMenuBookCd完了");
-
-	if(showTimeoutFlg){
-		getSetTime(pushMenubookChangeFlg);
-	}else{
-		editAllTableData(pushMenubookChangeFlg);
-	}
-}
-
-function getRegMenuBookCd(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getRegMenuBookCdStart");
-	getRegMenuBookCdByText(pushMenubookChangeFlg);
-	return;
 }
 
 var fstCreateFlg = false;

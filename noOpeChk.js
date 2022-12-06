@@ -197,43 +197,6 @@ function chkOrderCart() {
     return true;
 }
 
-/**
- * スクリーンセーバーの設定時間取得処理
- * 　汎用マスタからスクリーンセーバーの設定時間を取得する
- */
-function getGenericMasterByTextIngetSetTime(pushMenubookChangeFlg) {
-    if(regFlg == "1") {
-        geneTime = geneTimeForCashRegister;
-    } else {
-        geneTime = geneTimeForTable;
-    }
-	stopMeasuringElapsedTime("getSetTimeStart", "getSetTime完了");
-    getFilePath(pushMenubookChangeFlg);
-}
-
-function getSetTime(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getSetTimeStart");
-    getGenericMasterByTextIngetSetTime(pushMenubookChangeFlg);
-    return;
-}
-
-/**
- * スクリーンセーバーのファイルパス取得処理
- * 　汎用マスタからスクリーンセーバーのファイルパスを取得する　
- */
-function getGenericMasterByTextIngetFilePath(pushMenubookChangeFlg) {
-	stopMeasuringElapsedTime("getFilePathStart", "getFilePath完了");
-    setScreenSaver();
-    // 商品情報整理
-    editAllTableData(pushMenubookChangeFlg);
-}
-
-function getFilePath(pushMenubookChangeFlg) {
-	startMeasuringElapsedTime("getFilePathStart");
-    getGenericMasterByTextIngetFilePath(pushMenubookChangeFlg);
-    return;
-}
-
 var imgset_tmp = [];
 
 /** 
@@ -278,7 +241,9 @@ function setScreenSaver() {
 function load(pushMenubookChangeFlg) {
     if(regFlg != '1'){
         additionMessage("[Log       ]", "初回load処理開始");
-        getSetTime(pushMenubookChangeFlg);
+        geneTime = geneTimeForTable;
+        setScreenSaver();
+        editAllTableData(pushMenubookChangeFlg);
     }
 }
 
