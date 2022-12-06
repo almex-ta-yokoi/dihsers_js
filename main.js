@@ -10,25 +10,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// //________________________________________________________________________ Utilityクラス
-
-// var Util = function () {
-//   function Util() {
-//     _classCallCheck(this, Util);
-//   }
-//   // 桁ハイフン付金額表示を返す
-
-
-//   _createClass(Util, null, [{
-//     key: 'getPrice',
-//     value: function getPrice(value) {
-//       return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-//     }
-//   }]);
-
-//   return Util;
-// }();
-
 //________________________________________________________________________データ管理クラス
 
 
@@ -375,27 +356,6 @@ var DrinkView = function () {
   return DrinkView;
 }();
 
-// var DrinkView = function () {
-//   function DrinkView() {
-//     _classCallCheck(this, DrinkView);
-
-//     this.initView();
-//     this.initEvents();
-//   }
-
-//   _createClass(DrinkView, [{
-//     key: 'initView',
-//     value: function initView() {
-//     }
-//   }, {
-//     key: 'initEvents',
-//     value: function initEvents() {
-//     }
-//   }]);
-
-//   return DrinkView;
-// }();
-
 // ____________________________________________________________________________________ 汎用メニューシーン
 
 var SceneKids = function (_Scene51) {
@@ -626,115 +586,12 @@ function removeTags(str) {
   return str.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g, '');
 }
 
-//______________________________________________________________________カートクラス
-
-// var Cart = function () {
-//   function Cart() {
-//     _classCallCheck(this, Cart);
-
-//     Cart.reset();
-//     Cart.selectReset();
-//     Cart.updateOrderItemTotal();
-//   }
-
-//   _createClass(Cart, [{
-//     key: 'addOrderItem',
-//     value: function addOrderItem(id, num) {
-//     }
-//   }, {
-//     key: 'addCart',
-//     value: function addCart(id) {
-//     }
-//   }, {
-//     key: 'removeCart',
-//     value: function removeCart(id) {
-//     }
-//   }], [{
-//     key: 'reset',
-//     value: function reset() {
-//     }
-//   }, {
-//     key: 'selectReset',
-//     value: function selectReset() {
-//       Data.data['ordermadeItem'] = {
-//         'hamburg': {},
-//         'source': {},
-//         'topping': {},
-//         'rice': {},
-//         'salad': {}
-//       };
-//       Data.data['currentSelectItem'] = null;
-//       Data.data['ordermadeItemTotal'] = null;
-//       View.update();
-//     }
-//   }, {
-//     key: 'updateOrderItemTotal',
-//     value: function updateOrderItemTotal() {
-//       var obj = Data.data['ordermadeItem'];
-//       var price = 0;
-//       var salt = 0;
-//       var cal = 0;
-//       var list = '';
-//       var items = [];
-//       for (var type in obj) {
-//         for (var id in obj[type]) {
-//           var numStr = '';
-//           var num = Number(obj[type][id]);
-//           if (num == 0) delete Data.data['ordermadeItem'][type][id];
-//           if (num > 1) numStr = " x " + num;
-//           var item = Data.getItemById(id);
-//           price += Number(item['price']) * num * 100;
-//           salt += Number(item['salt']) * num * 100;
-//           cal += Number(item['cal']) * num * 100;
-//           list += '<li>' + removeTags(item['name']) + numStr + '</li>';
-//           items.push(id);
-//         }
-//       }
-//       Data.data['ordermadeItemTotal'] = {};
-//       Data.data['ordermadeItemTotal']['price'] = price / 100;
-//       Data.data['ordermadeItemTotal']['salt'] = salt / 100;
-//       Data.data['ordermadeItemTotal']['cal'] = cal / 100;
-//       Data.data['ordermadeItemTotal']['list'] = list;
-//       Data.data['ordermadeItemTotal']['items'] = items;
-//       Data.data['ordermadeItemTotal']['id'] = 0;
-//       Data.data['ordermadeItemTotal']['name'] = 'オーダーメイドディッシュ';
-//     }
-//   }]);
-
-//   return Cart;
-// }();
-
-//______________________________________________________________________買い物かごクラス
-
-// var CartView = function () {
-//   function CartView() {
-//     this.iTemp = $('.cartItem--temp2').remove();
-//   }
-
-//   _createClass(CartView, [{
-//     key: 'update',
-//     value: function update() {
-//     }
-//   }, {
-//     key: 'setCartItem',
-//     value: function setCartItem(cartID, name, list, price, id) {
-//     }
-//   }, {
-//     key: 'initEvents',
-//     value: function initEvents() {
-//     }
-//   }]);
-
-//   return CartView;
-// }();
-
 //___________________________________Flash MovieClipsクラス
 
 var MovieClips = function () {
   function MovieClips() {
     _classCallCheck(this, MovieClips);
 
-    //this.mc1 = exportRoot.order_select_mc;
   }
 
   _createClass(MovieClips, [{
@@ -1720,9 +1577,6 @@ var Scenedialog23 = function (_SceneA99) {
       $('#s-dialog23-slid').removeClass('s-dialog23-disp');
       $('.s-choice').removeClass('s-dialog23-disp-bg');
 
-      // $('#s-dialog23-slid').css('transition-delay','');
-      // $('.s-choice').css('transition-delay','');
-
       document.getElementById("s-dialog23-slid").style.transitionDelay = '';
       document.getElementById("s-choice").style.transitionDelay = '';
 
@@ -1751,11 +1605,6 @@ var Scenedialog23 = function (_SceneA99) {
       document.getElementById("s-dialog23-slid").style.transitionDelay = '';
       document.getElementById("s-choice").style.transitionDelay = '';
 
-      // dishEditingFlg = false;
-      // changeSideLnk();
-      // $('.c-menu1').removeClass('is-hide');
-      // $('.eatin-side').removeClass('is-hide');
-      // $('.c-menu4').removeClass('is-hide');
     }
   }]);
 
@@ -1921,10 +1770,6 @@ var SceneLevelNav = function (_SceneA) {
           var title = document.getElementById("side-default-title");
           title.height = "100px";
           title.hidden = false;
-          // title.getElementsByTagName("h2")[0].style.width = "100%";
-          // title.getElementsByTagName("h2")[0].style.height = "100%";
-          // title.getElementsByTagName("h2")[0].getElementsByTagName("img")[0].style.width = "100%";
-          // title.getElementsByTagName("h2")[0].getElementsByTagName("img")[0].style.height = "100%";
         }
 
         // スクロール位置初期化
@@ -2120,10 +1965,6 @@ function checkTableStatus(){
 	setTimeout(function(){
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
-      // ステータス要求失敗の場合、人数入力
-      // Data.data['scenes']['root'].changeScene('root/people'); //初期画面に遷移
-      // location.href = '#root/people';
-      // document.getElementById('loading').setAttribute("hidden","hidden");
       // リトライに変更
       timeoutRetryOccur("checkTableStatus");
       checkTableStatus();
@@ -2150,39 +1991,6 @@ function checkTableStatus(){
 			}
 		})
 	).done(function() {
-    // if(!(timeoutFlg)){
-    //   timeoutFlg = true;
-    //   if(response_json["status"] == 0){
-    //     // 卓ステータス
-    //     var tmp_tb_status = response_json["result"]["table_status"];
-    //     // メニューブック
-    //     menubook_cd = response_json["result"]["table_info"]["book_id"];
-    //     changeMenubookLayout(menubook_cd);
-    //     // 伝票番号
-    //     slipNo = response_json["result"]["slipNo"];
-        
-    //     if(tmp_tb_status != 0){
-    //       getQuantityLimit(response_json["result"]["table_people"]);
-    //       // 空卓以外の場合、TOPまで進める
-    //       location.href = '#root/home';
-    //       getMenuBookMaster(true);
-    //     }else{
-    //       // 空卓の場合、人数入力
-    //       Data.data['scenes']['root'].changeScene('root/people'); //初期画面に遷移
-    //       location.href = '#root/people';
-    //       document.getElementById('loading').setAttribute("hidden","hidden");
-    //     }
-    //   }else{
-    //     // ステータス要求失敗の場合、人数入力
-    //     Data.data['scenes']['root'].changeScene('root/people'); //初期画面に遷移
-    //     location.href = '#root/people';
-    //     document.getElementById('loading').setAttribute("hidden","hidden");
-    //     return;
-    //   }
-    // }else{
-    //   timeoutFlg = true;
-    // }
-
 		if(response_json["status"] == 0 && !(timeoutFlg)){
 			timeoutFlg = true;
 			// 卓ステータス
@@ -2210,10 +2018,6 @@ function checkTableStatus(){
 
       if(tmp_tb_status != 1){
         // 空卓の場合、人数入力
-        // Data.data['scenes']['root'].changeScene('root/people'); //初期画面に遷移
-        // location.href = '#root/people';
-        // document.getElementById('loading').setAttribute("hidden","hidden");
-        // document.getElementById('getData_blank_disp').setAttribute("class","s-offScreen2 jBtn is-hide");
         editAllTableDataStartup();
         getFstLayoutInfo();
       }
@@ -2221,16 +2025,11 @@ function checkTableStatus(){
 
 			slipNo = response_json["result"]["slipNo"];
       menubook_cd = response_json["result"]["table_info"]["book_id"];
-      // menubook_cd = 2;
       changeMenubookLayout(menubook_cd);
       outOparationLog("アプリ起動-卓ステータス取得終了,ステータス:"+tmp_tb_status+",伝票番号:"+slipNo+",メニューブックコード:"+menubook_cd);
       stopMeasuringElapsedTime("checkTableStatusStart", "checkTableStatus完了");
 		}else{
 			timeoutFlg = true;
-      // ステータス要求失敗の場合、人数入力
-      // Data.data['scenes']['root'].changeScene('root/people'); //初期画面に遷移
-      // location.href = '#root/people';
-      // document.getElementById('loading').setAttribute("hidden","hidden");
       // リトライに変更
       failureRetryOcuur("checkTableStatus");
       checkTableStatus();
@@ -2275,16 +2074,6 @@ function fstPreload(type,retry,src){
 function loadSuccess(){
   layoutData_list = JSON.parse(layoutData_json);
 
-  // 画像の明示的読み込み
-  // var imgList = document.getElementsByTagName('img');
-  // for(var line in imgList){
-  //   var src = imgList[line].src;
-  //   if(src == null || !(contains(src, 'images'))){
-  //     continue;
-  //   }
-  //   fstPreload(1,false,src);
-  // }
-
   for(var line in layoutData_list){
     var src = layoutData_list[line].replace('en_order/','');
     if(src == null || !(contains(src, 'images'))){
@@ -2292,14 +2081,12 @@ function loadSuccess(){
     }
     var imgPath = src;
 
-  // 2021/10/18 Base64廃止ここから
     // fstPreload(1,false,src);
     if(contains(imgPath,".wmv") ||contains(imgPath,".wav") ||contains(imgPath,".mp3") || contains(imgPath,".jpg") || contains(imgPath,".png")){
       // 動画・音声・画像データの場合
       toBase64Url("./"+imgPath,imgPath);
       layCnt++;
     }
-  // 2021/10/18 Base64廃止ここまで
   }
 
   // cssの明示的適用
@@ -2312,13 +2099,6 @@ function loadSuccess(){
 
   CheckGetLis();
 
-  // setTimeout(function () {
-  //   if(!(fstPreloadFlg)){
-  //     // ブランク画面解除
-  //     document.getElementById('error_blank_disp').setAttribute("class","s-offScreen2 jBtn is-hide");
-  //     // document.getElementById('loading').setAttribute("hidden","hidden");
-  //   }
-  // }, 2000);
 }
 
 /**
@@ -2352,20 +2132,6 @@ function loadSuccess(){
 		bgStr = bgStr.replace('./',"");
 		bgImgs[bgImg].style.backgroundImage = 'url("'+lis_fact_map[bgStr]+'")';
 	}
-
-  // // 画像参照先が一部配列に切り替えれない
-  // // 明示的に下記リストに記載されたidタグのbackGroundImageを書き換える
-  // for(var ts in EXP_CNG_IMG){
-  //   var tgtTag = document.getElementById(EXP_CNG_IMG[ts]); 
-	// 	if(tgtTag == null || tgtTag.style == null){
-	// 		continue;
-	// 	}
-	// 	var bgStr = tgtTag.style.backgroundImage;
-  //   tgtTag.setAttribute("tmpImg",bgStr);
-	// 	bgStr = bgStr.replace('url("',"").replace("url('","").replace('")',"").replace("')","");
-	// 	bgStr = bgStr.replace('./',"");
-	// 	tgtTag.style.backgroundImage = 'url("'+lis_fact_map[bgStr]+'")';
-  // }
 
 	// タップ音の差替
 	var sound = document.getElementById("touchsoundData").src;
@@ -2490,7 +2256,6 @@ function getLayoutDataFst() {
 		// 非同期通信の完了を監視
 		if(layoutData_json != false && !(timeoutFlg)){
       timeoutFlg = true;
-      // outOparationLog("アプリ起動-imagesフォルダ内ファイル情報取得終了");
 			loadSuccess();
 		}else{
 			timeoutFlg = true;
