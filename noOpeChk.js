@@ -18,7 +18,6 @@ function slideimage() {
         counter = 0;
     }
     // 対象要素の画像URLを次の画像のURLに切り替える
-    //document.getElementById('slideshow').src = imgset[counter];
     if(imgset[counter] == '' || imgset[counter] == null || contains(imgset[counter],'null') || contains(imgset[counter],'undefined')){
         document.getElementById('slideshow').src = '';
     }else{
@@ -52,7 +51,6 @@ function runScreenSaver() {
         dishEditingFlg = false;
         changeSideLnk();
         // 対象要素の画像URLを次の画像のURLに切り替える
-        //document.getElementById('slideshow').src = imgset[counter];
         counter = 0;
         if(imgset[counter] == '' || imgset[counter] == null || contains(imgset[counter],'null') || contains(imgset[counter],'undefined')){
             document.getElementById('slideshow').src = '';
@@ -90,7 +88,6 @@ function closePopup(type) {
     Data.data['scenes']['dialog'].onExit();
     Data.data['scenes']['dialog2'].onExit();
     // 商品情報取得失敗ポップアップは閉じないよう変更
-    // Data.data['scenes']['dialog3'].onExit();
     Data.data['scenes']['dialog4'].onExit();
     Data.data['scenes']['dialog5'].onExit();
     Data.data['scenes']['dialog6'].onExit();
@@ -155,7 +152,6 @@ function restartTimerBassing() {
     // タイマークリア
     clearInterval(timer);
     // タイマーセット
-    // timer=setInterval('chkOrderCart()',timeSet);
     setEvent();
 
     // スクリーンセーバー解除の場合、TOP画面に遷移する
@@ -219,74 +215,6 @@ function getSetTime(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getSetTimeStart");
     getGenericMasterByTextIngetSetTime(pushMenubookChangeFlg);
     return;
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-            timeoutFlg = true;
-            // showTimeoutFlg = false;
-            // 通信エラーポップアップ出力処理
-            // document.getElementById('loading').setAttribute("hidden","hidden");
-            // getDataErrorPopUp();
-			timeoutRetryOccur("getSetTime");
-            getSetTime(pushMenubookChangeFlg);
-            return;
-		}
-    },POST_TIMEOUT_TIME);
-
-    var fName;
-    var uName;
-    if(regFlg == '1'){
-        // レジ起動の場合、精算機へ戻るタイムアウト時間を取得
-        fName = 'regTimeOut';
-        uName = 'setTime';
-    }else{
-        fName = 'noOpeChk';
-        uName = 'setTime';
-    }
-
-    // 非同期通信で設定時間を取得
-    startMeasuringElapsedTime("PostStartIngetSetTime");
-	$.when(
-        $.ajax({
-            type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-            data:{
-                'fName':fName,
-                'uName':uName
-            },
-            success:function(data){
-  			    stopMeasuringElapsedTime("PostStartIngetSetTime", "getSetTime内getGenericMaster.php:post完了");
-                // 結果をJSON形式で取得
-                // if(data !== false && data !== ''){
-                //     geneTime = data;
-                // }
-                geneTime = data;
-				if((geneTime === false || geneTime === '') && !(timeoutFlg)){
-                    timeoutFlg = true;
-                    // showTimeoutFlg = false;
-                    // 通信エラーポップアップ出力処理
-                    // document.getElementById('loading').setAttribute("hidden","hidden");
-                    // getDataErrorPopUp();
-					failureRetryOcuur("getSetTime");
-                    getSetTime(pushMenubookChangeFlg);
-                    return;
-				}
-            }
-        })
-	).done(function() {
-        if(!(timeoutFlg)){
-            timeoutFlg = true;
-            // 非同期通信の完了を監視
-            if(geneTime !== false){
-			    stopMeasuringElapsedTime("getSetTimeStart", "getSetTime完了");
-                getFilePath(pushMenubookChangeFlg);
-            }
-        }else{
-            timeoutFlg = true;
-        }
-	})
 }
 
 /**
@@ -304,69 +232,10 @@ function getFilePath(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getFilePathStart");
     getGenericMasterByTextIngetFilePath(pushMenubookChangeFlg);
     return;
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-            timeoutFlg = true;
-            // showTimeoutFlg = false;
-            // 通信エラーポップアップ出力処理
-            // document.getElementById('loading').setAttribute("hidden","hidden");
-            // getDataErrorPopUp();
-			timeoutRetryOccur("getFilePath");
-            getFilePath(pushMenubookChangeFlg);
-            return;
-		}
-    },POST_TIMEOUT_TIME);
-    
-    // 非同期通信で設定時間を取得
-    startMeasuringElapsedTime("PostStartIngetFilePath");
-	$.when(
-        $.ajax({
-            type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-            data:{
-                'fName':'noOpeChk',
-                'uName':'filePath'
-            },
-            success:function(data){
-  			    stopMeasuringElapsedTime("PostStartIngetFilePath", "getFilePath内getGenericMaster.php:post完了");
-                // 結果をJSON形式で取得
-                // if(data !== false && data !== ''){
-                //     geneFilePath = data;
-                // }
-                geneFilePath = data;
-				if((geneFilePath === false || geneFilePath === '') && !(timeoutFlg)){
-                    timeoutFlg = true;
-                    // showTimeoutFlg = false;
-                    // 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-                    // getDataErrorPopUp();
-					failureRetryOcuur("getFilePath");
-                    getFilePath(pushMenubookChangeFlg);
-					return;
-				}
-            }
-        })
-	).done(function() {
-        if(!(timeoutFlg)){
-            timeoutFlg = true;
-            // 非同期通信の完了を監視
-            if(geneFilePath !== false && geneFilePath !== ''){
-			    stopMeasuringElapsedTime("getFilePathStart", "getFilePath完了");
-                setScreenSaver();
-                // 商品情報整理
-                editAllTableData(pushMenubookChangeFlg);
-            }
-            // setScreenSaver();
-        }else{
-            timeoutFlg = true;
-        }
-	})
 }
 
 var imgset_tmp = [];
+
 /** 
  * スクリーンセーバーの待機時間とファイルパス設定処理
  * 　スクリーンセーバーの待機時間とファイルパスを設定する
@@ -427,9 +296,6 @@ function setEvent() {
   	stopMeasuringElapsedTime("setEventStart", "setEvent完了");
 }
 
-// document.addEventListener("DOMContentLoaded", load, false);
-
-
 var postParentShowTimeout = function(info){
     window.parent.postMessage(info,'*');
 }
@@ -451,8 +317,6 @@ var notifySlipinfo = function(info){
         outOparationLog("精算機テイクアウト-スタート処理開始");
         // タイムアウト処理起動
         showTimeoutFlg = true;
-        // getSetTime(true);
-        // clearInterval(timer);
         // 最新メニュー情報取得
         if(!fstDispCheckFlg){
             getMenuBookMaster(true);
