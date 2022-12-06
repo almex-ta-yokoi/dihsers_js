@@ -208,6 +208,64 @@ var generic_all_map = [];
  * 　非同期通信で情報を取得する
  *   php実行処理1~6を連続実行。実行後、テーブル取得データの編集処理を実行。
  */
+function getAllInfoFromDB(pushMenubookChangeFlg) {
+	// getMenuBookMasterと差し替え
+	getGoodsMaster(pushMenubookChangeFlg);
+	getGoodsMasterByText(pushMenubookChangeFlg);
+	getAllGeneralData(pushGoodsStatusChange);
+	getAllGeneralDataByText(pushMenubookChangeFlg);
+	getAlclCheck(pushMenubookChangeFlg);
+	getAlclCheckByText(pushMenubookChangeFlg);
+	getAllergyMaster(pushMenubookChangeFlg);
+	getAllergyMasterByText(pushMenubookChangeFlg);
+	getWithGoods(pushMenubookChangeFlg);
+	getWithGoodsByText(pushMenubookChangeFlg);
+	getLayoutInfo(pushMenubookChangeFlg);
+	getLayoutInfoByText(pushMenubookChangeFlg);
+	getSideLinkInfo(pushMenubookChangeFlg);
+	getSideLinkInfoByText(pushMenubookChangeFlg);
+	if(regFlg == '1'){
+		// レジ起動時
+		getBasedishComboMaster(pushMenubookChangeFlg);
+		getBasedishComboMasterByText(pushMenubookChangeFlg);
+		getLayoutData(pushMenubookChangeFlg);
+		getLayoutDataByText(pushMenubookChangeFlg);
+		getPlasticBagFunc(pushMenubookChangeFlg);
+		getPlasticBagFuncByText(pushMenubookChangeFlg);
+		getAddHbDispTopping(pushMenubookChangeFlg);
+		getAddHbDispToppingByText(pushMenubookChangeFlg);
+		getSubmenuData(pushMenubookChangeFlg);
+		getSubmenuDataByText(pushMenubookChangeFlg);
+		getRegMenuBookCd(pushMenubookChangeFlg);
+		getRegMenuBookCdByText(pushMenubookChangeFlg);
+		if(showTimeoutFlg){
+			getSetTime(pushMenubookChangeFlg);
+    	getGenericMasterByTextIngetSetTime(pushMenubookChangeFlg);
+      geneTime = geneTimeForCashRegister;
+    	getFilePath(pushMenubookChangeFlg);
+    	getGenericMasterByTextIngetFilePath(pushMenubookChangeFlg);
+    	setScreenSaver(); // 中身あり
+    	editAllTableData(pushMenubookChangeFlg); // 中身あり
+		}else{
+			editAllTableData(pushMenubookChangeFlg); // 中身あり
+		}
+	}else{
+		getNgGoodsGroup(pushMenubookChangeFlg);
+		getNgGoodsGroupByText(pushMenubookChangeFlg);
+		getBasedishComboMaster(pushMenubookChangeFlg);
+		getBasedishComboMasterByText(pushMenubookChangeFlg);
+		getLayoutData(pushMenubookChangeFlg);
+		getLayoutDataByText(pushMenubookChangeFlg);
+		getPlasticBagFunc(pushMenubookChangeFlg);
+	getPlasticBagFuncByText(pushMenubookChangeFlg);
+	getAddHbDispTopping(pushMenubookChangeFlg);
+	getAddHbDispToppingByText(pushMenubookChangeFlg);
+	getSubmenuData(pushMenubookChangeFlg);
+	getSubmenuDataByText(pushMenubookChangeFlg);
+		getAccountKbn(pushMenubookChangeFlg);
+	}
+}
+
 function getMenuBookMasterByText(pushMenubookChangeFlg) {
 	stopMeasuringElapsedTime("getMenuBookMasterStart", "getMenuBookMaster完了");
 	getGoodsMaster(pushMenubookChangeFlg);
