@@ -548,10 +548,6 @@ function getSubmenuData(pushMenubookChangeFlg) {
  */
 function getAccountKbn(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAccountKbnStart");
-	if(guiFlg == "1"){
-		load(pushMenubookChangeFlg);
-		return;
-	}
 	outOparationLog("会計ボタン押下可否情報取得開始");
 	var timeoutFlg = false;
 
