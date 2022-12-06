@@ -2102,12 +2102,6 @@ window.addEventListener('onerror',loadError);
 
 // html読み込みが成功した場合、監視解除・後続処理実行
 window.addEventListener('load', function(){
-  // ChangeMsgLanguage('jp');
-  // getLayoutDataFst();
-  // firstTimeoutFlg = false;
-  // init();
-  // window.removeEventListener('error',loadError);
-  // window.removeEventListener('onerror',loadError);
   getMsgLanguage();
 });
 

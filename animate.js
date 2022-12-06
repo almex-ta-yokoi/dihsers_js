@@ -22,8 +22,6 @@ if(regFlg == '1'){
   slipinfo = null;
 }
 
-// alert(getParam('lang'));
-
 /**
  * Get the URL parameter value
  *
@@ -38,14 +36,6 @@ function getParam(name, url) {
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-function init() {
-  // $(function (){
-  //   starAnimation();
-  // });
-  // $(window).on('resize', setLayout);
-  // setLayout();
 }
 
 function setLayout() {
