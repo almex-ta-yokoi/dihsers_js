@@ -246,10 +246,7 @@ function createTag(type,postResult) {
             if (bf_order_map[ordCnt]['quantity'] == 1) {
                     // 数量1の場合、－ボタンを非活性
                     newBtnDwn.setAttribute('style', 'background-color:#dcdcdc; pointer-events: none;');
-                    // 数量0の場合、対象行のテキストを赤文字にする
-                    // newRow.setAttribute('style', 'color:#f54d37;');
                 } else if (bf_order_map[ordCnt]['quantity'] >= person) {
-            // } else if (bf_order_map[ordCnt]['goodsData']['byTakeoutDefaultType'] != '2' && bf_order_map[ordCnt]['quantity'] >= person) {
                     // イートインメニューかつ、選択数量が卓人数以上の場合、＋ボタンを非活性
                     newBtnUp.setAttribute('style', 'background-color:#dcdcdc; pointer-events: none;');
                 }
@@ -677,13 +674,6 @@ function createTag(type,postResult) {
  * 税率取得処理
  */
 function selectTax(taxType){
-        // var tax;
-        // if(taxType == '2'){
-        //     tax = trgtTax["nValue2"];
-        // }else{
-        //     tax = trgtTax["nValue"];
-        // }
-        // return BigNumber(tax).times(0.001).plus(1);
         // メモ：税計算廃止
         return BigNumber(1);
 }
@@ -741,16 +731,6 @@ function createDrinkTag(drinkCd, drinkNum, type) {
     ordCnt++;
     ordQuantity += num;
 
-    // var drink_map = null;
-    // if(type == 4){
-    //     // イートインドリンクメニュー
-    //     drink_map = drink_goods_map;
-    // }else if(type == 6){
-    //     // テイクアウトドリンクメニュー
-    //     drink_map = takeout_drink_goods_map;
-    // }else{
-    //     return;
-    // }
     var drink_map = all_m_goods_map;
 
     // 注文確定前mapにデータを格納
@@ -932,68 +912,6 @@ function addMsgGeneralSubMenu(goodsCd,map) {
     }
 }
 
-// /**
-//  * 商品追加処理
-//  * 　重複するオーダーが存在する場合、注文カゴの数量をカウントアップする
-//  * @param
-//  * 　btn： 押下された商品ボタンのオブジェクト
-//  * 　mkbn： 商品区分
-//  */
-// function addOrd(btn, mKbn) {
-//     // 選択数量
-//     var choiceCnt = parseInt(document.getElementById('cnt_pop_qnt_'+btn.getAttribute('itemid')).textContent);
-
-//     if (!chkDrinkQuantityFlg(choiceCnt)) {
-//         // 選択数量上限超えポップアップを表示し、処理終了
-//         document.getElementById('s-dialog14').innerHTML = I_1018.replace('{0}',quantityLimit);
-//         Data.data['scenes']['dialog14'].onEntry();
-//         return false;
-//     }
-
-//     // 一時格納用mapを初期化
-//     create_order_map = {};
-
-//     // 注文カゴ内の商品と注文商品が一致したらカウントアップする
-//     for (var ord in bf_order_map) {
-//         if (bf_order_map[ord]['nGoodsCode'] == btn.getAttribute('itemid')) {
-//             // 商品毎の数量上限チェック
-//             if (parseInt(bf_order_map[ord]['quantity'])+choiceCnt > person) {
-//                     // 選択数量上限超えポップアップを表示し、処理終了
-//                     document.getElementById('s-dialog14').innerHTML = I_1018.replace('{0}',person);
-//                     Data.data['scenes']['dialog14'].onEntry();
-//                     return false;
-//                 }
-//             // 注文カゴの数量をカウントアップ
-//             bf_order_map[ord]['quantity'] = parseInt(bf_order_map[ord]['quantity']) + choiceCnt;
-//             ordQuantity = parseInt(ordQuantity) + choiceCnt;
-
-//             // 注文確認画面表示
-//             createTag(1,null);
-//             addMsg(btn.getAttribute('itemid'));
-//             return false;
-//         }
-//     }
-//     // 注文件数をカウント
-//     ordCnt++;
-//     ordQuantity = parseInt(ordQuantity) + choiceCnt;
-
-//     // 一致する商品が存在しない場合、新規で確定前オーダー用mapと注文カゴに追加する
-//     var goodsCd = btn.getAttribute('itemid');
-//     create_order_map['nGoodsCode'] = goodsCd;    // 商品コード
-//     create_order_map['goodsData'] = all_m_goods_map[goodsCd];
-
-//     // create_order_map['quantity'] = '1';         // 数量
-//     create_order_map['quantity'] = choiceCnt;         // 数量
-//     create_order_map['orderMadeFlg'] = '0';     // オーダーメイドフラグ"0：オーダーメイド以外"
-//     bf_order_map[ordCnt] = JSON.parse(JSON.stringify(create_order_map));
-
-//     // 注文カゴにタグを追加
-//     createTag(1,null);
-//     addMsg(btn.getAttribute('itemid'));
-
-//     // outOparationLog("???-商品追加,追加行番号:"+ordCnt+",追加商品データ:"+JSON.stringify(bf_order_map[ordCnt]));
-// }
-
 /**
  * 商品追加処理
  * 　重複するオーダーが存在する場合、注文カゴの数量をカウントアップする
@@ -1168,8 +1086,6 @@ function createOrd() {
         // ごいっしょにいかがですか機能が有効な場合
         create_order_map['withGoodsCnt'] = 1;
     }
-    // var goodsName = {cGoodsName:ORD_MADE_DISHERS_LANG};
-    // var goodsName = {cGoodsName:m_basedishcombo_map[ordMadeSelectBaseCode]["cBaseDishName"]};
     create_order_map['goodsData'] = all_m_goods_map[m_basedishcombo_map[ordMadeSelectBaseCode]["nGoodsCode"]];      // 商品名称
     create_order_map['ordBaseCode'] = m_basedishcombo_map[ordMadeSelectBaseCode]["nGoodsCode"];      // オーダーメイドディッシュベースコード
 
@@ -1248,7 +1164,6 @@ function createOrdLevel() {
             ordQuantity = parseInt(ordQuantity) + choiceCnt;
 
             // 注文確認画面表示
-            // createTag(1,null);
             iconRef('add');
             addMsgGeneralSubMenu(goodsCd,addMsgList);
             outOparationLog("カート-サブメニューポップアップ-商品数量加算,行番号:"+ordCnt+",追加商品データ:"+JSON.stringify(bf_order_map[ordCnt]));
@@ -1274,7 +1189,6 @@ function createOrdLevel() {
     bf_order_map[ordCnt] = JSON.parse(JSON.stringify(create_order_map));
 
     // 注文カゴにタグを追加
-    // createTag(1,null);
     iconRef('add');
     addMsgGeneralSubMenu(goodsCd,addMsgList);
 
