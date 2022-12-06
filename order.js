@@ -2,16 +2,12 @@
 var androidID = '';
 if(regFlg == '1'){
 	// レジ起動の場合
-	// androidID = '8b7b843265534ba3';
 	androidID = termid;
 }else{
 	// オーダ端末起動の場合
-	//androidID = 'f44cdd20974f4de3';
 	//androidID = 'e2895de3f847f456';
-	//androidID = 'e2895dajifgjaifjaie3f847f456';
 	androidID = WuicTermInfo.getAndroidId();
 }
-// alert(window.navigator.appVersion);
 
 // メニューブックマスタ(未編集)
 var tmp_m_menubook_map = [];
@@ -20,8 +16,6 @@ var tmp_m_menubook_map = [];
 var m_menubook_map = [];
 
 // ------オーダーメイドディッシュ用データ------
-// 組み合わせ不可商品マスタ
-//var m_nggoodsgroup_map = [];
 
 // 商品マスタ
 var m_goods_map = [];
@@ -134,30 +128,6 @@ var OrdMadechangeLimitFlg = false;
 // 限定メニュー
 limit_goods_map = [];
 
-// // ドリンクメニュー
-// drink_goods_map = [];
-
-// // サイドメニュー
-// side_goods_map = [];
-
-// // お子様メニュー
-// child_goods_map = [];
-
-// // テイクアウトディッシュメニュー
-// takeout_dish_goods_map = [];
-
-// // テイクアウトドリンクメニュー
-// takeout_drink_goods_map = [];
-
-// // テイクアウトサイドメニュー
-// takeout_side_goods_map = [];
-
-// // モーニングメニュー
-// morning_goods_map = [];
-
-// // モーニングメニュー(サラダ付)
-// morning_goods_map2 = [];
-
 // 購入誘導商品情報
 with_goods_map = [];
 
@@ -185,7 +155,6 @@ var m_goods_json = null;
 var m_nggoodsgroup_json = null;
 var m_basedishcombo_json = null;
 var layoutData_json = null;
-// var lng_json = null;
 var ordmadeImg_json = null;
 var m_tax_json = null;
 var submenuData_json = null;
@@ -209,7 +178,6 @@ var person = 9;
 
 // 注文数量制御処理モード（quantityLimit：全体の数量制限、coefficient：人数☓係数による数量制限）
 var ORD_LIMIT_CONTROL_MODE = "quantityLimit";
-// var ORD_LIMIT_CONTROL_MODE = "coefficient";
 
 // 注文数量上限数（通信エラーにより取得出来なかった場合を考慮し、default値に"20"を設定）
 var quantityLimit = 20;
@@ -249,59 +217,6 @@ function getMenuBookMaster(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getMenuBookMasterStart");
 	getMenuBookMasterByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("メニューブックマスタ取得開始");
-	document.getElementById('loading').removeAttribute("hidden");
-	var timeoutFlg = false;
-
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getMenuBookMaster");
-			getMenuBookMaster(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetMenuBookMaster");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getMenuBookMaster.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetMenuBookMaster", "getMenuBookMaster内getMenuBookMaster.php:post完了");
-				// メニューブックマスタ取得
-				m_menubook_json = data;
-				data = null;
-				if(m_menubook_json == false || contains(m_menubook_json,CONNECT_ERR_MSG) && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getMenuBookMaster");
-					getMenuBookMaster(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(!(m_menubook_json == false || contains(m_menubook_json,CONNECT_ERR_MSG)) && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("メニューブックマスタ取得終了");
-			stopMeasuringElapsedTime("getMenuBookMasterStart", "getMenuBookMaster完了");
-			getGoodsMaster(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 function getGoodsMasterByText(pushMenubookChangeFlg) {
@@ -318,56 +233,6 @@ function getGoodsMaster(pushMenubookChangeFlg) {
 	outOparationLog("商品マスタ取得開始");
 	getGoodsMasterByText(pushMenubookChangeFlg);
 	return;
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getGoodsMaster");
-			getGoodsMaster(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetGoodsMaster");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getGoodsMaster.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetGoodsMaster", "getGoodsMaster内getGoodsMaster.php:post完了" );
-				// 商品マスタ取得
-				m_goods_json = data;
-				data = null;
-				if(m_goods_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getGoodsMaster");
-					getGoodsMaster(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(m_goods_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("商品マスタ取得終了");
-			stopMeasuringElapsedTime("getGoodsMasterStart", "getGoodsMaster完了");
-			getAllGeneralData(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -383,55 +248,6 @@ function getAllGeneralData(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAllGeneralDataStart");
 	getAllGeneralDataByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("汎用マスタデータ全取得処理開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getAllGeneralData");
-			getAllGeneralData(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetAllGeneralData");
-	$.when(
-		$.ajax({
-			type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getGenericMasterAll.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetAllGeneralData", "getAllGeneralData内getGenericMasterAll.php:post完了" );
-				// 商品マスタ取得
-				generic_all_json = data;
-				data = null;
-				if(generic_all_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// リトライ処理に変更
-					failureRetryOcuur("getAllGeneralData");
-					getAllGeneralData(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(generic_all_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("汎用マスタデータ全取得処理終了");
-			stopMeasuringElapsedTime("getAllGeneralDataStart", "getAllGeneralData完了");
-			getAlclCheck(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -447,59 +263,6 @@ function getAlclCheck(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAlclCheckStart");
 	getAlclCheckByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("アルコールポップアップ制限フラグ取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getAlclCheck");
-			getAlclCheck(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetAlclCheck");
-	$.when(
-		$.ajax({
-			type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-            data:{
-                'fName':'alcolFstOnly',
-                'uName':'onOffFlg'
-            },
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetAlclCheck", "getAlclCheck内getGenericMaster.php:post完了" );
-				// 商品マスタ取得
-				generic_alclFstOnly_json = data;
-				data = null;
-				if(generic_alclFstOnly_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// リトライ処理に変更
-					failureRetryOcuur("getAlclCheck");
-					getAlclCheck(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(generic_alclFstOnly_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("アルコールポップアップ制限フラグ取得終了");
-			stopMeasuringElapsedTime("getAlclCheckStart", "getAlclCheck完了");
-			getAllergyMaster(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -515,51 +278,6 @@ function getAllergyMaster(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAllergyMasterStart");
 	getAllergyMasterByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("アレルギーマスタ取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// リトライ処理
-			timeoutRetryOccur("getAllergyMaster");
-			getAllergyMaster(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetAllergyMaster");
-	$.when(
-		$.ajax({
-			type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getAllergyMaster.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetAllergyMaster", "getAllergyMaster内getAllergyMaster.php:post完了" );
-				// 商品マスタ取得
-				allergy_json = data;
-				data = null;
-				if(allergy_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// リトライ処理
-					failureRetryOcuur("getAllergyMaster");
-					getAllergyMaster(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(allergy_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("アレルギーマスタ取得終了");
-			stopMeasuringElapsedTime("getAllergyMasterStart", "getAllergyMaster完了");
-			getWithGoods(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -580,61 +298,6 @@ function getNgGoodsGroup(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getNgGoodsGroupStart");
 	getNgGoodsGroupByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("組み合わせ不可商品マスタ取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getNgGoodsGroup");
-			getNgGoodsGroup(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetNgGoodsGroup");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getNgGoodsGroup.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetNgGoodsGroup", "getNgGoodsGroup内getNgGoodsGroup.php:post完了" );
-				// 商品マスタ取得
-				m_nggoodsgroup_json = data;
-				data = null;
-				if(m_nggoodsgroup_json == false && !(timeoutFlg)){
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getNgGoodsGroup");
-					getNgGoodsGroup(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(m_nggoodsgroup_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("組み合わせ不可商品マスタ取得終了");
-			stopMeasuringElapsedTime("getNgGoodsGroupStart",  "getNgGoodsGroup完了");
-			if(regFlg == '1'){
-				// レジ起動時
-				getLayoutData(pushMenubookChangeFlg);
-			}else{
-				getBasedishComboMaster(pushMenubookChangeFlg);
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -650,50 +313,6 @@ function getWithGoods(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getWithGoodsStart");
 	getWithGoodsByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("ご一緒に販売商品マスタ取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// リトライ処理
-			timeoutRetryOccur("getWithGoods");
-			getWithGoods(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetWithGoods");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getWithGoods.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetWithGoods", "getWithGoods内getWithGoods.php:post完了");
-				// 商品マスタ取得
-				m_with_goods_json = data;
-				data = null;
-				if(m_with_goods_json == false && !(timeoutFlg)){
-					// リトライ処理
-					failureRetryOcuur("getWithGoods");
-					getWithGoods(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		if(m_with_goods_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("ご一緒に販売商品マスタ取得終了");
-			stopMeasuringElapsedTime("getWithGoodsStart", "getWithGoods完了");
-			getLayoutInfo(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -709,52 +328,6 @@ function getLayoutInfo(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getLayoutInfoStart");
 	getLayoutInfoByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("レイアウト調整情報取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// リトライ処理に変更
-			timeoutRetryOccur("getLayoutInfo");
-			getLayoutInfo(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetLayoutInfo");
-	$.when(
-  	$.ajax({
-  		type:'POST',
-      url:PHP_EN_ROOT_FOLDER + '/getLayoutInfo.php',
-      // data:{
-      //     'fName':'layout',
-      //     'uName':'position'
-      // },
-      success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetLayoutInfo", "getLayoutInfo内getLayoutInfo.php:post完了" );
-        layoutInfo_json = data;
-				if((layoutInfo_json === false || layoutInfo_json === '') && !(timeoutFlg)){
-          timeoutFlg = true;
-					failureRetryOcuur("getLayoutInfo");
-          getLayoutInfo(pushMenubookChangeFlg);
-          return;
-				}
-      }
-    })
-	).done(function() {
-		if(layoutInfo_json !== false && layoutInfo_json !== '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("レイアウト調整情報取得終了");
-			stopMeasuringElapsedTime("getLayoutInfoStart", "getLayoutInfo完了");
-			getSideLinkInfo(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -775,57 +348,6 @@ function getSideLinkInfo(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getSideLinkInfoStart");
 	getSideLinkInfoByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("サイドリンクバー情報取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// リトライ処理に変更
-			timeoutRetryOccur("getSideLinkInfo");
-			getSideLinkInfo(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetSideLinkInfo");
-	$.when(
-    $.ajax({
-      type:'POST',
-      url:PHP_EN_ROOT_FOLDER + '/getSideLinkInfo.php',
-      // data:{
-      //     'fName':'layout',
-      //     'uName':'position'
-      // },
-      success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetSideLinkInfo", "getSideLinkInfo内getSideLinkInfo.php:post完了" );
-      	sideLinkInfo_json = data;
-				if((sideLinkInfo_json === false || sideLinkInfo_json === '') && !(timeoutFlg)){
-          timeoutFlg = true;
-					failureRetryOcuur("getSideLinkInfo");
-          getSideLinkInfo(pushMenubookChangeFlg);
-          return;
-				}
-      }
-    })
-	).done(function() {
-		if(sideLinkInfo_json !== false && sideLinkInfo_json !== '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			// 非同期通信の完了を監視
-			outOparationLog("サイドリンクバー情報取得終了");
-			stopMeasuringElapsedTime("getSideLinkInfoStart", "getSideLinkInfo完了");
-			if(regFlg == '1'){
-				// レジ起動時
-				getBasedishComboMaster(pushMenubookChangeFlg);
-			}else{
-				getNgGoodsGroup(pushMenubookChangeFlg);
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -841,56 +363,6 @@ function getBasedishComboMaster(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getBasedishComboMasterStart");
 	getBasedishComboMasterByText(pushMenubookChangeFlg);
 	return;
-	var timeoutFlg = false;
-	outOparationLog("基本形ディッシュ組合せマスタ取得開始");
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getBasedishConboMaster");
-			getBasedishComboMaster(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetBasedishComboMasterStart");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getBasedishComboMaster.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetBasedishComboMasterStart", "getBasedishComboMaster内getBasedishComboMaster.php:post完了" );
-				// 基本形ディッシュ組合せマスタ取得
-				m_basedishcombo_json = data;
-				data = null;
-				if(m_basedishcombo_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getBasedishComboMaster");
-					getBasedishComboMaster(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		// 非同期通信の完了を監視
-		if(m_basedishcombo_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("基本形ディッシュ組合せマスタ取得終了");
-			stopMeasuringElapsedTime("getBasedishComboMasterStart", "getBasedishComboMaster完了");
-			getLayoutData(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -906,56 +378,6 @@ function getLayoutData(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getLayoutDataStart");
 	getLayoutDataByText(pushMenubookChangeFlg);
 	return;
-	var timeoutFlg = false;
-	outOparationLog("imegesフォルダ内ファイル情報取得開始");
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getLayoutData");
-			getLayoutData(pushMenubookChangeFlg);
-			return false;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で情報を取得
-  startMeasuringElapsedTime("PostStartIngetLayoutData");
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getLayoutData.php',
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetLayoutData", "getLayoutData内getLayoutData.php:post完了" );
-				// レイアウトデータパス取得
-				layoutData_json = data;
-				data = null;
-				if(layoutData_json == false && !(timeoutFlg)){
-					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getLayoutData");
-					getLayoutData(pushMenubookChangeFlg);
-					return false;
-				}
-			}
-		})
-	).done(function() {
-		// 非同期通信の完了を監視
-		if(layoutData_json != false && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("imegesフォルダ内ファイル情報取得終了");
-			stopMeasuringElapsedTime("getLayoutDataStart", "getLayoutData完了");
-			getPlasticBagFunc(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 var plasticBagFlg_reg = false;
@@ -968,66 +390,11 @@ function getPlasticBagFuncByText(pushMenubookChangeFlg) {
 	stopMeasuringElapsedTime("getPlasticBagFuncStart", "getPlasticBagFunc完了");
 	getAddHbDispTopping(pushMenubookChangeFlg);
 }
+
 function getPlasticBagFunc(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getPlasticBagFuncStart");
 	getPlasticBagFuncByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("レジ袋機能ONOFF取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getPlasticBagFunc");
-			getPlasticBagFunc(pushMenubookChangeFlg);
-      return;
-		}
-	},POST_TIMEOUT_TIME);
-
-  // 非同期通信で設定時間を取得
-	startMeasuringElapsedTime("PostStartIngetPlasticBagFunc");
-	$.when(
-  	$.ajax({
-      type:'POST',
-      url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-      data:{
-      	'fName':'plasticBag',
-      	'uName':'onOffFlg'
-      },
-      
-			success:function(data){
-				stopMeasuringElapsedTime("PostStartIngetPlasticBagFunc", "getPlasticBagFunc内getGenericMaster.php:post完了");
-      	// 結果をJSON形式で取得
-				plasticBagFunc_json = data;
-				data = null;
-				if((plasticBagFunc_json === false || plasticBagFunc_json === '') && !(timeoutFlg)){
-        	timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getPlasticBagFunc");
-					getPlasticBagFunc(pushMenubookChangeFlg);
-					return;
-				}
-      }
-    })
-	).done(function() {
-		// 非同期通信の完了を監視
-		if(plasticBagFunc_json != false && plasticBagFunc_json != '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("レジ袋機能ONOFF取得終了");
-			stopMeasuringElapsedTime("getPlasticBagFuncStart", "getPlasticBagFunc完了");
-			getAddHbDispTopping(pushMenubookChangeFlg);
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -1043,126 +410,7 @@ function getAddHbDispTopping(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAddHbDispToppingStart");
 	getAddHbDispToppingByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("追加ハンバーグのトッピング欄表示機能ONOFF取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getAddHbDispTopping");
-			getAddHbDispTopping(pushMenubookChangeFlg);
-      return;
-		}
-	},POST_TIMEOUT_TIME);
-
-  // 非同期通信で設定時間を取得
-	startMeasuringElapsedTime("PostStartIngetAddHbDispTopping");
-	$.when(
-  	$.ajax({
-    	type:'POST',
-    	url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-    	data:{
-    	  'fName':'addHbDisp',
-    	  'uName':'topping'
-    	},
-    
-		success:function(data){
-			stopMeasuringElapsedTime("PostStartIngetAddHbDispTopping", "getAddHbDispTopping内getGenericMaster.php:post完了");
-      // 結果をJSON形式で取得
-			addHbDispFlg_json = data;
-			data = null;
-			if((addHbDispFlg_json === false || addHbDispFlg_json === '') && !(timeoutFlg)){
-    		timeoutFlg = true;
-				// 通信エラーポップアップ出力処理
-				// document.getElementById('loading').setAttribute("hidden","hidden");
-				// getDataErrorPopUp();
-				// リトライ処理に変更
-				failureRetryOcuur("getAddHbDispTopping");
-				getAddHbDispTopping(pushMenubookChangeFlg);
-				return;
-			}
-    }
-  })).done(function() {
-		// 非同期通信の完了を監視
-		if(addHbDispFlg_json != false && addHbDispFlg_json != '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("追加ハンバーグのトッピング欄表示機能ONOFF取得終了");
-			stopMeasuringElapsedTime("getAddHbDispToppingStart", "getAddHbDispTopping完了");
-			// getLanguageFile(pushMenubookChangeFlg);
-			if(regFlg == '1'){
-				// レジ起動時
-				getSubmenuData(pushMenubookChangeFlg);
-			}else{
-				getOrdMadeImg(pushMenubookChangeFlg);
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
-
-// /**
-//  * php実行処理6(商品マスタの言語設定ファイル取得)
-//  * 　非同期通信で情報を取得する
-//  */
-// function getLanguageFile(pushMenubookChangeFlg) {
-// 	outOparationLog("商品マスタの言語設定ファイル取得開始");
-// 	var timeoutFlg = false;
-
-// 	// タイムアウト処理
-// 	setTimeout(function(){
-// 		if(!(timeoutFlg)){
-// 			timeoutFlg = true;
-// 			// 通信エラーポップアップ出力処理
-// 			// document.getElementById('loading').setAttribute("hidden","hidden");
-// 			// getDataErrorPopUp();
-// 			// リトライ処理に変更
-// 			getLanguageFile(pushMenubookChangeFlg);
-// 			return false;
-// 		}
-// 	},POST_TIMEOUT_TIME);
-
-// 	// 非同期通信で情報を取得
-// 	$.when(
-// 		$.ajax({
-// 			type:'POST',
-// 			url:PHP_EN_ROOT_FOLDER + '/getLanguageFile.php',
-// 			success:function(data){
-// 				// レイアウトデータパス取得
-// 				lng_json = data;
-// 				data = null;
-// 				if(lng_json == false || contains(lng_json,'<b>Warning</b>') && !(timeoutFlg)){
-// 					timeoutFlg = true;
-// 					// 通信エラーポップアップ出力処理
-// 					// document.getElementById('loading').setAttribute("hidden","hidden");
-// 					// getDataErrorPopUp();
-// 					// リトライ処理に変更
-// 					getLanguageFile(pushMenubookChangeFlg);
-// 					return false;
-// 				}
-// 			}
-// 		})
-// 	).done(function() {
-// 		// 非同期通信の完了を監視
-// 		if(lng_json != false && !(timeoutFlg)){
-// 			timeoutFlg = true;
-// 			outOparationLog("商品マスタの言語設定ファイル取得終了");
-// 			if(regFlg == '1'){
-// 				// レジ起動時
-// 				getSubmenuData(pushMenubookChangeFlg);
-// 			}else{
-// 				getOrdMadeImg(pushMenubookChangeFlg);
-// 			}
-// 		}else{
-// 			timeoutFlg = true;
-// 		}
-// 	})
-// }
 
 /**
  * php実行処理7(オーダーメイドディッシュ完成画像名取得)
@@ -1177,9 +425,6 @@ function getOrdMadeImg(pushMenubookChangeFlg) {
 	setTimeout(function(){
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
 			// リトライ処理に変更
 			timeoutRetryOccur("getOrdMadeImg");
 			getOrdMadeImg(pushMenubookChangeFlg);
@@ -1200,9 +445,6 @@ function getOrdMadeImg(pushMenubookChangeFlg) {
 				data = null;
 				if(ordmadeImg_json == false && !(timeoutFlg)){
 					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
 					// リトライ処理に変更
 					failureRetryOcuur("getOrdMadeImg");
 					getOrdMadeImg(pushMenubookChangeFlg);
@@ -1216,7 +458,6 @@ function getOrdMadeImg(pushMenubookChangeFlg) {
 		stopMeasuringElapsedTime("getOrdMadeImgStart", "getOrdMadeImg完了");
 		if(ordmadeImg_json != false && !(timeoutFlg)){
 			timeoutFlg = true;
-			// getTaxMaster(pushMenubookChangeFlg);
 			getSubmenuData(pushMenubookChangeFlg);
 		}else{
 			timeoutFlg = true;
@@ -1241,61 +482,6 @@ function getSubmenuData(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getSubmenuDataStart");
 	getSubmenuDataByText(pushMenubookChangeFlg);
 	return;
-	outOparationLog("サブメニュー情報取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getSubmenuData");
-			getSubmenuData(pushMenubookChangeFlg);
-      return;
-		}
-	},POST_TIMEOUT_TIME);
-
-  // 非同期通信で設定時間を取得
-	startMeasuringElapsedTime("PostStartIngetSubmenuData");
-	$.when(
-    $.ajax({
-      type:'POST',
-      url:PHP_EN_ROOT_FOLDER + '/getSubMenuData.php',
-    success:function(data){
-			stopMeasuringElapsedTime("PostStartIngetSubmenuData", "getSubMenuData内getSubMenuData.php:post完了");
-      // 結果をJSON形式で取得
-			submenuData_json = data;
-			data = null;
-			if((submenuData_json === false || submenuData_json === '') && !(timeoutFlg)){
-        timeoutFlg = true;
-				// 通信エラーポップアップ出力処理
-				// document.getElementById('loading').setAttribute("hidden","hidden");
-				// getDataErrorPopUp();
-				// リトライ処理に変更
-				failureRetryOcuur("getSubmenuData");
-				getSubmenuData(pushMenubookChangeFlg);
-				return;
-			}
-    }
-  })
-	).done(function() {
-		// 非同期通信の完了を監視
-		if(submenuData_json != false && submenuData_json != '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("サブメニュー情報取得終了");
-			stopMeasuringElapsedTime("getSubmenuDataStart", "getSubmenuData完了");
-			if(regFlg == '1'){
-				getRegMenuBookCd(pushMenubookChangeFlg);
-			}else{
-				getAccountKbn(pushMenubookChangeFlg);
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -1315,13 +501,10 @@ function getAccountKbn(pushMenubookChangeFlg) {
 	setTimeout(function(){
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
 			// リトライ処理に変更
 			timeoutRetryOccur("getAccountKbn");
 			getAccountKbn(pushMenubookChangeFlg);
-            return;
+      return;
 		}
 	},POST_TIMEOUT_TIME);
 
@@ -1363,9 +546,6 @@ function getAccountKbn(pushMenubookChangeFlg) {
 					load(pushMenubookChangeFlg);
 				}else{
 					timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
 					// リトライ処理に変更
 					failureRetryOcuur("getAccountKbn");
 					getAccountKbn(pushMenubookChangeFlg);
@@ -1393,71 +573,12 @@ function getRegMenuBookCd(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getRegMenuBookCdStart");
 	getRegMenuBookCdByText(pushMenubookChangeFlg);
 	return;
-
-	outOparationLog("精算機用-メニューブックコード取得開始");
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// document.getElementById('loading').setAttribute("hidden","hidden");
-			// getDataErrorPopUp();
-			// リトライ処理に変更
-			timeoutRetryOccur("getRegMenuBookCd");
-			getRegMenuBookCd(pushMenubookChangeFlg);
-            return;
-		}
-	},POST_TIMEOUT_TIME);
-
-  // 非同期通信で設定時間を取得
-	startMeasuringElapsedTime("PostStartIngetRegMenuBookCd");
-	$.when(
-        $.ajax({
-            type:'POST',
-            url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-            data:{
-                'fName':'regMenuBookCode',
-                'uName':'menuBookCode'
-            },
-            success:function(data){
-			stopMeasuringElapsedTime("PostStartIngetRegMenuBookCd", "getRegMenuBookCd内getGenericMaster.php:post完了");
-                // 結果をJSON形式で取得
-				regMenuBookCd_json = data;
-				data = null;
-				if((regMenuBookCd_json === false || regMenuBookCd_json === '') && !(timeoutFlg)){
-                    timeoutFlg = true;
-					// 通信エラーポップアップ出力処理
-					// document.getElementById('loading').setAttribute("hidden","hidden");
-					// getDataErrorPopUp();
-					// リトライ処理に変更
-					failureRetryOcuur("getRegMenuBookCd");
-					getRegMenuBookCd(pushMenubookChangeFlg);
-					return;
-				}
-            }
-        })
-	).done(function() {
-		// 非同期通信の完了を監視
-		if(regMenuBookCd_json != false && regMenuBookCd_json != '' && !(timeoutFlg)){
-			timeoutFlg = true;
-			outOparationLog("精算機用-メニューブックコード取得終了");
-			stopMeasuringElapsedTime("getRegMenuBookCdStart", "getRegMenuBookCd完了");
-			if(showTimeoutFlg){
-				getSetTime(pushMenubookChangeFlg);
-			}else{
-				editAllTableData(pushMenubookChangeFlg);
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 var fstCreateFlg = false;
 var cngLevel = 10000;
 var sideOpeFlg = false;
+
 /**
  * レイアウト調整情報反映処理
  */
@@ -1574,11 +695,6 @@ function editLayoutInfo() {
 						new_btn.setAttribute("goodsType",layoutInfo_map[line]["nSoldOutIcon_condition_type"]);
 					}
 	
-					// メモ：処理の場所を移動
-					// if(layoutInfo_map[line]["nDispType"] == 5 && m_goods_map[layoutInfo_map[line]["nGoodsCode"]]["bySalesStatusType"] == "2"){
-					// 	// 品切れの場合、品切れ表示
-					// 	new_btn.classList.add("off");
-					// }
 					new_btn.classList.add(MSG_CSS_LANG);
 	
 					// 品切れアイコンサイズ位置
@@ -1596,12 +712,10 @@ function editLayoutInfo() {
 					styleAf.appendChild(document.createTextNode(cssAf));
 					document.getElementsByTagName('head')[0].appendChild(styleAf);
 	
-					// cngLevel = layoutInfo_map[line]["nAfDispId"];
 					if(layoutInfo_map[line]["nDispType"] == 1){
 						// 画面切替ボタンの場合
 						if(nTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nAfDispId"]] == 5){
 							// 画面遷移ボタンの場合
-							//new_btn.setAttribute("onclick","cngLevel = "+layoutInfo_map[line]['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(300); checkHierarchyCode("+layoutInfo_map[line]['nHierarchyCode']+");");
 							new_btn.setAttribute("onclick","startMeasuringElapsedTime("+layoutInfo_map[line]['nHierarchyCode']+ "); cngLevel = "+layoutInfo_map[line]['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(300); checkHierarchyCode("+layoutInfo_map[line]['nHierarchyCode']+");");
 
 							// "準備中です"表示判定実施
@@ -1753,20 +867,6 @@ function editLayoutInfo() {
 						new_btn.setAttribute("onclick","touch();dispLevelPopup("+layoutInfo_map[line]["nGoodsCode"]+")");
 					}
 
-						// // 品切れアイコンサイズ位置
-						// var css = ".levelItems.off.level_so_"+layoutInfo_map[line]["nDispId"]+"_"+layoutInfo_map[line]["nGoodsCode"]
-						// 			+'::before{left:'+layoutInfo_map[line]["nSoldOutIcon_X"]+'px;top:'+layoutInfo_map[line]["nSoldOutIcon_Y"]
-						// 			+'px;width:'+layoutInfo_map[line]["nSoldOutIcon_width"]+'%;height:'+layoutInfo_map[line]["nSoldOutIcon_height"]
-						// 			+'%;border-radius:'+layoutInfo_map[line]["nSoldOutIcon_radius"]+'px;}';
-						// var style = document.createElement('style');
-						// style.appendChild(document.createTextNode(css));
-						// document.getElementsByTagName('head')[0].appendChild(style);
-	
-						// var cssAf = ".levelItems.off.level_so_"+layoutInfo_map[line]["nDispId"]+"_"+layoutInfo_map[line]["nGoodsCode"]
-						// 			+'::after{left:'+layoutInfo_map[line]["nSoldOutIcon_X"]+'px;width:'+layoutInfo_map[line]["nSoldOutIcon_width"]+'%;}';
-						// var styleAf = document.createElement('style');
-						// styleAf.appendChild(document.createTextNode(cssAf));
-						// document.getElementsByTagName('head')[0].appendChild(styleAf);
 					}
 					// new_btn.href = "#root/level";
 					new_btn.href = "javascript:void(0)";
@@ -2021,11 +1121,6 @@ function editLayoutInfo() {
 					new_btn.setAttribute("goodsType",layoutInfo_map[line]["nSoldOutIcon_condition_type"]);
 				}
 
-				// メモ：処理の場所を移動
-				// if(layoutInfo_map[line]["nDispType"] == 5 && m_goods_map[layoutInfo_map[line]["nGoodsCode"]]["bySalesStatusType"] == "2"){
-				// 	// 品切れの場合、品切れ表示
-				// 	new_btn.classList.add("off");
-				// }
 				new_btn.classList.add(MSG_CSS_LANG);
 
 				// 品切れアイコンサイズ位置
@@ -2213,24 +1308,8 @@ function editLayoutInfo() {
 						new_btn.setAttribute("onclick","touch();dispLevelPopup("+layoutInfo_map[line]["nGoodsCode"]+")");
 					}
 
-					// // 品切れアイコンサイズ位置
-					// var css = ".levelItems.off.level_so_"+layoutInfo_map[line]["nDispId"]+"_"+layoutInfo_map[line]["nGoodsCode"]
-					// 			+'::before{left:'+layoutInfo_map[line]["nSoldOutIcon_X"]+'px;top:'+layoutInfo_map[line]["nSoldOutIcon_Y"]
-					// 			+'px;width:'+layoutInfo_map[line]["nSoldOutIcon_width"]+'%;height:'+layoutInfo_map[line]["nSoldOutIcon_height"]
-					// 			+'%;border-radius:'+layoutInfo_map[line]["nSoldOutIcon_radius"]+'px;}';
-					// var style = document.createElement('style');
-					// style.appendChild(document.createTextNode(css));
-					// document.getElementsByTagName('head')[0].appendChild(style);
-
-					// var cssAf = ".levelItems.off.level_so_"+layoutInfo_map[line]["nDispId"]+"_"+layoutInfo_map[line]["nGoodsCode"]
-					// 			+'::after{left:'+layoutInfo_map[line]["nSoldOutIcon_X"]+'px;width:'+layoutInfo_map[line]["nSoldOutIcon_width"]+'%;}';
-					// var styleAf = document.createElement('style');
-					// styleAf.appendChild(document.createTextNode(cssAf));
-					// document.getElementsByTagName('head')[0].appendChild(styleAf);
 				}
-				// new_btn.href = "#root/level";
 				new_btn.href = "javascript:void(0)";
-				// new_btn.setAttribute("onclick","touch();menuBookMstEdit();goodsMstEdit();Data.data['scenes']['level'].onEntry("+layoutInfo_map[line]["nAfDispId"]+");");
 
 				new_btn.style.display = "block";
 				new_btn.style.position = "absolute";
@@ -2392,11 +1471,6 @@ function editLayoutInfo() {
 					if(!findFlg){
 						new_bg_img.src = "";
 					}
-					// if(layoutInfo_map[defaultImagePath] != null){
-					// 	new_bg_img.src = lis_fact_map[generateLangImgPath(layoutInfo_map[defaultImagePath]["cDefaultImagePath"])];
-					// } else {
-					// 	new_bg_img.src = "";
-					// }
 				} else {
 					// それ以外は通常の画像パスと判定
 					new_bg_img.src = lis_fact_map[generateLangImgPath(layoutInfo_map[line]["cDefaultImagePath"])];
@@ -2534,49 +1608,6 @@ function editLayoutInfo() {
 					}
 				}
 				fstSidekinFlg = false;
-				// if(layoutInfo_map[line]["nAfDispId"] == 0 && nTypeMap[layoutInfo_map[line]["nAfDispId"]] != 5){
-				// 	// 遷移先なし(タイトル画像等)の場合
-				// 	var titleLine = document.createElement("h2");
-				// 	titleLine.classList.add("sideLinks");
-				// 	titleLine.classList.add("sideLink_"+layoutInfo_map[line]["nDispId"]);
-				// 	var titleLine_img = document.createElement("img");
-				// 	titleLine_img.src = lis_fact_map[generateLangImgPath(layoutInfo_map[line]["cDefaultImagePath"])];
-				// 	titleLine.appendChild(titleLine_img);
-				// 	if(layoutInfo_map[line]["nDispType"] == 7){
-				// 		titleLine.classList.add("sideLinkTitles");
-				// 		sideLinkBarTitle.appendChild(titleLine);
-				// 	} else {
-				// 		sideLinkBar.appendChild(titleLine);
-				// 	}
-				// } else if(nTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nAfDispId"]] == 5){
-				// 	// 遷移先　階層画面の場合
-				// 	var levelLine = document.createElement("a");
-				// 	levelLine.classList.add("sideLinks");
-				// 	levelLine.classList.add("sideLink_"+layoutInfo_map[line]["nDispId"]);
-				// 	levelLine.classList.add("jBtn");
-				// 	if(layoutInfo_map[line]['nAfDispId'] == HOME_DISP_ID){
-				// 		// TOP画面の場合
-				// 		levelLine.setAttribute("onclick","sideOpeFlg = true;touch(); location.href = '#root/home';");
-				// 	} else {
-				// 		levelLine.setAttribute("onclick","sideOpeFlg = true;cngLevel = "+layoutInfo_map[line]['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(0);");
-				// 	}
-				// 	var levelLine_img = document.createElement("img");
-				// 	levelLine_img.src = lis_fact_map[generateLangImgPath(layoutInfo_map[line]["cDefaultImagePath"])];
-				// 	levelLine.appendChild(levelLine_img);
-				// 	sideLinkBar.appendChild(levelLine);
-				// } else if(nTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nAfDispId"]] != 5){
-				// 	// 遷移先　商品詳細画面の場合
-				// 	var levelLine = document.createElement("a");
-				// 	levelLine.classList.add("sideLinks");
-				// 	levelLine.classList.add("sideLink_"+layoutInfo_map[line]["nDispId"]);
-				// 	levelLine.classList.add("jBtn");
-
-				// 	levelLine.setAttribute("onclick","sideOpeFlg = true;touch();levelDispGoodsDetail("+layoutInfo_map[line]['nAfDispId']+");");
-				// 	var levelLine_img = document.createElement("img");
-				// 	levelLine_img.src = lis_fact_map[generateLangImgPath(layoutInfo_map[line]["cDefaultImagePath"])];
-				// 	levelLine.appendChild(levelLine_img);
-				// 	sideLinkBar.appendChild(levelLine);
-				// }
 			}
 		}
 	}
@@ -2682,7 +1713,6 @@ function dispLevelPopup(goodsCd){
 				var subCnt = 0;
 				for(var j = 0; j< 5; j++){
 					// 商品件数チェック
-					// if(i + 1 == 1 && subMenuData["cValue1"] != "3"){continue} // ベース商品行のためスルー
 					if(j + 1 == 1){continue} // ベース商品行のためスルー
 					if(subMenuData[clmMapping["cValue"+(j+6)]] == "0"){continue}
 					subCnt++;
@@ -2690,9 +1720,7 @@ function dispLevelPopup(goodsCd){
 				// サブメニュー商品
 				for(var j = 0; j < 5; j++){
 					if(subMenuData[clmMapping["cValue"+(j+6)]] == "0" && j != subMenuData[clmMapping["cValue11"]]){continue} // 未設定の場合スルー
-					// if(i + 1 == 1 && subMenuData["cValue1"] != "3"){continue} // ベース商品行のためスルー
 					if(j + 1 == 1){continue} // ベース商品行のためスルー
-					// if(i + 1 >= 5 && subMenuData["cValue1"] == "3"){continue} // レイアウトが4個までしか対応できない
 					if(j + 1 >= 6 && subMenuData[clmMapping["cValue1"]] == "3"){continue} // レイアウトが4個までしか対応できない
 					if(j + 1 >= 6 && subMenuData[clmMapping["cValue1"]] == "2"){continue} // レイアウトが4個までしか対応できない
 					var a_subGoods = document.createElement("span");
@@ -2707,7 +1735,6 @@ function dispLevelPopup(goodsCd){
 						a_subGoods.setAttribute('selectCd',subMenuData[clmMapping["cValue"+(j+6)]]);
 					}
 					a_subGoods.setAttribute('selectCd',subMenuData[clmMapping["cValue"+(j+6)]]);
-					// a_subGoods.setAttribute('id','rice3_'+m_goods_map[goodsCd]['nGoodsCode']);
 					a_subGoods.setAttribute('onclick','touch(); generalSubMenuSelect(this,"'+subMenuData[clmMapping["cValue1"]]+'");');
 					a_subGoods.setAttribute('style','font-size:65%;line-height:1.1;');
 					var span_rice3 = document.createElement('div');
@@ -2749,18 +1776,6 @@ function dispLevelPopup(goodsCd){
 					}
 
 					span_rice3.setAttribute('style','padding-top:5%;width:100%;');
-					// if
-					// (j == subMenuData[clmMapping["cValue11"]] && subMenuData[clmMapping["cValue12"]] == 1){
-					// 	// なし表示の場合
-					// 	span_rice3.innerHTML = '<div style="height:59px;">'+MSG_COMMON_22+'</div>';
-					// }else if(j == subMenuData[clmMapping["cValue11"]] && subMenuData[clmMapping["cValue12"]] == 2){
-					// 	// 商品名任意設定の場合
-					// 	if(MSG_CSS_LANG == "jp"){
-					// 		span_rice3.innerHTML = '<div style="height:59px;">'+subMenuData[clmMapping["cValue13"]]+'</div>';
-					// 	} else if(MSG_CSS_LANG == "en") {
-					// 		span_rice3.innerHTML = '<div style="height:59px;">'+subMenuData[clmMapping["cValue14"]]+'</div>';
-					// 	}
-					// } else {
 						var subGoodsName = "";
 						if(j == 1 && ((MSG_CSS_LANG == "jp" && subMenuData[clmMapping["cValue"+(j+12)]] != "-" && subMenuData[clmMapping["cValue"+(j+12)]] != "")
 						|| (MSG_CSS_LANG == "en" && subMenuData[clmMapping["cValue"+(j+13)]] != "-" && subMenuData[clmMapping["cValue"+(j+13)]] != ""))){
@@ -2848,13 +1863,6 @@ function dispLevelPopup(goodsCd){
 								symbol = "";
 							}
 
-							// // 差額計算表示タイプの場合
-							// var editUnitCost = new BigNumber(0);
-							// if(submenuData_map[i]["cValue1"] == "5"){
-							// 	editUnitCost = new BigNumber(m_goods_map[subMenuData["cValue"+(j+6)]]["nUnitCost"]).minus(new BigNumber(m_goods_map[subMenuData["cValue6"]]["nUnitCost"]));
-							// } else {
-							// 	editUnitCost = new BigNumber(m_goods_map[subMenuData["cValue"+(j+6)]]["nUnitCost"]);
-							// }
 							if(editUnitCost < 0){
 								// マイナス値段の場合は、+記号つけない
 								symbol = "";
@@ -2931,29 +1939,11 @@ function dispLevelPopup(goodsCd){
 				}
 				span_hbAdd_msg2.innerHTML = hbAddMsg2;
 				span_hbAdd_msg2.setAttribute('style','width:100%;text-align:center;line-height: 115%;margin-top:2%;position:absolute;');
-				// var span_hbAdd_msg3 = document.createElement('div');
-				// span_hbAdd_msg3.innerHTML = MSG_GENERAL_9;
-				// span_hbAdd_msg3.setAttribute('style','width:100%;text-align:center;margin-bottom:3%;line-height: 115%;');
-				// div_pop.appendChild(span_hbAdd_msg1);
 				div_pop.appendChild(span_hbAdd_msg2);
-				// div_pop.appendChild(span_hbAdd_msg3);
 	
 				// 商品名称・値段・塩分/カロリー
 				var hbMap = m_goods_map[subMenuData[clmMapping["cValue7"]]];
 				var hbName = hbMap["cGoodsName"];
-				// if(hbMap["nGoodsCode"] == "82001" && (hbMap["cGoodsName"] == '追加ハンバーグ' || hbMap["cGoodsName"] == 'Additional Hamburg-steak Patty')){
-				// 	// 追加ハンバーグ(82001)の場合、ディッシャーズ独自挙動として
-				// 	// 基本ハンバーグ込みの個数表示動作とする
-				// 	if(MSG_CSS_LANG == 'jp'){
-				// 		hbName = 'ハンバーグ';
-				// 	}else if(MSG_CSS_LANG == 'en'){
-				// 		hbName = 'Hamburg-steak Patty';
-				// 	}else if(MSG_CSS_LANG == 'kr'){
-				// 		hbName = 'Hamburg-steak Patty';
-				// 	}else if(MSG_CSS_LANG == 'cn'){
-				// 		hbName = 'Hamburg-steak Patty';
-				// 	}
-				// }
 
 				if(((MSG_CSS_LANG == "jp" && subMenuData[clmMapping["cValue13"]] != "-" && subMenuData[clmMapping["cValue13"]] != "")
 				|| (MSG_CSS_LANG == "en" && subMenuData[clmMapping["cValue14"]] != "-" && subMenuData[clmMapping["cValue14"]] != ""))){
@@ -2964,7 +1954,7 @@ function dispLevelPopup(goodsCd){
 						hbName = subMenuData[clmMapping["cValue14"]];
 					}
 				}
-				// var calSaltText = '<br><span class="tNum">'+hbMap["nCal"]+'</span>'+MSG_ORDMADE_7+'<span class="tNum">'+hbMap["nSalt"]+'</span>'+"g";
+
 				var calSaltText = '<br>'+MSG_ORDMADE_7.replace('{0}','<span class="tNum">'+hbMap["nCal"]+'</span>')
 													.replace('{1}','<span class="tNum">'+hbMap["nSalt"]+'</span>');
 
@@ -3159,7 +2149,6 @@ function dispLevelPopup(goodsCd){
 	img_plus.setAttribute('onclick','touch(); generalCntUp('+m_goods_map[goodsCd]['nGoodsCode']+');');
 	a_plus.appendChild(img_plus);
 	var space_div = document.createElement("div");
-	// space_div.innerHTML = "　<br>　";
 
 	// 英語の文字量が多いため調整
 	if(MSG_CSS_LANG == "jp"){
@@ -3828,8 +2817,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 			if(regFlg == '1'){
 				// レジ起動時
 				// テイクアウトTOP画面遷移
-				// Data.data['scenes']['root'].changeScene('root/takeout');
-				// location.href = '#root/takeout';
 				cngLevel = regLevelDispId;
 				Data.data['scenes']['level'].onEntry(0);
 
@@ -3852,10 +2839,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 				getQuantityLimit();
 
 				// フッターを注文内容一覧・TOP以外非表示化
-				// document.getElementById('footer_line1').setAttribute("hidden","hidden");
-				// document.getElementById('footer_1').setAttribute("hidden","hidden");
-				// document.getElementById('footer_2').style.position = 'relative';
-				// document.getElementById('footer_2').style.left = '58.5%';
 				startMeasuringElapsedTime("rejiKidou1");
 				document.getElementById('footer_3').setAttribute("hidden","hidden");
 				document.getElementById('footer_line4').setAttribute("hidden","hidden");
@@ -3876,8 +2859,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 				document.getElementById('loading').setAttribute("hidden","hidden");
 				stopMeasuringElapsedTime("rejiKidou1", "レジ起動完了(rejiKidou1)");
 			}else{
-				// // チェックイン処理
-				// checkIn(document.getElementById('selectPeople').textContent);
 				// メニューデータ整理
 				menuBookMstEdit();
 				goodsMstEdit();
@@ -3933,10 +2914,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 				getQuantityLimit();
 
 				// フッターを注文内容一覧・TOP以外非表示化
-				// document.getElementById('footer_line1').setAttribute("hidden","hidden");
-				// document.getElementById('footer_1').setAttribute("hidden","hidden");
-				// document.getElementById('footer_2').style.position = 'relative';
-				// document.getElementById('footer_2').style.left = '58.5%';
 				startMeasuringElapsedTime("rejiKidou2");
 				document.getElementById('footer_3').setAttribute("hidden","hidden");
 				document.getElementById('footer_line4').setAttribute("hidden","hidden");
@@ -4058,37 +3035,6 @@ function getGoodErrCheck(){
 	return false;
 }
 
-// var trgtTax = null;
-// /**
-//  * 税率判定処理
-//  */
-// function checkTax(){
-// 	// 現在日時を取得
-// 	var currentDateTime = new Date();
-// 	// 現在日付に変換
-// 	var currentDate = new Date(currentDateTime.getFullYear()+'/'+(currentDateTime.getMonth()+1)+'/'+currentDateTime.getDate());
-
-// 	var findTax = null;
-// 	var notFindTax = null;
-
-// 	for(var m in m_tax_map){
-// 		if(m_tax_map[m]["nTaxType"].length == 8){
-// 			var date = m_tax_map[m]["nTaxType"].match( /(\d{4})(\d{2})(\d{2})/ );
-// 			if(new Date(date[1]+'/'+date[2]+'/'+date[3]) <= currentDate){
-// 				findTax = m_tax_map[m];
-// 			}
-// 		}else{
-// 			notFindTax = m_tax_map[m];
-// 		}
-// 	}
-	
-// 	if(findTax != null){
-// 		trgtTax = findTax;
-// 	}else{
-// 		trgtTax = notFindTax;
-// 	}
-// }
-
 // デフォルト
 var IMG_DIR_DF = 'images/';
 // 変更先
@@ -4118,27 +3064,6 @@ var fstImgCngFlg = false;
 	// 対象フォルダ
 	var tgtFolder = 'menu_book/1';
 
-	// 期間フォルダ取得
-	// for(var list in layoutData_list){
-	// 	// チェック対象を抽出
-	// 	var tmp = layoutData_list[list];
-	// 	if(tmp != null){
-	// 		var result = tmp.match( /(\d{8})-(\d{8})/ );
-	// 	}
-	// 	if(result != null){
-	// 		// 期間フォルダの場合、保存
-	// 		dateList.push(result);
-	// 	}
-	// }
-	// for(var i in dateList){
-	// 	var startDate = dateList[i][1].match( /(\d{4})(\d{2})(\d{2})/ );
-	// 	var endDate = dateList[i][2].match( /(\d{4})(\d{2})(\d{2})/ );
-	// 	if(new Date(startDate[1]+'/'+startDate[2]+'/'+startDate[3]) <= currentDate && currentDate <= new Date(endDate[1]+'/'+endDate[2]+'/'+endDate[3])){
-	// 		// 対象フォルダ
-	// 		tgtFolder = dateList[i][0];
-	// 	}
-	// }
-
 	for(var list in layoutData_list){
 		// チェック対象を抽出
 		if(contains(layoutData_list[list],'menu_book/'+menubook_cd)){
@@ -4165,15 +3090,6 @@ var fstImgCngFlg = false;
 	for(var img=0;img < imgs.length;img++){
     // for(var img in imgs){
     if(imgs[img].src != null){
-		// // androidwebviewで同じタグを複数回取得できてしまうため、二重処理を回避
-		// if(contains(imgs[img].getAttribute('src'),IMG_DIR)){
-		// 	continue;
-		// }
-
-		// if(!(fstImgCngFlg)){
-		// 	// デフォルトの画像パスを保存
-		// 	imgs[img].setAttribute("tmpImg",imgs[img].getAttribute('src'));
-		// }
 		// 保存されなかったものはスキップ　※商品画像等のDOM構築であとから生成されたimgタグ。切替対象がないため。
 		if(imgs[img].getAttribute('tmpImg') == null){
 			continue;
@@ -4221,10 +3137,6 @@ var fstImgCngFlg = false;
 	// css指定の画像を置き換え
 	var cssImgs = document.getElementsByClassName('bgImg');
 	for(var i = 0; i < cssImgs.length;i++){
-		// if(!(fstImgCngFlg)){
-		// 	// デフォルトの画像パスを保存
-		// 	cssImgs[i].setAttribute("tmpImg",cssImgs[i].style.backgroundImage);
-		// }
 		var tgtImg = cssImgs[i].getAttribute("tmpImg").replace(IMG_DIR_DF,IMG_DIR);
 		var tgtImg_lng = cssImgs[i].getAttribute("tmpImg").replace(IMG_DIR_DF,IMG_DIR_LNG);
 
@@ -4239,10 +3151,6 @@ var fstImgCngFlg = false;
 			cssImgs[i].style.backgroundImage = "url("+lis_fact_map[cssImgs[i].getAttribute("tmpImg").replace('url\(\"\.\/','').replace('\"\)','').replace('url(','').replace(')','').replace(/.*images/,'images')]+")";
 		}
 	}
-	// copy_layoutData_json = null;
-
-	// 最後の変更先を保存
-	// IMG_DIR_DF = IMG_DIR;
 
 	// 初回画像切替完了化
 	fstImgCngFlg = true;
@@ -4409,59 +3317,6 @@ function createorderMadeList(changeType,changeId){
 	// マイディッシュ完成タブの非表示化
 	document.getElementById('orderLastTab').setAttribute('style','display: none;');
 
-
-	//ソース一覧にデフォルトで「ハンバーグソース」を追加
-	// if((changeType == 'sc' || changeType == null) && changeId == null && !(OrdMadechangeLimitFlg)){
-	// 	// 行
-	// 	var li = document.createElement('li');
-	// 	li.setAttribute('id',"empty");
-	// 	var a_goods = document.createElement('a');
-
-	// 	// 元の選択状態を復元
-	// 	if(scEmpSelect == null || scEmpSelect.getAttribute('class') == "p-orderSelectBtn1"){
-	// 		a_goods.setAttribute('class',"p-orderSelectBtn1");
-	// 	}else{
-	// 		a_goods.setAttribute('class',"p-orderSelectBtn1 current");
-	// 	}
-	// 	a_goods.setAttribute('id',"empty_a");
-	// 	a_goods.setAttribute('onclick',"touch(); goodsCheckBoxClick('sc','empty');");
-	// 	// 商品名部
-	// 	var p_name = document.createElement('p');
-	// 	p_name.setAttribute('class',"p-orderSelectBtn1_txt2 name");
-	// 	p_name.innerHTML = MSG_ORDMADE_10;
-	// 	// 値段部
-	// 	// var p_price = document.createElement('p');
-	// 	// p_price.setAttribute('class',"p-orderSelectBtn1_txt3");
-	// 	// var span_price = document.createElement('span');
-	// 	// span_price.setAttribute('class',"price");
-	// 	// span_price.textContent = '0';
-	// 	// p_price.appendChild(span_price);
-	// 	// p_price.innerHTML = p_price.innerHTML + MSG_ORDMADE_8;
-
-	// 	// cal/塩分部
-	// 	var p_cal_salt = document.createElement('p');
-	// 	p_cal_salt.setAttribute('class',"p-orderSelectBtn1_txt1");
-	// 	var span_cal = document.createElement('span');
-	// 	span_cal.setAttribute('class',"cal");
-	// 	span_cal.textContent = '7';
-
-	// 	var span_salt = document.createElement('span');
-	// 	span_salt.setAttribute('class',"salt");
-	// 	span_salt.textContent = '0.4';
-
-	// 	p_cal_salt.appendChild(span_cal);
-	// 	p_cal_salt.innerHTML = p_cal_salt.innerHTML + MSG_ORDMADE_7;
-	// 	p_cal_salt.appendChild(span_salt);
-	// 	p_cal_salt.innerHTML = p_cal_salt.innerHTML + "g";
-
-	// 	a_goods.appendChild(p_name);
-	// 	// a_goods.appendChild(p_price);
-	// 	a_goods.appendChild(p_cal_salt);
-
-	// 	li.appendChild(a_goods);
-	// 	document.getElementById("scList").appendChild(li);
-	// }
-
 	// 数量変更のみの場合、該当タグを取得・編集
 	if(changeId != null){
 		var change_li = document.getElementById("ordermade_id_"+create_dish_map[changeType][changeId]["nGoodsCode"]);
@@ -4518,22 +3373,12 @@ function createorderMadeList(changeType,changeId){
 				}
 				// ライス・サラダの場合
 				if(sType == "rp"|| sType == "sr"){
-					// if(ngGroupFlg){
-					// 	// ボタン無効
-					// 	a_goods.setAttribute('onclick',"touch();");
-					// }else{
 						// ラジオ選択機能追加
 						a_goods.setAttribute('onclick',"touch(); goodsRadioClick('"+sType+"',"+create_dish_map[sType][gData]["nGoodsCode"]+");");
-					// }
 				// ソースの場合
 				}else if(sType == "sc"){
-					// if(ngGroupFlg){
-					// 	// ボタン無効
-					// 	a_goods.setAttribute('onclick',"touch();");
-					// }else{
 						// 一択チェックボックス機能追加
 						a_goods.setAttribute('onclick',"touch(); goodsCheckBoxClick('"+sType+"',"+create_dish_map[sType][gData]["nGoodsCode"]+");");
-					// }
 				}
 				// 商品名部
 				var p_name = document.createElement('p');
@@ -4557,7 +3402,6 @@ function createorderMadeList(changeType,changeId){
 					}
 					span_price.textContent = editPrice;
 				}else if(sType == "sc" && !(OrdMadechangeLimitFlg)){
-					// span_price.textContent = "+" + create_dish_map[sType][gData]["nUnitCost"];
 					span_price.textContent = create_dish_map[sType][gData]["nUnitCost"];
 				}else{
 					span_price.textContent = create_dish_map[sType][gData]["nUnitCost"];
@@ -4620,9 +3464,7 @@ function createorderMadeList(changeType,changeId){
 						a_plus.setAttribute('class',"plus");
 						var img_plus = document.createElement('img');
 						img_plus.setAttribute('src',lis_fact_map["images/select/selectNumBtn2.png"]);
-						//img_plus.setAttribute('onclick',"goodsSelectAnimation('"+mappingList[sType]+"',"+create_dish_map[sType][gData]["nGoodsCode"]+");");
 						img_plus.setAttribute('onclick',"touch(); goodsCntUp('"+sType+"',"+create_dish_map[sType][gData]["nGoodsCode"]+");");
-						//img_plus.setAttribute('onclick',"clickTopping(this, 1)");
 						
 						a_plus.appendChild(img_plus);
 						div_qntMain.appendChild(a_minus);
@@ -4693,7 +3535,6 @@ function createorderMadeList(changeType,changeId){
 				if(create_dish_map[sType][gData]["quantity"] != 0){
 					var status_li  = document.createElement('li');
 					if(sType == "hb" || sType == "tp"){
-						// status_li.innerHTML = create_dish_map[sType][gData]["cGoodsName"]+' x '+create_dish_map[sType][gData]["quantity"];
 						status_li.innerHTML = create_dish_map[sType][gData]["cGoodsName"]+'&nbsp;x&nbsp;'+'<span class="tNum">'+create_dish_map[sType][gData]["quantity"]+'</span>';
 					}else{
 						status_li.innerHTML = create_dish_map[sType][gData]["cGoodsName"];
@@ -4775,32 +3616,15 @@ function createorderMadeList(changeType,changeId){
 	}
 	if(rp_total == rp_max_total && firstDishMakeRpEndFlg == false){
 		nextBanFlg = false;
-		// 自動遷移処理廃止
-		// sleep(1, function () {
-		// 	if(!(nextBanFlg)){
-		// 		orderNextBtn();
-		// 	}else{
-		// 		nextBanFlg = false;
-		// 	}
-        // });
 		// 初回のみ実行
 		firstDishMakeRpEndFlg = true;
 	}
 	if(sc_total == sc_max_total && firstDishMakeScEndFlg == false){
 		nextBanFlg = false;
-		// 自動遷移処理廃止
-		// sleep(1, function () {
-		// 	if(!(nextBanFlg)){
-		// 		orderNextBtn();
-		// 	}else{
-		// 		nextBanFlg = false;
-		// 	}
-        // });
 		// 初回のみ実行
 		firstDishMakeScEndFlg = true;
 	}
 	if(scEmpSelect != null && scEmpSelect.getAttribute('class') == "p-orderSelectBtn1 current" && firstDishMakeScEndFlg == false){
-		// orderNextBtn();
 		// 初回のみ実行
 		firstDishMakeScEndFlg = true;
 	}
@@ -4951,31 +3775,6 @@ function menuListSort(type) {
     }
 }
 
-// /**
-//  * 通信エラーポップアップ出力処理
-//  */
-// function getDataErrorPopUp(){
-// 	if(regFlg == '1'){
-// 		location.href = '#root/takeout';
-// 		document.getElementById('s-dialog3').innerHTML = E_9007;
-// 		document.getElementById('dialog3').setAttribute('href','root/takeout');
-// 		document.getElementById('s-dialog3-btn').innerHTML = MSG_COMMON_9;
-// 		document.getElementById('s-dialog3-btn').setAttribute('onclick',"touch(); Data.data['scenes']['dialog3'].onExit();starAnimation();");
-// 	}else{
-// 		if(tmp_tb_status == '1'){
-// 			location.href = '#root/home';
-// 			document.getElementById('s-dialog3').innerHTML = E_9007;
-// 			document.getElementById('dialog3').setAttribute('href','root/home');
-// 			document.getElementById('s-dialog3-btn').innerHTML = MSG_COMMON_9;
-// 			document.getElementById('s-dialog3-btn').setAttribute('onclick',"touch(); Data.data['scenes']['dialog3'].onExit();starAnimation();");
-// 		}else{
-// 			location.href = '#root/people';
-// 			document.getElementById('s-dialog3').innerHTML = E_9001;
-// 		}
-// 	}
-// 	Data.data['scenes']['dialog3'].onEntry();
-// }
-
 /**
  * メニューブックマスタのデータ整理処理
  */
@@ -4988,10 +3787,6 @@ function menuBookMstEdit(){
 
 	for(var mm in tmp_m_menubook_map){
 		// 現在日時で有効なメニューブックのみに編集
-		// ※補足：tmp_m_menubook_mapは現在日付で有効なメニューブックデータ
-		// if(!(new Date(Date.parse(tmp_m_menubook_map[mm]["tStartValidDate"])) <= currentDate && new Date(Date.parse(tmp_m_menubook_map[mm]["tEndValidDate"])) > currentDate)){
-		// 	delete m_menubook_map[mm];
-		// }		
 		if(!(menubook_cd == tmp_m_menubook_map[mm]["nMenuBookCode"])){
 			delete m_menubook_map[mm];
 		}	
@@ -5016,10 +3811,7 @@ function allGoodsMapEdit(){
 				// 一旦日本語商品名を退避
 				all_m_goods_map[mp]["cGoodsNameJp"] = all_m_goods_map[mp]["cGoodsName"];
 			}
-			// 言語設定の反映
-			// if(goods_lng_map.get(all_m_goods_map[mp]["nGoodsCode"]) != null){
-			// 	all_m_goods_map[mp]["cGoodsName"] = goods_lng_map.get(all_m_goods_map[mp]["nGoodsCode"])["name"];
-			// }
+
 			if(MSG_CSS_LANG == "jp"){
 				all_m_goods_map[mp]["cGoodsName"] = all_m_goods_map[mp]["cGoodsNameJp"];
 			} else if(MSG_CSS_LANG == "en"){
@@ -5089,11 +3881,6 @@ function goodsMstEdit(){
 
 	// サブメニューとなる商品をチェック
 	var tmp_submenuCode_list = {};
-	// for(sd in submenuData_map){
-	// 	tmp_submenuCode_list[submenuData_map[sd]["cValue7"]] = "";
-	// 	tmp_submenuCode_list[submenuData_map[sd]["cValue8"]] = "";
-	// 	tmp_submenuCode_list[submenuData_map[sd]["cValue9"]] = "";
-	// }
 
 	// 取扱い禁止、販売中止データリスト
 	var notSaleItemList = [];
@@ -5114,9 +3901,6 @@ function goodsMstEdit(){
 		}
 
 		// 言語設定の反映
-		// if(goods_lng_map.get(m_goods_map[rc]["nGoodsCode"]) != null){
-		// 	m_goods_map[rc]["cGoodsName"] = goods_lng_map.get(m_goods_map[rc]["nGoodsCode"])["name"];
-		// }
 		if(m_goods_map[rc]["cGoodsNameJp"] == null){
 			// 一旦日本語商品名を退避
 			m_goods_map[rc]["cGoodsNameJp"] = m_goods_map[rc]["cGoodsName"];
@@ -5197,37 +3981,6 @@ function goodsMstEdit(){
 			}
 
 		}
-		// else if(m_goods_map[rc]["byMenuType"] == "2"){
-		// 	//お子様メニューの整理
-		// 	child_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "3"){
-		// 	//サイドメニューの整理
-		// 	side_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "4"){
-		// 	//ドリンクメニューの整理
-		// 	drink_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "5"){
-		// 	//テイクアウトディッシュメニューの整理
-		// 	takeout_dish_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "6"){
-		// 	//テイクアウトドリンクメニューの整理
-		// 	takeout_drink_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "7"){
-		// 	//テイクアウトサイドメニューの整理
-		// 	takeout_side_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "8"){
-		// 	//モーニングメニューの整理
-		// 	morning_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }else if(m_goods_map[rc]["byMenuType"] == "9"){
-		// 	//モーニングメニューの整理
-		// 	morning_goods_map2[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }
-
-		// if(m_goods_map[rc]["byMenuType"] == "10" && menubook_cd == '2'){
-		// 	side_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// 	morning_goods_map[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// 	morning_goods_map2[m_goods_map[rc]["nGoodsCode"]] = jQuery.extend(true, {}, m_goods_map[rc]);
-		// }
 
 		if(m_goods_map[rc]["byGoodsDataType"] == "2" && regFlg != '1'){
 			//限定メニューの整理
@@ -5247,19 +4000,6 @@ function goodsMstEdit(){
 		base_dish_map['sr'] = jQuery.extend(true, {}, m_goods_sr_map);
 		base_dish_map['sc'] = jQuery.extend(true, {}, m_goods_sc_map);
 	}
-
-	// 限定メニュー準備中表示初期化
-	// var tar = document.getElementById("limit_top_icon");
-	// tar.setAttribute('class','main_menu1_btn2');
-	// var side = document.getElementById("c-menu1__btn1");
-	// side.setAttribute('class','');
-	// if(Object.keys(limit_goods_map).length == 0){
-	// 	// 限定メニューが１件もない場合、「ただいま準備中です」表示
-	// 	tar.classList.add("off");
-	// 	tar.classList.add(MSG_CSS_LANG);
-	// 	side.classList.add("off");
-	// 	side.classList.add(MSG_CSS_LANG);
-	// }
 
 	if(regFlg != '1' && !pushGoodsStatusChangeFlg){
 		// 購入誘導ポップアップ更新
@@ -5286,39 +4026,6 @@ function preloadRetry(type,src){
 function layoutDataPreload() {
 	imgChange();
 	return;
-	// 配列化
-	layoutData_list = JSON.parse(layoutData_json);
-	var imgTmp = document.getElementById('imgTmp');
-	// imgChange();
-	// レイアウトデータをプリロード
-	for(var layData in layoutData_list) {
-		// if(layoutData_list[layData] != null && contains(layoutData_list[layData],IMG_DIR)){
-		if(layoutData_list[layData] != null){
-			if(MSG_CSS_LANG == 'jp'){
-				if(contains(layoutData_list[layData],'/en/')){
-					continue;
-				}
-			}
-			if(MSG_CSS_LANG == 'en'){
-				if(contains(layoutData_list[layData],'/jp/')){
-					continue;
-				}
-			}
-			if(contains(layoutData_list[layData],'screensaver')){continue;}
-			var img = document.createElement('img');
-			img.src = layoutData_list[layData].replace('en_order/','');
-		}
-	}
-	// レイアウトデータをプリロード
-	for(var layData in layoutData_list) {
-		if(layoutData_list[layData] != null && contains(layoutData_list[layData],IMG_DIR)){
-			if(contains(layoutData_list[layData],'screensaver')){
-				var img = document.createElement('img');
-				img.src = layoutData_list[layData].replace('en_order/','');
-				imgTmp.appendChild(img);
-			}
-		}
-	}
 }
 
 /**
@@ -5328,47 +4035,6 @@ function layoutDataPreload() {
 function changeLanguage(lang) {
 	startMeasuringElapsedTime("changeLanguageStart");
 	try{
-		// // 先頭末尾の"を削除
-		// var tmp_lng_json = lng_json;
-		// tmp_lng_json = tmp_lng_json.substr( 1 );
-		// tmp_lng_json = tmp_lng_json.substr( 0, tmp_lng_json.length - 1);
-		// // 「\"」　⇒ 「"」　へ置換
-		// tmp_lng_json = tmp_lng_json.replace(/\\"/g, '"');
-		// // 不要文字削除
-		// tmp_lng_json =tmp_lng_json.replace(/\\ufeff/, '');
-		// // 言語設定ファイルを配列変換
-		// tmp_goods_lng_map = JSON.parse(tmp_lng_json);
-
-		// // if(tmp_goods_lng_map["item"]["0"]["item_id"] == "dummy"){
-		// // 	// ダミーデータが返って来た場合、取得失敗処理
-		// // 	// 通信エラーポップアップを表示
-		// // 	getDataErrorPopUp();
-		// // 	return;
-		// // }
-		// goods_lng_map = new Map();
-
-		// var formatLang;
-		// if(lang == 'jp'){
-		// 	formatLang = 'default';
-		// }else if(lang == 'kr'){
-		// 	formatLang = 'ko';
-		// }else if(lang == 'cn'){
-		// 	if(contains(tmp_lng_json,'"language":"pk"')){
-		// 		formatLang = 'pk';
-		// 	}else{
-		// 		formatLang = 'kt';
-		// 	}
-		// }else if(lang == 'en'){
-		// 	formatLang = 'en';
-		// }
-		// tmp_lng_json = null;
-		// for(var data in tmp_goods_lng_map["item"]){
-		// 	if(formatLang == tmp_goods_lng_map["item"][data]["language"]){
-		// 		//選択言語のみのマップを生成
-		// 		goods_lng_map.set(tmp_goods_lng_map["item"][data]["item_id"], tmp_goods_lng_map["item"][data]);
-		// 	}
-		// }
-
 		menuBookMstEdit();
 		goodsMstEdit();
 
@@ -5873,143 +4539,6 @@ function toSoftDrinkPopDisp(){
  */
 function createSoftDrinkPop(type){
 	return;
-	if(type == '1'){
-		var temp;
-		if(menubook_cd == '1'){
-			drinkTop = document.getElementById('drinkTop');
-			temp = document.getElementById('cnt_pop_40001');
-		}else{
-			drinkTop = document.getElementById('morningEatInTop');
-			temp = document.getElementById('cnt_pop_52007');
-		}
-		if(temp != null){
-			drinkTop.removeChild(temp);
-		}
-	}else {
-		drinkTop = document.getElementById('drinkTop-takeout');
-		var temp = document.getElementById('cnt_pop_90001');
-		if(temp != null){
-			drinkTop.removeChild(temp);
-		}
-	}
-	
-	var div_pop_cnt = document.createElement('div');
-
-	if(type == '1'){
-		var roop_map;
-		var gData;
-		var type;
-		if(menubook_cd == '1'){
-			roop_map = drink_goods_map;
-			gData = '40001';
-			type = '4';
-		}else{
-			roop_map = drink_goods_map;
-			gData = '52007';
-			type = '4';
-		}
-	}else{
-		var roop_map = takeout_drink_goods_map;
-		var gData = '90001';
-		var type = '6';
-	}
-	// 品切れチェック
-	var tar_a;
-	if(type == '4'){
-		if(menubook_cd == "1"){
-			tar_a = document.getElementById('EatInSoftDrink');
-		}else{
-			tar_a = document.getElementById('MorningSoftDrink');
-		}
-	}else{
-		tar_a = document.getElementById('TakeOutSoftDrink');
-	}
-	tar_a.classList.remove('en');
-	tar_a.classList.remove('jp');
-	tar_a.classList.remove('off');
-	if(roop_map[gData]['bySalesStatusType'] == '2'){
-		tar_a.classList.add('off');
-		if(MSG_CSS_LANG == 'en'){
-			tar_a.classList.add('en');
-		}else{
-			tar_a.classList.add('jp');
-		}
-	}
-
-	// 商品数量選択ポップアップシーン
-	div_pop_cnt.setAttribute('id','cnt_pop_'+roop_map[gData]['nGoodsCode']);
-	div_pop_cnt.setAttribute('class','p-general-pop');
-	div_pop_cnt.style.display = 'none';
-	// 商品数量選択タイトルメッセージ
-	var span_cntAdd_msg2 = document.createElement('div');
-	span_cntAdd_msg2.innerHTML = MSG_GENERAL_14_2.replace('{0}',roop_map[gData]["cGoodsName"]);
-	span_cntAdd_msg2.setAttribute('style','width:100%;text-align:center;line-height: 115%;margin-top:2%;');
-	div_pop_cnt.appendChild(span_cntAdd_msg2);
-	// 数量箇所
-	var div_qntMain = document.createElement('div');
-	div_qntMain.setAttribute('style','position:relative;left:20%;');
-	// 値段
-	var price_span = document.createElement('span');
-	price_span.innerHTML = '<span style="font-weight:bold;font-size:150%;" class="tNum">'+roop_map[gData]["nUnitCost"]+'</span>'+MSG_COMMON_6;
-	price_span.setAttribute('class',"tNum");
-	price_span.setAttribute('style',"width:40%;height:40%;position:absolute;left:-3%;top:10%;");
-
-
-
-
-	// 数量マイナス
-	var a_minus = document.createElement('a');
-	var img_minus = document.createElement('img');
-	img_minus.setAttribute('src',lis_fact_map["images/select/selectNumBtn1.png"]);
-	img_minus.setAttribute('style',"width:9%;height:40%;position:absolute;left:33%;top:25%;");
-	img_minus.setAttribute('onclick','touch(); generalCntDown('+roop_map[gData]['nGoodsCode']+');');
-	a_minus.appendChild(img_minus);
-	// 数量
-	var div_qnt = document.createElement('div');
-	div_qnt.setAttribute('style','text-align: center;margin-left:0%;');
-	var p_qnt = document.createElement('p');
-	p_qnt.setAttribute('style','font-size:150%;');
-	p_qnt.setAttribute('id','cnt_pop_qnt_'+roop_map[gData]['nGoodsCode']);
-	p_qnt.setAttribute('class','tNum');
-	p_qnt.textContent = '1';
-	div_qnt.appendChild(p_qnt);
-	div_qnt.innerHTML = MSG_ORDMADE_9+div_qnt.innerHTML;
-	// 数量プラス
-	var a_plus = document.createElement('a');
-	var img_plus = document.createElement('img');
-	img_plus.setAttribute('src',lis_fact_map["images/select/selectNumBtn2.png"]);
-	img_plus.setAttribute('style',"width:9%;height:40%;position:absolute;left:58%;top:25%;");
-	img_plus.setAttribute('onclick','touch(); generalCntUp('+roop_map[gData]['nGoodsCode']+');');
-	a_plus.appendChild(img_plus);
-
-	div_qntMain.appendChild(price_span);
-	div_qntMain.appendChild(a_minus);
-	div_qntMain.appendChild(div_qnt);
-	div_qntMain.appendChild(a_plus);
-	div_pop_cnt.appendChild(div_qntMain);
-
-	// キャンセルボタン
-	var a_cancel = document.createElement('a');
-	a_cancel.setAttribute('class','p-general-pop-cancel');
-	var span_cancel = document.createElement('div');
-	span_cancel.setAttribute('style','padding-top:3%;padding-bottom:3%;');
-	span_cancel.setAttribute('onclick','touch(); generalCntCancel('+roop_map[gData]['nGoodsCode']+');');
-	document.getElementById("cnt_pop_"+roop_map[gData]['nGoodsCode']);
-	span_cancel.textContent = MSG_COMMON_3;
-	a_cancel.appendChild(span_cancel);
-	div_pop_cnt.appendChild(a_cancel);
-
-	// 決定ボタン
-	var a_next = document.createElement('a');
-	a_next.setAttribute('class','p-general-pop-ok');
-	var span_next = document.createElement('div');
-	span_next.setAttribute('style','padding-top:3%;padding-bottom:3%;');
-	span_next.setAttribute('onclick','touch(); generalCntOk('+roop_map[gData]['nGoodsCode']+','+type+');');
-	span_next.textContent = MSG_GENERAL_13;
-	a_next.appendChild(span_next);
-	div_pop_cnt.appendChild(a_next);
-
-	drinkTop.appendChild(div_pop_cnt);
 }
 
 var currentNDispMenuType = '99';
@@ -6089,73 +4618,7 @@ function createGeneralDetail(nDispMenuType){
 		line.setAttribute('id','kidsDetail_'+roop_map[gData]['nGoodsCode']);
 		line.setAttribute('sort', roop_map[gData]["nDetailIndex"]);
 
-		// // 商品数量選択ポップアップシーン
-		// div_pop_cnt.setAttribute('id','cnt_pop_'+roop_map[gData]['nGoodsCode']);
-		// div_pop_cnt.setAttribute('class','p-general-pop');
-		// div_pop_cnt.style.display = 'none';
-		// // 商品数量選択タイトルメッセージ
-		// var span_cntAdd_msg2 = document.createElement('div');
-		// span_cntAdd_msg2.innerHTML = MSG_GENERAL_14.replace('{0}',roop_map[gData]["cGoodsName"]);
-		// span_cntAdd_msg2.setAttribute('style','width:100%;text-align:center;line-height: 115%;margin-top:2%;');
-		// div_pop_cnt.appendChild(span_cntAdd_msg2);
-		// // 数量箇所
-		// var div_qntMain = document.createElement('div');
-		// div_qntMain.setAttribute('style','position:relative;');
-		// // 数量マイナス
-		// var a_minus = document.createElement('a');
-		// var img_minus = document.createElement('img');
-		// img_minus.setAttribute('src',lis_fact_map["images/select/selectNumBtn1.png"]);
-		// img_minus.setAttribute('style',"width:9%;height:40%;position:absolute;left:33%;top:25%;");
-		// img_minus.setAttribute('onclick','touch(); generalCntDown('+roop_map[gData]['nGoodsCode']+');');
-		// a_minus.appendChild(img_minus);
-		// // 数量
-		// var div_qnt = document.createElement('div');
-		// div_qnt.setAttribute('style','text-align: center;margin-left:0%;');
-		// var p_qnt = document.createElement('p');
-		// p_qnt.setAttribute('style','font-size:150%;');
-		// p_qnt.setAttribute('id','cnt_pop_qnt_'+roop_map[gData]['nGoodsCode']);
-		// p_qnt.setAttribute('class','tNum');
-		// p_qnt.textContent = '1';
-		// div_qnt.appendChild(p_qnt);
-		// div_qnt.innerHTML = MSG_ORDMADE_9+div_qnt.innerHTML;
-		// // 数量プラス
-		// var a_plus = document.createElement('a');
-		// var img_plus = document.createElement('img');
-		// img_plus.setAttribute('src',lis_fact_map["images/select/selectNumBtn2.png"]);
-		// img_plus.setAttribute('style',"width:9%;height:40%;position:absolute;left:58%;top:25%;");
-		// img_plus.setAttribute('onclick','touch(); generalCntUp('+roop_map[gData]['nGoodsCode']+');');
-		// a_plus.appendChild(img_plus);
-
-		// div_qntMain.appendChild(a_minus);
-		// div_qntMain.appendChild(div_qnt);
-		// div_qntMain.appendChild(a_plus);
-		// div_pop_cnt.appendChild(div_qntMain);
-
-		// // キャンセルボタン
-		// var a_cancel = document.createElement('a');
-		// a_cancel.setAttribute('class','p-general-pop-cancel');
-		// var span_cancel = document.createElement('div');
-		// span_cancel.setAttribute('style','padding-top:3%;padding-bottom:3%;');
-		// span_cancel.setAttribute('onclick','touch(); generalCntCancel('+roop_map[gData]['nGoodsCode']+');');
-		// document.getElementById("cnt_pop_"+roop_map[gData]['nGoodsCode']);
-		// span_cancel.textContent = MSG_COMMON_3;
-		// a_cancel.appendChild(span_cancel);
-		// div_pop_cnt.appendChild(a_cancel);
-
-		// // 決定ボタン
-		// var a_next = document.createElement('a');
-		// a_next.setAttribute('class','p-general-pop-ok');
-		// var span_next = document.createElement('div');
-		// span_next.setAttribute('style','padding-top:3%;padding-bottom:3%;');
-		// span_next.setAttribute('onclick','touch(); generalCntOk('+roop_map[gData]['nGoodsCode']+','+type+');');
-		// span_next.textContent = MSG_GENERAL_13;
-		// a_next.appendChild(span_next);
-		// div_pop_cnt.appendChild(a_next);
-
-		// generalTop.appendChild(div_pop_cnt);
 		line.setAttribute('onclick','touch(); generalCntDisp('+roop_map[gData]['nGoodsCode']+');');
-
-
 
 		// 共通サブメニューの存在チェック
 		var subMenuData = null;
@@ -6312,15 +4775,6 @@ function createGeneralDetail(nDispMenuType){
 			p_info.innerHTML = calSaltText;
 		}
 
-		// // 値段
-		// p_price.setAttribute('class','p-kids-btn__txt2');
-		// strong_price.innerHTML = '<span class="tNum">'+roop_map[gData]['nUnitCost'].toLocaleString()+'</span>';
-		// p_price.innerHTML = strong_price.innerHTML+MSG_GENERAL_2;
-
-		// // カロリー/塩分
-		// p_info.setAttribute('class','p-kids-btn__txt3');
-		// p_info.innerHTML = '<span class="tNum">'+roop_map[gData]['nCal']+'</span>' + 'kcal/' + '<span class="tNum">'+roop_map[gData]['nSalt']+'</span>' + 'g';
-
 		// 行を追加
 		line.appendChild(p_img);
 		line.appendChild(p_name);
@@ -6362,8 +4816,6 @@ function createGeneralDetail(nDispMenuType){
 		}
 	}
 
-
-	
 	// メニュー一覧をソート
 	menuListSort('1');
 
@@ -6583,12 +5035,6 @@ function createDrinkDetail(type, drinkGoodsType){
 			// 商品名
 			p_name.setAttribute('class', 'p-drink-btn__txt1');
 			var name = tmp_roop_map[gData]['cGoodsName'];
-			// // フラッピー商品は名称が長くなる為、改行タグを挿入
-			// if (tmp_roop_map[gData]["nGoodsType"] == 1) {
-			// 	name = name.replace('<br1>', 'フラッピー<br />');
-			// } else if (tmp_roop_map[gData]["nGoodsType"] == 1) {
-			// 	name = name.replace('Flappy ', 'Flappy<br />');
-			// }
 			p_name.innerHTML = name;
 
 			// 値段
@@ -6614,9 +5060,6 @@ function createDrinkDetail(type, drinkGoodsType){
 	// ドリンクpreview取得
 	var dView = document.getElementById('drinkMain');
 
-	// // ドリンクpreviewの状態をリセットする
-	// dView.textContent = null;
-	
 	// ドリンクpreviewの初期表示
 	// var p_prev = document.createElement('p');
 	var div_prev = document.createElement('div');
@@ -6624,13 +5067,6 @@ function createDrinkDetail(type, drinkGoodsType){
 	var p_prev_price = document.createElement('p');
 	var nav_prev = document.createElement('nav');
 	
-	// // prevに空のドリンクを表示
-	// p_prev.setAttribute('class', 'p-drink-main__base');
-	// var p_prev_img = document.createElement('img');
-	// p_prev_img.setAttribute('src', lis_fact_map['images/drink/drink-main-base.png']);
-	// p_prev.appendChild(p_prev_img);
-	// dView.appendChild(p_prev);
-
 	// prev用のタグ作成
 	div_prev.setAttribute('class', 'p-drink-main__drink');
 	div_prev.setAttribute('id', 'drinkView');
@@ -6661,7 +5097,6 @@ function createDrinkDetail(type, drinkGoodsType){
 	var p_num = document.createElement('p');
 	p_num.setAttribute('class', 'num tNum');
 	p_num.setAttribute('id', 'drinkNum');
-	// p_num.textContent = '1';
 	nav_prev.appendChild(p_num);
 	// '-'ボタン
 	var button_dwn = document.createElement('input');
@@ -6765,12 +5200,6 @@ function preView(elem, type) {
 				loopFlg = false;
 			}
 		}
-		// フラッピー商品は名称が長くなる為、改行タグを挿入
-		// if (drink_map[gCode]["nGoodsType"] == 1) {
-		// 	name = name.replace('フラッピー', 'フラッピー<br />');
-		// } else if (drink_map[gCode]["nGoodsType"] == 1) {
-		// 	name = name.replace('Flappy ', 'Flappy<br />');
-		// }
 		document.getElementById('dPreTxt1').innerHTML = name;
 
 		document.getElementById('dPreTxt2').innerHTML = '<strong class="tNum">' + drink_map[gCode]['nUnitCost'].toLocaleString() + '</strong>'+MSG_DRINK_2;
@@ -6823,12 +5252,6 @@ function preView(elem, type) {
 					loopFlg = false;
 				}
 			}
-			// フラッピー商品は名称が長くなる為、改行タグを挿入
-			// if (drink_map[gCode]["nGoodsType"] == 1) {
-			// 	name = name.replace('フラッピー', 'フラッピー<br />');
-			// } else if (drink_map[gCode]["nGoodsType"] == 1) {
-			// 	name = name.replace('Flappy ', 'Flappy<br />');
-			// }
 			document.getElementById('dPreTxt1').innerHTML = name;
 
 			document.getElementById('dPreTxt2').innerHTML = '<strong class="tNum">' + drink_map[gCode]['nUnitCost'].toLocaleString() + '</strong>'+MSG_DRINK_2;
@@ -6872,7 +5295,6 @@ function numUpDwn(act, type) {
 	if (act === 'up') {
 		// 注文数量の上限チェック（卓人数変更処理のチェック用）
 		if (Number(targetElem.textContent) >= person) {
-		// if (type == 4 && Number(targetElem.textContent) >= person) {
 				// イートインメニューかつ、数量加算により上限値以上になった場合、＋ボタンを非活性
 			document.getElementById('dUp').setAttribute('style', 'background-color:#dcdcdc; pointer-events: none;');
 		} else {
@@ -6880,7 +5302,6 @@ function numUpDwn(act, type) {
 			targetElem.textContent = num + 1;
 			// 注文数量の上限チェック（通常のカウントアップのチェック用）
 			if (Number(targetElem.textContent) >= person) {
-			// if (type == 4 && Number(targetElem.textContent) >= person) {
 					// イートインメニューかつ、数量加算により上限値以上になった場合、＋ボタンを非活性
 				document.getElementById('dUp').setAttribute('style', 'background-color:#dcdcdc; pointer-events: none;');
 			}
@@ -6905,8 +5326,6 @@ function numUpDwn(act, type) {
  * @param 商品コード
  */
 function goodsCntUp(type,gcode){
-	// トッピングの数量を合計 9個以下に制限　※廃止
-	// if(tp_total >= 9 && type == 'tp'){return;};
 	// 対象商品の現在選択個数
 	goodsCnt = parseInt(create_dish_map[type][gcode]["quantity"]);
 	if(goodsCnt < create_dish_map[type][gcode]["wSelectEnableCount"]){
@@ -6931,9 +5350,6 @@ function goodsCntUp(type,gcode){
 function goodsCntDown(type,gcode){
 	// 対象商品の現在選択個数
 	goodsCnt = parseInt(create_dish_map[type][gcode]["quantity"]);
-	// if(goodsCnt == 1 && type == 'hb'){
-	// 	// ハンバーグの場合、1以下の個数不可
-	// }else 
 	if(goodsCnt == 1 && create_dish_map[type][gcode]["lock"] == 'on' && type == 'tp'){
 		// ベースに設定されているトッピングの場合、１個以下不可
 	}else if(goodsCnt == 1){
@@ -7062,20 +5478,8 @@ function goodsCheckBoxClick(type,gcode){
 		createorderMadeList(type,null);
 		// 商品表示アニメーション
 		goodsSelectAnimation(type,create_dish_map[type][gcode]["nGoodsCode"]);
-	}else{
-		// // チェックが外された場合
-		// if(create_dish_map[type][gcode]["ChangeLimit"] == 'on'){
-		// 	// 切替制限が有効な場合、解除不可
-		// 	return;
-		// }else{
-		// 	create_dish_map[type][gcode]["quantity"] = 0;
-		// 	smogOnFlg = true;
-		// 	// 一覧項目を再表示
-		// 	createorderMadeList(type,null);
-		// 	// 0になる場合は、商品画像非表示
-		// 	goodsSelectOutAnimation(type,create_dish_map[type][gcode]["nGoodsCode"]);
-		// }
 	}
+
 	outOparationLog("オーダーメイドディッシュ作成画面-商品ボタン(ラジオ-ソース専用),商品種別:"+type+",商品コード:"+gcode);
 }
 
@@ -7160,10 +5564,6 @@ function goodsEditReset(){
 	/// オーダーメイドディッシュ作成画面-ハンバーグ一覧を表示
 	goodsTabReset();
 
-	// 一覧項目を再表示
-//	if(document.getElementById("empty_a") != null){
-//		document.getElementById("empty_a").setAttribute('class',"p-orderSelectBtn1 current");
-//	}
 	createorderMadeList(null,null);
 
 	// 初期選択商品アニメーション
@@ -7175,7 +5575,6 @@ function goodsEditReset(){
  * オーダーメイドディッシュ　選択タブ初期化
  */
 function goodsTabReset(){
-	//$(function (){
 		if((!firstDishMakeFlg && addHpDispTpFlg)){
 			// トッピング一覧を表示
 			document.getElementById('hbMain').setAttribute('class','p-orderSelectMenu__nav');
@@ -7188,7 +5587,6 @@ function goodsTabReset(){
 		document.getElementById('rpMain').setAttribute('class','p-orderSelectMenu__nav');
 		document.getElementById('scMain').setAttribute('class','p-orderSelectMenu__nav');
 		document.getElementById('srMain').setAttribute('class','p-orderSelectMenu__nav');
-	//});
 }
 
 /**
@@ -7205,9 +5603,7 @@ function firstEditIncomplete(){
 		document.getElementById('hbBtn').click();
 		document.getElementById('tpBtn').setAttribute('class','p-orderSelectNav__btn');
 	}
-	// document.getElementById('hbBtn').setAttribute('class','p-orderSelectNav__btn current ordermade-selected');
-	// document.getElementById('hbBtn').click();
-	// document.getElementById('tpBtn').setAttribute('class','p-orderSelectNav__btn');
+
 	document.getElementById('rpBtn').setAttribute('class','p-orderSelectNav__btn');
 	document.getElementById('scBtn').setAttribute('class','p-orderSelectNav__btn');
 	document.getElementById('srBtn').setAttribute('class','p-orderSelectNav__btn');
@@ -7400,47 +5796,8 @@ function chkOrdType() {
 		}
 	}
 
-	// 1皿内のサブ商品選択数が上限値より多い場合、falseを返却
-	// if (ordTypeNum > MaxOrdTypeNum) {
-	// 	// 選択数量上限超えポップアップを表示し、処理終了
-	// 	document.getElementById('s-dialog15').innerHTML = I_1020.replace('{0}',MaxOrdTypeNum);
-	// 	Data.data['scenes']['dialog15'].onEntry();
-	// 	return false;
-	// }
 	return true;
 }
-
-/**
- * 組み合わせ必須チェック処理
- * 　組合せの必須チェックを行い、結果を返却する。
- * @param なし
- * @return boolean: 必須チェックNGの場合"false"を返却、チェックOKの場合"true"を返却
- */
-// function chkRequired() {
-// 	// パスタの組合せ必須チェック
-// 	for (var rpCd in create_dish_map["rp"]) {
-// 		if (rpCd == 26001 || rpCd == 26002) {
-// 			if (create_dish_map["rp"][rpCd]["quantity"] == 1) {
-// 				// パスタが選択されている場合、ソースが選択されているかチェック
-// 				for (var scCd in create_dish_map["sc"]) {
-// 					if (scCd == 92008) {
-// 						// ベースソースの場合はスキップ
-// 						continue;
-// 					}
-// 					if (create_dish_map["sc"][scCd]["quantity"] >= 1) {
-// 						// 選択されている場合"true"を返却
-// 						return true;
-// 					}
-// 				}
-// 				// パスタ選択時にソース未選択の場合、必須チェックNGポップアップを表示し、処理終了
-// 				document.getElementById('s-dialog15').innerHTML = I_1022;
-// 				Data.data['scenes']['dialog15'].onEntry();
-// 				return false;
-// 			}
-// 		}
-// 	}
-// 	return true;
-// }
 
 /**
  * ソースの必須チェック処理
@@ -7566,30 +5923,9 @@ function goodsSelectAnimation(type,goodsNo){
 	// 表示領域取得
 	var ordermade_animation = document.getElementById('ordermade_animation');
 
-	// // ライス・パスタ・カリフラワー用の判定
-	// // 判定結果
-	// var bySmallMenuType = '0';
-	// if(type == "sc" || type == "rp"){
-	// 	// ライス区分の全データ
-	// 	for(var gData in create_dish_map["rp"]){
-	// 		var smallTypeCheckQnt = parseInt(create_dish_map["rp"][gData]["quantity"]);
-	// 		if(smallTypeCheckQnt > 0){
-	// 			// 選択中ライスの場合
-	// 			bySmallMenuType = create_dish_map["rp"][gData]["bySmallMenuType"];
-	// 			break;
-	// 		}
-	// 	}
-	// }
-
 	// 商品画像生成
 	var img = null;
-	// if(contains(layoutData_json,goodsNo+"_pasta") && bySmallMenuType == '1'){
-	// 	img = document.getElementById('ordermade_img_'+goodsNo+'_pasta');
-	// }else if(contains(layoutData_json,goodsNo+"_cauliflower") && bySmallMenuType == '2'){
-	// 	img = document.getElementById('ordermade_img_'+goodsNo+'_cauliflower');
-	// }else {
-		img = document.getElementById('ordermade_img_'+goodsNo);
-	// }
+	img = document.getElementById('ordermade_img_'+goodsNo);
 
 	if(type == "rp"){
 		// ライス切替時、ソース画像の切替が必要なら、切替
@@ -7598,13 +5934,8 @@ function goodsSelectAnimation(type,goodsNo){
 			if(smallTypeCheckQnt > 0){
 				// 選択中ソースの場合
 				var goodsNo_sc = create_dish_map["sc"][rp_gData]["nGoodsCode"];
-				// if(contains(layoutData_json,goodsNo_sc+"_pasta") && bySmallMenuType == '1'){
-				// 	img_sc = document.getElementById('ordermade_img_'+goodsNo_sc+'_pasta');
-				// }else if(contains(layoutData_json,goodsNo_sc+"_cauliflower") && bySmallMenuType == '2'){
-				// 	img_sc = document.getElementById('ordermade_img_'+goodsNo_sc+'_cauliflower');
-				// }else {
-					img_sc = document.getElementById('ordermade_img_'+goodsNo_sc);
-				// }
+				img_sc = document.getElementById('ordermade_img_'+goodsNo_sc);
+
 				if(img_sc != null){
 					// ベースソースの場合、画像がないため処理なし
 					img_sc.setAttribute('class','ordermade_goods3');
@@ -7632,12 +5963,6 @@ function goodsSelectAnimation(type,goodsNo){
 
 	if(type == 'hb' || type == 'tp' || smogOnFlg){
 		// 煙生成
-		// 処理の軽量化のため、smog1なし
-		// var smog1 = document.getElementById('smogEff1');
-		// smog1.setAttribute('style','left:'+Xline+'%;top:'+YLine+'%;height:'+height+'%;width:'+width+'%;z-index:'+'300'+';');
-		// smog1.setAttribute('class','');
-		// smog1.offsetWidth = smog1.offsetWidth;
-		// smog1.setAttribute('class','smogEff1');
 		var smog2 = document.getElementById('smogEff2');
 		smog2.setAttribute('style','left:'+Xline+'%;top:'+YLine+'%;height:'+height+'%;width:'+width+'%;z-index:'+'300'+';');
 		smog2.setAttribute('class','');
@@ -7666,7 +5991,6 @@ function goodsFirstAnimation(){
 			document.getElementById('smogEff1').setAttribute('class','smogEff1');
 			document.getElementById('smogEff2').setAttribute('class','smogEff2');
 		}
-	//});
 		// 初期選択商品の描画
 		// 全商品区分のデータ
 		var cnt = new BigNumber(-5.3);
@@ -7679,27 +6003,8 @@ function goodsFirstAnimation(){
 					if (gData != '92008') {
 						// ハンバーグソースの場合、画像生成スキップ
 						// 商品画像生成
-						// var bySmallMenuType = '0';
 						var img = null;
-						// if(sType == "sc"){
-						// 	// ソース表示時、ライスによって画像を切替
-						// 	for(var rpData in create_dish_map["rp"]){
-						// 		if(create_dish_map["rp"][rpData]["quantity"] >= 1){
-						// 			create_dish_map["rp"][rpData]["quanti"]
-						// 			bySmallMenuType = create_dish_map["rp"][rpData]["bySmallMenuType"];
-						// 			break;
-						// 		}
-						// 	}
-						// 	if(bySmallMenuType == '1'){
-						// 		img = document.getElementById('ordermade_img_'+gData+'_pasta');
-						// 	}else if(bySmallMenuType == '2'){
-						// 		img = document.getElementById('ordermade_img_'+gData+'_cauliflower');
-						// 	}else{
-						// 		img = document.getElementById('ordermade_img_'+gData);
-						// 	}
-						// }else{
 							img = document.getElementById('ordermade_img_'+gData);
-						// }
 						img.setAttribute('class','ordermade_goods_first');
 						img.style.animationDelay = cnt.toString()+'s';
 						cnt = cnt.plus(0.2);
@@ -7715,10 +6020,6 @@ function goodsFirstAnimation(){
  */
 function goodsResetAnimation(){
 	// 表示領域取得
-	// var ordermade_animation = document.getElementById('ordermade_animation');
-	// // 一旦すべて非表示化
-	// ordermade_animation.innerHTML = '';
-	// ordermade_animation.setAttribute('style','left: 6.725%;top: 0%;');
 	goodsAnimationSet();
 
 	// 煙生成
@@ -7745,27 +6046,8 @@ function goodsResetAnimation(){
 				if (gData != '92008') {
 					// ハンバーグソースの場合、画像生成スキップ
 					// 商品画像生成
-					// var bySmallMenuType = '0';
 					var img = null;
-					// if(sType == "sc"){
-					// 	// ソース表示時、ライスによって画像を切替
-					// 	for(var rpData in create_dish_map["rp"]){
-					// 		if(create_dish_map["rp"][rpData]["quantity"] >= 1){
-					// 			create_dish_map["rp"][rpData]["quanti"]
-					// 			bySmallMenuType = create_dish_map["rp"][rpData]["bySmallMenuType"];
-					// 			break;
-					// 		}
-					// 	}
-					// 	if(bySmallMenuType == '1'){
-					// 		img = document.getElementById('ordermade_img_'+gData+'_pasta');
-					// 	}else if(bySmallMenuType == '2'){
-					// 		img = document.getElementById('ordermade_img_'+gData+'_cauliflower');
-					// 	}else{
-					// 		img = document.getElementById('ordermade_img_'+gData);
-					// 	}
-					// }else{
 						img = document.getElementById('ordermade_img_'+gData);
-					// }
 					img.setAttribute('class','ordermade_goods_first');
 					img.style.animationDelay = cnt.toString()+'s';
 					ordermade_animation.appendChild(img);
@@ -7831,35 +6113,12 @@ function goodsEndAnimation(){
 				}
 				if(create_dish_map[sType][gData]["quantity"] >= 1){
 					// 初回商品表示アニメーション
-					// // ライス・パスタ・カリフラワー用の判定
-					// // 判定結果
-					// var bySmallMenuType = '0';
-					// if(sType == "sc"){
-					// 	// ライス区分の全データ
-					// 	for(var gData2 in create_dish_map["rp"]){
-					// 		var smallTypeCheckQnt = parseInt(create_dish_map["rp"][gData2]["quantity"]);
-					// 		if(smallTypeCheckQnt > 0){
-					// 			// 選択中ライスの場合
-					// 			bySmallMenuType = create_dish_map["rp"][gData2]["bySmallMenuType"];
-					// 			break;
-					// 		}
-					// 	}
-					// }
 					// 商品画像生成
 					var img = document.createElement('img');
 					img.setAttribute('id','ordermade_img_'+gData);
 					img.setAttribute('class','ordermade_goods_first');
-					// img.setAttribute('src','images/goods/'+gData+'.png');
 
-					// ライス毎に画像を切り替える設定の場合、対象の画像を表示
-					// if(contains(layoutData_json,gData+"_pasta") && bySmallMenuType == '1'){
-					// 	img.setAttribute('src','images/goods/'+gData+'_pasta.png');
-					// }else if(contains(layoutData_json,gData+"_cauliflower") && bySmallMenuType == '2'){
-					// 	img.setAttribute('src','images/goods/'+gData+'_cauliflower.png');
-					// }else {
-						// img.setAttribute('src','images/goods/'+gData+'.png');
 						img.setAttribute('src',lis_fact_map['images/goods/'+gData+'.png']);
-					// }
 
 					// X軸
 					var Xline = ORDERMADE_X + parseInt((create_dish_map[sType][gData]['nDispPositionX']))+1;
@@ -7912,34 +6171,10 @@ function goodsEndAnimationImg(){
 			}
 			if(create_dish_map[sType][gData]["quantity"] >= 1){
 				// 初回商品表示アニメーション
-				// // ライス・パスタ・カリフラワー用の判定
-				// // 判定結果
-				// var bySmallMenuType = '0';
-				// if(sType == "sc"){
-				// 	// ライス区分の全データ
-				// 	for(var gData2 in create_dish_map["rp"]){
-				// 		var smallTypeCheckQnt = parseInt(create_dish_map["rp"][gData2]["quantity"]);
-				// 		if(smallTypeCheckQnt > 0){
-				// 			// 選択中ライスの場合
-				// 			bySmallMenuType = create_dish_map["rp"][gData2]["bySmallMenuType"];
-				// 			break;
-				// 		}
-				// 	}
-				// }
 				// 商品画像生成
 				var img = document.createElement('img');
-				// img.setAttribute('id','ordermade_img_'+gData);
 				img.setAttribute('class','ordermade_goods3');
-				// img.setAttribute('src','images/goods/'+gData+'.png');
-
-				// ライス毎に画像を切り替える設定の場合、対象の画像を表示
-				// if(contains(layoutData_json,gData+"_pasta") && bySmallMenuType == '1'){
-				// 	img.setAttribute('src','images/goods/'+gData+'_pasta.png');
-				// }else if(contains(layoutData_json,gData+"_cauliflower") && bySmallMenuType == '2'){
-				// 	img.setAttribute('src','images/goods/'+gData+'_cauliflower.png');
-				// }else {
 					img.setAttribute('src',lis_fact_map['images/goods/'+gData+'.png']);
-				// }
 
 				// X軸
 				var Xline = ORDERMADE_X + parseInt((create_dish_map[sType][gData]['nDispPositionX']))+1;
@@ -8026,12 +6261,6 @@ function goodsSelectOutAnimation(type,goodsNo){
 
 	if(type == 'hb' || type == 'tp' || smogOnFlg){
 		// 煙生成
-		// 処理の軽量化のため、smog1なし
-		// var smog1 = document.getElementById('smogEff1');
-		// smog1.setAttribute('style',img.getAttribute('style'));
-		// smog1.setAttribute('class','');
-		// smog1.offsetWidth = smog1.offsetWidth;
-		// smog1.setAttribute('class','smogEff1');
 		var smog2 = document.getElementById('smogEff2');
 		smog2.setAttribute('style',img.getAttribute('style'));
 		smog2.style.animationDelay = '0s';
@@ -8111,22 +6340,6 @@ function goodsAnimationSet(){
  * @param "eatin"or"takeout"or""
  */
 function changeSideBarType(type) {
-    // if(type == "eatin"){
-	// 	document.getElementById('side-default').setAttribute('class','c-navRight bgImg eatin-side');
-	// 	document.getElementById('takeoutSide').setAttribute('class','c-navRight bgImg is-hide');
-	// 	document.getElementById('anotherOrderBtn').setAttribute('href','root/top');
-	// }else if(type == "takeout"){
-	// 	document.getElementById('side-default').setAttribute('class','c-navRight bgImg is-hide eatin-side');
-	// 	document.getElementById('takeoutSide').setAttribute('class','c-navRight bgImg');
-	// 	document.getElementById('anotherOrderBtn').setAttribute('href','root/takeout');
-	// }else if(type == ""){
-	// 	var href = document.getElementById('anotherOrderBtn').getAttribute('href');
-	// 	if(href == 'root/top'){
-	// 		document.getElementById('side-default').setAttribute('class','c-navRight bgImg eatin-side');
-	// 	}else if(href == 'root/takeout'){
-	// 		document.getElementById('takeoutSide').setAttribute('class','c-navRight bgImg');
-	// 	}
-	// }
 }
 
 
@@ -8136,60 +6349,20 @@ function changeSideBarType(type) {
  */
 function changeSideLnk() {
     if(dishEditingFlg){
-		// document.getElementById('c-menu1__btn0').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn0').setAttribute('onclick','touch(); changeSideLnkFunc(1);');
-		// document.getElementById('c-menu1__btn1').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn1').setAttribute('onclick','touch(); changeSideLnkFunc(2);');
-		// document.getElementById('c-menu1__btn2').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn2').setAttribute('onclick','touch(); changeSideLnkFunc(3);');
-		// document.getElementById('c-menu1__btn3').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn3').setAttribute('onclick','touch(); changeSideLnkFunc(4);');
-		// document.getElementById('c-menu1__btn4').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn4').setAttribute('onclick','touch(); changeSideLnkFunc(5);');
-		// document.getElementById('c-menu1__btn5').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu1__btn5').setAttribute('onclick','touch(); changeSideLnkFunc(6);');
 		document.getElementById('footer_1').setAttribute('href','#root/order/order-select');
 		document.getElementById('footer_1').setAttribute('onclick','touch(); changeSideLnkFunc(7);levelCancel();');
 		document.getElementById('footer_2').setAttribute('href','#root/order/order-select');
 		document.getElementById('footer_2').setAttribute('onclick','touch(); changeSideLnkFunc(8);levelCancel();');
 		document.getElementById('footer_3').setAttribute('href','#root/order/order-select');
 		document.getElementById('footer_3').setAttribute('onclick','touch(); changeSideLnkFunc(9);levelCancel();');
-		// document.getElementById('c-menu2__btn1').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu2__btn1').setAttribute('onclick','touch(); changeSideLnkFunc(11);');
-		// document.getElementById('c-menu2__btn2').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu2__btn2').setAttribute('onclick','touch(); changeSideLnkFunc(12);');
-		// document.getElementById('c-menu2__btn3').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu2__btn3').setAttribute('onclick','touch(); changeSideLnkFunc(13);');
-		// document.getElementById('c-menu2__btn4').setAttribute('href','#root/order/order-select');
-		// document.getElementById('c-menu2__btn4').setAttribute('onclick','touch(); changeSideLnkFunc(14);');
 		document.getElementById('dialog_txt').innerHTML = W_2001;
 	}else{
-		// document.getElementById('c-menu1__btn0').setAttribute('href','root/ordermade');
-		// document.getElementById('c-menu1__btn0').setAttribute('onclick',"touch(); basedishcomboMstEdit();ordermadeBaseImage();orderMadeDishBaseSelectReset();orderMadeDishBaseSelectCheck(1);orderMadeDishBaseSelectCheck(2);orderMadeDishBaseSelectCheck(3);orderMadeDishBaseSelectCheck(4);orderMadeDishBaseSelectCheck(5);orderMadeDishBaseSelectCheck(6);");
-		// document.getElementById('c-menu1__btn1').setAttribute('href','javascript:basedishcomboMstEdit();createGeneralDetail(99);void(0)');
-		// document.getElementById('c-menu1__btn1').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu1__btn2').setAttribute('href','javascript:createDrinkDetail(4, 0);void(0)');
-		// document.getElementById('c-menu1__btn2').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu1__btn3').setAttribute('href','javascript:createGeneralDetail(3);void(0)');
-		// document.getElementById('c-menu1__btn3').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu1__btn4').setAttribute('href','javascript:createGeneralDetail(2);void(0)');
-		// document.getElementById('c-menu1__btn4').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu1__btn5').setAttribute('href','root/top');
-		// document.getElementById('c-menu1__btn5').setAttribute('onclick',"touch(); menuBookMstEdit();goodsMstEdit();");
 		document.getElementById('footer_1').setAttribute('href','root/home');
 		document.getElementById('footer_1').setAttribute('onclick','touch();levelCancel();');
 		document.getElementById('footer_2').setAttribute('href','root/cart');
 		document.getElementById('footer_2').setAttribute('onclick','touch(); createTag(1,null);levelCancel();');
 		document.getElementById('footer_3').setAttribute('href','javascript:void(0)');
 		document.getElementById('footer_3').setAttribute('onclick','touch(); getAccountInfoPost(2); menuBookMstEdit(); goodsMstEdit();levelCancel();');
-		// document.getElementById('c-menu2__btn1').setAttribute('href','javascript:createGeneralDetail(8);void(0)');
-		// document.getElementById('c-menu2__btn1').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu2__btn2').setAttribute('href','javascript:createGeneralDetail(9);void(0)');
-		// document.getElementById('c-menu2__btn2').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu2__btn3').setAttribute('href','javascript:createGeneralDetail(3);void(0)');
-		// document.getElementById('c-menu2__btn3').setAttribute('onclick','touch();');
-		// document.getElementById('c-menu2__btn4').setAttribute('href','#root/top');
-		// document.getElementById('c-menu2__btn4').setAttribute('onclick','touch();');
 	}
 }
 
@@ -8200,19 +6373,6 @@ function changeSideLnk() {
 function changeSideLnkFunc(dest) {
 	if(dishEditingFlg){
 		document.getElementById('dialog').setAttribute('href','javascript:void(0)');
-		// if(dest == 1){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); basedishcomboMstEdit();ordermadeBaseImage();orderMadeDishBaseSelectReset();orderMadeDishBaseSelectCheck(1);orderMadeDishBaseSelectCheck(2);orderMadeDishBaseSelectCheck(3);orderMadeDishBaseSelectCheck(4);orderMadeDishBaseSelectCheck(5);orderMadeDishBaseSelectCheck(6);changeSideLnkFuncOk(1);');
-		// }else if(dest == 2){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(2);');
-		// }else if(dest == 3){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(3);');
-		// }else if(dest == 4){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(4);');
-		// }else if(dest == 5){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(5);');
-		// }else if(dest == 6){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(6);');
-		// }else 
 		if(dest == 7){
 			document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(7);');
 		}else if(dest == 8){
@@ -8222,15 +6382,6 @@ function changeSideLnkFunc(dest) {
 		} else {
 			document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(999);');
 		}
-		// else if(dest == 11){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(11);');
-		// }else if(dest == 12){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(12);');
-		// }else if(dest == 13){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(13);');
-		// }else if(dest == 14){
-		// 	document.getElementById('dialog_ok').setAttribute('onclick','touch(); changeSideLnkFuncOk(14);');
-		// }
 		Data.data['scenes']['dialog'].onEntry();
 	}
 }
@@ -8240,26 +6391,6 @@ function changeSideLnkFunc(dest) {
  * @param 遷移先(1:オーダーメイドディッシュ、2:限定、3:ドリンク、4:サイド、5:お子様、6:イートインTOP、7:TOP、8:注文確認、9:注文履歴、10:会計)
  */
 function changeSideLnkFuncOk(dest) {
-
-	// if(dest == 1){
-	// 	document.getElementById('dialog').setAttribute('href','root/ordermade');
-	// 	location.href = '#root/ordermade';
-	// }else if(dest == 2){
-	// 	document.getElementById('dialog').setAttribute('href','#root/kids');
-	// 	basedishcomboMstEdit();
-	// 	createGeneralDetail(99);
-	// }else if(dest == 3){
-	// 	document.getElementById('dialog').setAttribute('href','#root/drinkTopEatIn');
-	// 	createDrinkDetail(4, 0);
-	// }else if(dest == 4){
-	// 	document.getElementById('dialog').setAttribute('href','#root/kids');
-	// 	createGeneralDetail(3);
-	// }else if(dest == 5){
-	// 	document.getElementById('dialog').setAttribute('href','#root/kids');
-	// 	createGeneralDetail(2);
-	// }else if(dest == 6){
-	// 	document.getElementById('dialog').setAttribute('href','root/top');
-	// }else 
 	if(dest == 7){
 		document.getElementById('dialog').setAttribute('href','root/home');
 		location.href = '#root/home';
@@ -8275,19 +6406,6 @@ function changeSideLnkFuncOk(dest) {
 	}else{
 		document.getElementById('dialog').setAttribute('href','javascript:void(0)');
 	}
-	// else if(dest == 11){
-	// 	document.getElementById('dialog').setAttribute('href','javascript:void(0)');
-	// 	createGeneralDetail(8);
-	// }else if(dest == 12){
-	// 	document.getElementById('dialog').setAttribute('href','javascript:void(0)');
-	// 	createGeneralDetail(9);
-	// }else if(dest == 13){
-	// 	document.getElementById('dialog').setAttribute('href','javascript:void(0)');
-	// 	createGeneralDetail(3);
-	// }else if(dest == 14){
-	// 	document.getElementById('dialog').setAttribute('href','#root/top');
-	// 	location.href = '#root/top';
-	// }
 	Data.data['scenes']['dialog'].onExit();
 
 	if(levelOrdMadePop == 1){
@@ -8307,7 +6425,6 @@ function changeSideLnkFuncCancel() {
 	levelOrdMadePop = 0;
 	document.getElementById('dialog').setAttribute('href','javascript:void(0)');
 	Data.data['scenes']['dialog'].onExit();
-	// document.getElementById('dialog').setAttribute('href','root/order/order-select');
 }
 
 /**
@@ -8317,27 +6434,9 @@ function changeSideLnkFuncCancel() {
  */
 function chgOrdMadeLang(lang) {
 	startMeasuringElapsedTime("chgOrdMadeLangStart");
-	// switch (lang) {
-	// 	case 'jp':
-	// 		ORD_MADE_DISHERS_LANG = 'オーダーメイドディッシュ';
-	// 		break;
-	// 	case 'en':
-	// 		ORD_MADE_DISHERS_LANG = 'Order made dish';
-	// 		break;
-	// 	case 'cn':
-	// 		ORD_MADE_DISHERS_LANG = '定制菜';
-	// 		break;
-	// 	case 'kr':
-	// 		ORD_MADE_DISHERS_LANG = '맞춤형 요리';
-	// 		break;				
-	// }
 	for(var line in tmp_m_basedishcombo_map){
 		for(var i in tmp_m_basedishcombo_map[line]){
 			// 言語設定の反映
-			// if (goods_lng_map.get(tmp_m_basedishcombo_map[line][i]["nGoodsCode"]) != null){
-			// 	// goodsType[gt]['cGoodsName'] = goods_lng_map.get(goodsType[gt]['nGoodsCode'])['name'];
-			// 	tmp_m_basedishcombo_map[line][i]["cBaseDishName"] = goods_lng_map.get(tmp_m_basedishcombo_map[line][i]["nGoodsCode"])['name'];
-			// }
 			if(m_goods_map[tmp_m_basedishcombo_map[line][i]["nGoodsCode"]] != null){
 				tmp_m_basedishcombo_map[line][i]["cBaseDishName"] = m_goods_map[tmp_m_basedishcombo_map[line][i]["nGoodsCode"]]["cGoodsName"];
 			}
@@ -8357,9 +6456,6 @@ function chgBfOrdMap() {
 	for (var ord in bf_order_map) {
 		if (bf_order_map[ord]['orderMadeFlg'] === '1') {
 			// 「オーダーメイドディッシュ」の言語設定反映
-			// if(goods_lng_map.get(bf_order_map[ord]['ordBaseCode']) != null){
-			// 	bf_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(bf_order_map[ord]['ordBaseCode'])['name'];
-			// }
 			if(m_goods_map[bf_order_map[ord]['ordBaseCode']] != null){
 				bf_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[bf_order_map[ord]['ordBaseCode']]['cGoodsName'];
 			}
@@ -8370,9 +6466,6 @@ function chgBfOrdMap() {
                     var goodsType = bf_order_map[ord][odish];
                     for (var gt in goodsType) {
 						// 言語設定の反映
-						// if (goods_lng_map.get(goodsType[gt]['nGoodsCode']) != null){
-						// 	goodsType[gt]['cGoodsName'] = goods_lng_map.get(goodsType[gt]['nGoodsCode'])['name'];
-						// }
 						if(m_goods_map[goodsType[gt]['nGoodsCode']] != null){
 							goodsType[gt]['cGoodsName'] = m_goods_map[goodsType[gt]['nGoodsCode']]["cGoodsName"];
 						}
@@ -8381,16 +6474,12 @@ function chgBfOrdMap() {
 			}
 		} else if (bf_order_map[ord]['orderMadeFlg'] === '3') {
 				// 「オーダーメイドディッシュ」の言語設定反映
-				// bf_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(bf_order_map[ord]['ordBaseCode'])['name'];
 				if(m_goods_map[bf_order_map[ord]['ordBaseCode']] != null){
 					bf_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[bf_order_map[ord]['ordBaseCode']]["cGoodsName"];
 				}
 		} else {
 			// オーダーメイドディッシュ以外の場合
 			// 言語設定の反映
-			// if (goods_lng_map.get(bf_order_map[ord]['nGoodsCode']) != null){
-			// 	bf_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(bf_order_map[ord]['nGoodsCode'])['name'];
-			// }
 			if(m_goods_map[bf_order_map[ord]['nGoodsCode']] != null){
 				bf_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[bf_order_map[ord]['nGoodsCode']]["cGoodsName"];
 			}
@@ -8409,10 +6498,6 @@ function chgAfOrdMap() {
 	startMeasuringElapsedTime("chgAfOrdMapStart");
 	for (var ord in af_order_map) {
 		if (af_order_map[ord]['orderMadeFlg'] === '1') {
-			// 「オーダーメイドディッシュ」の言語設定反映
-			// if (goods_lng_map.get(af_order_map[ord]['ordBaseCode']) != null){
-			// 	af_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(af_order_map[ord]['ordBaseCode'])['name'];
-			// }
 			if (m_goods_map[af_order_map[ord]['ordBaseCode']] != null){
 				af_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[af_order_map[ord]['ordBaseCode']]['cGoodsName'];
 			}
@@ -8423,9 +6508,6 @@ function chgAfOrdMap() {
                     var goodsType = af_order_map[ord][odish];
                     for (var gt in goodsType) {
 						// 言語設定の反映
-						// if (goods_lng_map.get(goodsType[gt]['nGoodsCode']) != null){
-						// 	goodsType[gt]['cGoodsName'] = goods_lng_map.get(goodsType[gt]['nGoodsCode'])['name'];
-						// }
 						if (m_goods_map[goodsType[gt]['nGoodsCode']] != null){
 							goodsType[gt]['cGoodsName'] = m_goods_map[goodsType[gt]['nGoodsCode']]['cGoodsName'];
 						}
@@ -8434,16 +6516,12 @@ function chgAfOrdMap() {
 			}
 		} else if (af_order_map[ord]['orderMadeFlg'] === '3') {
 				// 「オーダーメイドディッシュ」の言語設定反映
-				// af_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(af_order_map[ord]['ordBaseCode'])['name'];
 				if (m_goods_map[goodsType[gt]['nGoodsCode']] != null){
 					af_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[goodsType[gt]['nGoodsCode']]['cGoodsName'];
 				}
 		} else {
 			// オーダーメイドディッシュ以外の場合
 			// 言語設定の反映
-			// if (goods_lng_map.get(af_order_map[ord]['nGoodsCode']) != null){
-			// 	af_order_map[ord]['goodsData']['cGoodsName'] = goods_lng_map.get(af_order_map[ord]['nGoodsCode'])['name'];
-			// }
 			if (m_goods_map[af_order_map[ord]['nGoodsCode']] != null){
 				af_order_map[ord]['goodsData']['cGoodsName'] = m_goods_map[af_order_map[ord]['nGoodsCode']]['cGoodsName'];
 			}
@@ -8491,9 +6569,6 @@ function ordEndPop(){
 		}else{
 			document.getElementById('s-dialog11').innerHTML = I_1014.replace('{0}','');
 		}
-	// }else{
-		// document.getElementById('s-dialog11').innerHTML = I_1014;
-	// }
 	Data.data['scenes']['dialog11'].onEntry();
 }
 
@@ -8524,9 +6599,6 @@ function getTableNo() {
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
 			//TODO：卓番号取得失敗エラー
-			// document.getElementById('s-dialog10').innerHTML = E_9002;
-			// Data.data['scenes']['dialog10'].onEntry();
-			// document.getElementById('loading').setAttribute("hidden","hidden");
       additionMessage("[Error     ]", "getTableNo: タイムアウト発生");
 
 
@@ -8565,17 +6637,6 @@ function getTableNo() {
 					fstGetTableNoFlg = true;
 				}
 			}else{
-				//TODO：卓番号取得失敗エラー
-				// document.getElementById('s-dialog10').innerHTML = E_9002;
-				// if(regFlg == '1'){
-				// 	location.href = '#root/takeout';
-				// 	document.getElementById('dialog10').href = '#root/takeout';
-				// }else{
-				// 	location.href = '#root/people';
-				// 	document.getElementById('dialog10').href = '#root/people';
-				// }
-				// Data.data['scenes']['dialog10'].onEntry();
-				// document.getElementById('loading').setAttribute("hidden","hidden");
 				additionMessage("[Error     ]", "getTableNo: エラー発生");
 
 				getTableNo();
@@ -8602,9 +6663,6 @@ function checkIn(people) {
 	setTimeout(function(){
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
-			// 通信エラーポップアップ出力処理
-			// getDataErrorPopUp();
-			// document.getElementById('loading').setAttribute("hidden","hidden");
 			// リトライ処理に変更
 			timeoutRetryOccur("checkIn");
 			checkIn(people);
@@ -8636,18 +6694,10 @@ function checkIn(people) {
 			if(response_json["status"] == 0){
 				// チェックイン後処理
 				// // TOP画面遷移
-				// Data.data['scenes']['root'].changeScene('root/home');
-				// location.href = '#root/home';
-				// document.getElementById('loading').setAttribute("hidden","hidden");
-				// // person = people;
-				// getQuantityLimit();
 				outOparationLog("チェックイン処理終了");
 				stopMeasuringElapsedTime("startcheckIn", "checkIn完了");
 				getStatusAndMenu(false);
 			}else{
-				// 通信エラーポップアップ出力処理
-				// getDataErrorPopUp();
-				// document.getElementById('loading').setAttribute("hidden","hidden");
 				// リトライ処理に変更
 				failureRetryOcuur("checkIn");
 				checkIn(people);
@@ -8681,51 +6731,6 @@ function getQuantityLimit(people) {
 	startMeasuringElapsedTime("getQuantityLimit");
 	getGenericMasterByTextIngetQuantityLimit(people);
 	return;
-	var timeoutFlg = false;
-
-	// タイムアウト処理
-	setTimeout(function(){
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-		}
-	},POST_TIMEOUT_TIME);
-
-	// 非同期通信で注文数量上限値を取得
-  startMeasuringElapsedTime("PostStartIngetQuantityLimit");
-	var response_json_map = {};
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/getGenericMaster.php',
-			data:{
-                'fName': 'ordLimitControl',
-                'uName': ORD_LIMIT_CONTROL_MODE
-            },
-			success:function(data){
-  			stopMeasuringElapsedTime("PostStartIngetQuantityLimit", "getQuantityLimit内getGenericMaster.php:post完了");
-				// 結果をJSON形式で取得
-				response_json_map = JSON.parse(data);
-				data = null;
-			}
-		})
-	).done(function() {
-		if(!(timeoutFlg)){
-			timeoutFlg = true;
-			stopMeasuringElapsedTime("getQuantityLimit", "getQuantityLimit完了");
-			for (var id in response_json_map) {
-				// 注文数量上限値を更新
-				if (ORD_LIMIT_CONTROL_MODE == "quantityLimit") {
-					// 全体の数量制限モードの場合
-					quantityLimit = Number(response_json_map[id]["cValue1"]);
-				} else {
-					// 人数☓係数モードの場合
-					quantityLimit = Number(response_json_map[id]["cValue1"]) * people;
-				}
-			}
-		}else{
-			timeoutFlg = true;
-		}
-	})
 }
 
 /**
@@ -8812,7 +6817,6 @@ function poeple_btn(){
 		return;
 	}
 	manual = true;
-	// getMenuBookMaster(false);
 	touch();
 	ChangeMsgLanguage('jp');
 	// チェックイン
@@ -8881,7 +6885,6 @@ function pushReset2(){
 		if(response_json["status"] == 0 && !(timeoutFlg)){
 			timeoutFlg = true;
 			// 卓ステータス
-			// alert(slipNo +"rw"+response_json["result"]["slipNo"]);
 			tmp_tb_status = response_json["result"]["table_status"];
 			if(tmp_tb_status == 1 && slipNo != response_json["result"]["slipNo"]){
 				// 在卓の場合、バッシング完了処理
@@ -8894,7 +6897,6 @@ function pushReset2(){
 				bashingEnd();
 				outOparationLog("リセットプッシュ通知受信処理終了-空卓判定");
 			}else if(tmp_tb_status == 1 && menubook_cd != response_json["result"]["table_info"]["book_id"]){
-			// }else if(tmp_tb_status == 1){
 				// 在卓の場合、メニューブック切替処理
 				menubook_cd = response_json["result"]["table_info"]["book_id"];
 				changeMenubook(response_json["result"]["table_people"]);
@@ -8923,9 +6925,6 @@ function pushReset2(){
 				uica.onScreen();
 				Data.data['scenes']['offScreen'].onExit();
 				screenOffFlg = false;
-				// location.href = '#root/home';
-				// menubook_cd = response_json["result"]["table_info"]["book_id"];
-				// changeMenubook(response_json["result"]["table_people"]);
 				outOparationLog("リセットプッシュ通知受信処理終了2-画面ON判定");
 			}
 
@@ -8941,7 +6940,6 @@ function pushReset2(){
 		setTimeout(function () {
 			pushResetGoFlg = false;
 		  }, 1000);
-		// pushResetGoFlg = false;
 	})
 }
 
@@ -8985,7 +6983,6 @@ function getStatusAndMenu(pushMenubookChangeFlg){
 			menubook_cd = response_json["result"]["table_info"]["book_id"];
 			outOparationLog("最新メニューブックコード取得完了");
 			changeMenubookLayout(menubook_cd);
-//getMenuBookMaster(pushMenubookChangeFlg);
       retryPromise(getAccountKbnCheckIn, 1000)
 			.then((result) => {
 				$(function(){
@@ -8998,7 +6995,6 @@ function getStatusAndMenu(pushMenubookChangeFlg){
 		}else{
 			timeoutFlg = true;
 			// ステータス要求失敗の場合
-			// getDataErrorPopUp();
 			getStatusAndMenu(pushMenubookChangeFlg);
 			return;
 		}
@@ -9037,8 +7033,6 @@ function bashingEnd(){
 	// 卓番号の取得
 	document.getElementById('selectPeople').textContent = 1;
 	getTableNo();
-	// 最新メニューの取得・商品名言語設定の初期化(jp)
-	//getMenuBookMaster(false);
 	// 人数入力画面へ遷移
 	$('.c-menu1').addClass('is-hide');
     $('.c-menu4').addClass('is-hide');
@@ -9061,12 +7055,6 @@ function changeMenubook(people){
 	// 最新メニューの取得
 	getMenuBookMaster(true);
 
-	// // メニューブック切替ポップアップ表示
-	// document.getElementById('s-dialog12').innerHTML = I_1015;
-	// Data.data['scenes']['dialog12'].onEntry();
-
-	// // TOP画面へ遷移
-	// location.href = '#root/home';
 }
 
 /**
@@ -9116,24 +7104,6 @@ function enOrderdataReset(){
 	niceChoiceFlg = false;
 	// 限定メニュー
 	limit_goods_map = [];
-	// // ドリンクメニュー
-	// drink_goods_map = [];
-	// // サイドメニュー
-	// side_goods_map = [];
-	// // お子様メニュー
-	// child_goods_map = [];
-	// // テイクアウトディッシュメニュー
-	// takeout_dish_goods_map = [];
-	// // テイクアウトドリンクメニュー
-	// takeout_drink_goods_map = [];
-	// // テイクアウトサイドメニュー
-	// takeout_side_goods_map = [];
-	// // モーニングメニュー
-	// morning_goods_map = [];
-	// // モーニングメニュー(サラダ付)
-	// morning_goods_map2 = [];
-	// 商品マスタ 言語設定
-	// goods_lng_map = new Map();
     create_order_map = {};   // 一時格納用map
     ordCrtTtlPrice = 0;  // 注文カート内の合計金額
 	ordPostFlg = false; // 確定ボタン押下処理中フラグ
@@ -9185,18 +7155,13 @@ function enOrderdataReset(){
 	// チェックイン中フラグリセット
 	checkInFlg = false;
 
-	// // サイド・フッターバーをリセット
-	// $('.c-menu1').removeClass('is-hide');
-	// $('.c-menu4').removeClass('is-hide');
 }
 
 var pushGoodsStatusChangeFlg = false;
 var pushGoodsStatusChangeTest = '{"command": "ITEM_STATUS_NOTIFY","req_time": "2012/05/01 02:11:01","option": {"items": [{"item_id": "101","item_status": 2},{"item_id": "90000101","item_status": 2}]}}';
 var pushGoodsStatusChangeTest2 = '{"command": "ITEM_STATUS_NOTIFY","req_time": "2012/05/01 02:11:01","option": {"items": [{"item_id": "101","item_status": 0},{"item_id": "90000101","item_status": 0}]}}';
 var pushGoodsStatusChangeTest3 = '{"command": "ITEM_STATUS_NOTIFY","req_time": "2012/05/01 02:11:01","option": {"items": [{"item_id": "101","item_status": 6},{"item_id": "90000101","item_status": 6}]}}';
-//pushGoodsStatusChange(pushGoodsStatusChangeTest);
-//pushGoodsStatusChange(pushGoodsStatusChangeTest2);
-//pushGoodsStatusChange(pushGoodsStatusChangeTest3);
+
 /**
  * 商品ステータス通知処理
  * 　商品ステータスに変更があった場合、画面へ即時反映する。
@@ -9429,19 +7394,6 @@ function pushGoodsStatusChange(pushJson){
 		}
 	}
 	
-	// if(contains(location.href,"root/drinkTopEatIn")){
-	// 	// ソフトドリンクの反映
-	// 	createDrinkDetail(4, 0);
-	// }
-	// if(contains(location.href,"root/drinkTopTakeOut")){
-	// 	// ソフトドリンクの反映
-	// 	createDrinkDetail(6, 0);
-	// }
-	// if(contains(location.href,"root/top") && menubook_cd == '2'){
-	// 	// ソフトドリンクの反映
-	// 	createDrinkDetail(4, 0);
-	// }
-
 	// オーダーメイドディッシュ画面のチェック
 	if(contains(location.href,"root/order/order-select") && !contains(location.href,"root/order/order-select/choice")){
 
@@ -9971,61 +7923,6 @@ function pushGoodsStatusChange(pushJson){
 	}
 }
 
-// テスト用json
-// var req_json = '{"command": "TABLE_PEOPLE_NOTIFY", "req_time": "2020/03/06 14:00:00", "option": {"table_people": "6"}}';
-
-/**
- * 卓人数通知処理
- * 　PUSH通知により最新の卓人数を受け取り、
- * 　卓人数情報を更新する。
- * 　※jsonサンプル '{"command": "TABLE_PEOPLE_NOTIFY", "req_time": "2020/03/06 14:00:00", "option": {"table_people": "6"}}'
- * @param リクエスト(json)
- * @returns response_json：JSON形式のレスポンス情報
- * 　　　　　　　　　　　{
- * 　　　　　　　　　　　　status：処理ステータス
- * 　　　　　　　　　　　　res_time：実行日時(yyyy/MM/dd HH:mm:ss)
- * 　　　　　　　　　　　　description：処理メッセージ
- * 　　　　　　　　　　　}
- */
-// function pushTablePeopleNotify(request_json) {
-// 	var response_json = {};
-// 	// 配列化
-// 	var request_map = JSON.parse(request_json);
-// 	if (request_map['command'] == 'TABLE_PEOPLE_NOTIFY') {
-// 		// 機能が卓人数通知であれば処理実行
-// 		if (request_map['option']['table_people'] != null
-// 			|| request_map['option']['table_people'] != '') {
-// 			// 卓人数変更
-// 			person = request_map['option']['table_people'];
-
-// 			// 結果返却
-// 			response_json['status'] = '0';
-// 			response_json['res_time'] = request_map['req_time'];
-// 			response_json['description'] = '正常終了';
-// 			return response_json;
-// 		} else {
-// 			// 卓人数が未設定の場合、エラーを返却する
-// 			response_json['status'] = '-1002';
-// 			response_json['res_time'] = request_map['req_time'];
-// 			response_json['description'] = 'パラメーターエラー';
-// 			return response_json;
-// 		}
-// 	} else {
-// 		// 機能が卓人数通知以外の場合、エラーを返却する
-// 		response_json['status'] = '-1002';
-// 		response_json['res_time'] = request_map['req_time'];
-// 		response_json['description'] = 'パラメーターエラー';
-// 		return response_json;
-// 	}	
-// }
-
-// setTimeout(function () {
-// 	pushReset();
-//   }, 55000);
-//   setTimeout(function () {
-// 	pushReset();
-//   }, 65000);
-
 function getOrdMadePic(){
       html2canvas(document.getElementById('tgtimg'),{
         onrendered: function(canvas){
@@ -10233,31 +8130,7 @@ function selectPepleBtn(people) {
  */
 function changeMenubookLayout(mbCd) {
 	if(mbCd == '1'){
-		// 通常メニューの場合
-		// メニューボタン
-		// document.getElementById('s-top-default').classList.remove('is-hide');
-		// document.getElementById('s-top-morning').classList.add('is-hide');
-
-		// サイドリンク
-		// document.getElementById('side-default').hidden = '';
-		// document.getElementById('side-morning').hidden = 'hidden';
-
-		// // TOP画面ボタン
-		// document.getElementById('s-home-default').classList.remove('is-hide');
-		// document.getElementById('s-home-morning').classList.add('is-hide');
 	}else if(mbCd == '2'){
-		// モーニングメニューの場合
-		// メニューボタン
-		// document.getElementById('s-top-default').classList.add('is-hide');
-		// document.getElementById('s-top-morning').classList.remove('is-hide');
-
-		// サイドリンク
-		// document.getElementById('side-default').hidden = 'hidden';
-		// document.getElementById('side-morning').hidden = '';
-
-		// // TOP画面ボタン
-		// document.getElementById('s-home-default').classList.add('is-hide');
-		// document.getElementById('s-home-morning').classList.remove('is-hide');
 	}
 }
 
@@ -10724,38 +8597,6 @@ function withGoodsFix(){
 	// 数量情報保持タグを全取得
 	var qntTags = document.getElementById("withgoods_data").getElementsByClassName("withgoods_cnt");
 
-	// var addTotal = 0;
-	// // 選択商品の上限チェック
-	// for(var i = 0;i < qntTags.length; i++){
-	// 	var goodsId = qntTags[i].id.replace("withgoods_","");
-	// 	var choiceCnt = parseInt(qntTags[i].textContent);
-	// 	addTotal = addTotal + choiceCnt;
-	// 	for (var ord in bf_order_map) {
-    //         if (bf_order_map[ord]['nGoodsCode'] == goodsId) {
-    //             // 商品毎の数量上限チェック
-    //             if (parseInt(bf_order_map[ord]['quantity'])+choiceCnt > person) {
-	// 				// 選択数量上限超えポップアップを表示し、処理終了
-	// 				document.getElementById('s-dialog14').innerHTML = I_1018_2.replace('{0}',person).replace('{1}',bf_order_map[ord]['goodsData']['cGoodsName']);
-	// 				Data.data['scenes']['dialog14'].onEntry();
-	// 				return;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// // 合計商品数の上限チェック
-	// var cartTotal = 0;
-	// for (var ord in bf_order_map) {
-	// 	cartTotal = cartTotal + parseInt(bf_order_map[ord]['quantity']);
-	// }
-	// if(cartTotal + addTotal > quantityLimit){
-	// 	// 上限以上の場合
-	// 	// 選択数量上限超えポップアップを表示し、処理終了
-	// 	document.getElementById('s-dialog14').innerHTML = I_1018.replace('{0}',quantityLimit);
-	// 	Data.data['scenes']['dialog14'].onEntry();
-	// 	return;
-	// }
-
 	// カート追加
 	for(var i = 0;i < qntTags.length; i++){
 		if(qntTags[i].textContent != "0"){
@@ -10879,12 +8720,6 @@ function otherGoodsOrdBtn(){
 function outOparationLog(opeMsg){
 	// 一度操作ログ送信を止めるため即return
 	return true;
-
-	// 現在日時取得
-	var currentDateTimeStr = makeCurrentDateTimeStr();
-	const msg = currentDateTimeStr + opeMsg;
-
-	setOperationLogList(msg);
 }
 
 function setOperationLogList(message) {
@@ -10989,11 +8824,6 @@ function ordermadeGoodsPrevGUI(goodsCd,getXline,getYLine,getHeight,getWidth,getZ
 				create_dish_map[type][goodsCd]["nWidthRate"] = getWidth;
 				create_dish_map[type][goodsCd]["nZline"] = getZLine;
 
-				// reset_dish_map[type][goodsCd]["nDispPositionX"] = getXline;
-				// reset_dish_map[type][goodsCd]["nDispPositionY"] = getYLine;
-				// reset_dish_map[type][goodsCd]["nHeightRate"] = getHeight;
-				// reset_dish_map[type][goodsCd]["nWidthRate"] = getWidth;
-				// reset_dish_map[type][goodsCd]["nZline"] = getZLine;
 				break;
 			}
 		}
