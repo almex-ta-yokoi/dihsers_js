@@ -2809,7 +2809,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 		if(!(pushMenubookChangeFlg)){
 			ChangeMsgLanguage('jp');
 			changeLanguage('jp');
-			changeAllergenLanguage('jp');
 
 			// レイアウトデータのプリロード
 			layoutDataPreload();
@@ -2852,7 +2851,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 				//レジ側と同一言語に切替
 				ChangeMsgLanguage(regLang);
 				changeLanguage(regLang);
-				changeAllergenLanguage(regLang);
 
 				// プログレスアイコン解除
 				document.getElementById('getData_blank_disp').setAttribute("class","s-offScreen2 jBtn is-hide");
@@ -2887,7 +2885,6 @@ function editAllTableData(pushMenubookChangeFlg) {
 		}else{
 			ChangeMsgLanguage(MSG_CSS_LANG);
 			changeLanguage(MSG_CSS_LANG);
-			changeAllergenLanguage(MSG_CSS_LANG);
 			if(regFlg == '1'){
 				// レジ起動時
 				// テイクアウトTOP画面遷移
@@ -2985,14 +2982,12 @@ function editAllTableData(pushMenubookChangeFlg) {
 				//レジ側と同一言語に切替
 				ChangeMsgLanguage(regLang);
 				changeLanguage(regLang);
-				changeAllergenLanguage(regLang);
 				// メニューデータ整理
 				menuBookMstEdit();
 				goodsMstEdit();
 			} else{
 				ChangeMsgLanguage('jp');
 				changeLanguage('jp');
-				changeAllergenLanguage('jp');
 
 				// メニューデータ整理
 				menuBookMstEdit();
@@ -3168,7 +3163,6 @@ function changeLangBtn(lang) {
 		outOparationLog("言語切替開始,切替言語:"+lang);
 		ChangeMsgLanguage(lang);
 		changeLanguage(lang);
-		changeAllergenLanguage(lang);
 		editLayoutInfo();
 		layoutDataPreload();
 		outOparationLog("言語切替終了,切替言語:"+lang);
@@ -6756,7 +6750,6 @@ function createAllergenTable() {
 	target.textContent = null;
 
 	// // アレルギー一覧の中身を作成
-	// for (var name in aller_map) {
 	for(var mg in m_goods_map){
 		if(m_goods_map[mg]["byAllergyDetailDispFlg"] != "1"){
 			// 一覧表示対象外データの場合スキップ
@@ -9479,7 +9472,6 @@ function editAllTableDataStartup() {
 
 		ChangeMsgLanguage('jp');
 		changeLanguage('jp');
-		changeAllergenLanguage('jp');
 
 		// レイアウトデータのプリロード
 		layoutDataPreload();
