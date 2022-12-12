@@ -173,15 +173,19 @@ function additionMessagesForBaseDishCombo(messages) {
 	}
 }
 
-// チェックイン開始
+/**
+ * チェックイン処理開始時刻マーク
+ */
 function recordStartCheckIn() {
 	const prefix = "[Start     ]";
 	const message = "チェックイン開始";
 	additionMessage(prefix, message);
 }
 
-// チェックイン終了
-// 人数入力ボタン押下後～ホームシーン遷移完了時間計測
+/**
+ * 人数入力ボタン押下後～ホームシーン遷移完了時間計測
+ * @returns
+ */
 function recordStopCheckIn() {
 	try {
   	performance.measure("stopCheckIn", "touchPeopleBtn");
@@ -209,6 +213,7 @@ function recordStopCheckIn() {
 }
 
 // リトライ発生(タイムアウトにより) 時間計測は行わない。リトライ発生のみログファイルに書き込む
+// 廃止予定
 function timeoutRetryOccur(occurrencePlace) {
 	const currentDateTimeStr = makeCurrentDateTimeStr();
 	const message = occurrencePlace + ":タイムオーバーによりリトライ";
@@ -217,6 +222,7 @@ function timeoutRetryOccur(occurrencePlace) {
 }
 
 // リトライ発生(データ取得失敗により) 時間計測は行わない。リトライ発生のみログファイルに書き込む
+// 廃止予定
 function failureRetryOcuur(occurrencePlace) {
 	const currentDateTimeStr = makeCurrentDateTimeStr();
 	const message = occurrencePlace + ":データ取得失敗によりリトライ";
@@ -224,7 +230,10 @@ function failureRetryOcuur(occurrencePlace) {
 	setElapsedTimeList(sentence);
 }
 
-// 計測ログを配列に格納 
+/**
+ * サーバとの通信を減らすため書き込み内容を溜め込んでから書き込む
+ * @param {string} message: ログ書き込み内容
+ */
 function setElapsedTimeList(message) {
 	elapsedTimeList.push(message);
 
@@ -238,22 +247,18 @@ function setElapsedTimeList(message) {
 	}
 }
 
-// ログファイル書き込み
+/**
+ * ログファイルに書き込みたい内容をサーバに送信
+ * @param {string} opeMsg: ログ書き込み内容
+ */
 function writingElapsedTime(opeMsg){
-	$.when(
-		$.ajax({
-			type:'POST',
-			url:PHP_EN_ROOT_FOLDER + '/measuringElapsedTime.php',
-			data:{
-				table_no:regFlg == '1' ? "reg":table_no,
-				androidID:androidID,
-				opeMsg:opeMsg
-			},
-			success:function(data){
-				// POST送信終了
-			}
-		})
-	).done(function() {
+  var elapsedTimeUrl = PHP_EN_ROOT_FOLDER + '/measuringElapsedTime.php';
+  var formData = new FormData();
 
-	})
+  var tableNo = (regFlg == '1' ? "reg":table_no);
+  formData.append('table_no', tableNo);
+  formData.append('andoroidID', androidID);
+  formData.append('opeMsg', opeMsg);
+
+  postMessage(formData, elapsedTimeUrl)
 }
