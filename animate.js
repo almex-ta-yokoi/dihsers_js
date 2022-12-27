@@ -40,24 +40,9 @@ function getParam(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function init() {
-  // $(function (){
-  //   starAnimation();
-  // });
-  // $(window).on('resize', setLayout);
-  // setLayout();
-}
-
 function setLayout() {
-  var itemW = 0;
-  var itemH = 0;
-  // if(regFlg == '1'){
-  //   itemW = 1920;
-  //   itemH = 1080;
-  // }else{
-    itemW = 1280;
-    itemH = 800;
-  // }
+  var itemW = 1280;
+  var itemH = 800;
   const winW = $(window).width();
   const winH = $(window).height();
   const scaleW = winW / itemW;
@@ -65,14 +50,8 @@ function setLayout() {
   const fixScale = Math.min(scaleW, scaleH);
   const setW = Math.min(winW, itemW * fixScale);
   const setH = Math.min(winH, itemH * fixScale);
-  // if(regFlg == '1'){
-  //   $('#dom_overlay_container').css({
-  //     'transform': 'scale(' + fixScale*1.5 + ',' + fixScale*1.35 + ')'
-  //   });
-  // }else{
-    $('#dom_overlay_container').css({
-      'transform': 'scale(' + fixScale + ',' + fixScale + ')'
-    });
-  // }
+  $('#dom_overlay_container').css({
+    'transform': 'scale(' + fixScale + ',' + fixScale + ')'
+  });
   $('#main_area').width(setW).height(setH);
 }

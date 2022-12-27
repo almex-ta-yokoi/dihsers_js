@@ -33,11 +33,6 @@ function chkSoldOut() {
 	setTimeout(function(){
 		if(!(timeoutFlg)){
 			timeoutFlg = true;
-			// // 通信エラーポップアップ出力処理
-            // getDataErrorPopUp();
-            // ordPostFlg = false;
-            // // プログレスバー解除
-            // document.getElementById('loading').setAttribute("hidden","hidden");
             chkSoldOut();
             return;
 		}
@@ -53,11 +48,6 @@ function chkSoldOut() {
                 result = data;
 				if((result === false || result === '') && !(timeoutFlg)){
                     timeoutFlg = true;
-					// // 通信エラーポップアップ出力処理
-                    // getDataErrorPopUp();
-                    // ordPostFlg = false;
-                    // // プログレスバー解除
-                    // document.getElementById('loading').setAttribute("hidden","hidden");
                     chkSoldOut();
 					return;
 				}
@@ -213,8 +203,6 @@ var misoSorpFlg = false;
  * 　なし
  */
 function ordConf() {
-    // if(ordConfFlg){return;}
-    // ordConfFlg = true;
     softDrinkFlg = false;
     misoSorpFlg = false;
     var cnt = 0;
@@ -254,33 +242,15 @@ function ordConf() {
                     }
 
                     data_item_id[cnt] = bf_order_map[key]["nGoodsCode"];
-                    //data_item_count[cnt] = bf_order_map[key]["quantity"];
-                    // if(bf_order_map[key]["orderMadeFlg"] == '0'){
-                    //     data_item_count[cnt] = parseInt(bf_order_map[key]["quantity"]);
-                    // }else{
-                        data_item_count[cnt] = 1;
-                    // }
+                    data_item_count[cnt] = 1;
                     data_item_payment_type[cnt] = '0';
 
-                    // // ご一緒にいかがですか商品情報追加処理
-                    // data_with_item_count[cnt] = bf_order_map[key]["withGoodsCnt"] != null ? bf_order_map[key]["withGoodsCnt"]:0;
-
-                    // data_with_item_count[cnt] = 0;
-                    // if(bf_order_map[key]["withGoodsCnt"] != null){
-                    //     data_with_item_count[cnt] = i+1 <= bf_order_map[key]["withGoodsCnt"] ? 1:0;
-                    // }
-
-                // if(bf_order_map[key]["orderMadeFlg"] != '0'){
-                //     for (var i = 0; i < parseInt(bf_order_map[key]["quantity"]); i++) {
                     // テイクアウトディッシュの場合
                     if(bf_order_map[key]["orderMadeFlg"] == '3'){
                         data_item_id[cnt] = bf_order_map[key]["ordBaseCode"];
 
                         data_sub_item_id[cnt] = {};
                         data_sub_count[cnt] = {};
-
-                        // data_sub_item_id[cnt][ORDERMADE_SUBMENU_CD] = [];
-                        // data_sub_count[cnt][ORDERMADE_SUBMENU_CD] = [];
 
                         var onceLineFlg = false;
                         if(bf_order_map[key]['addHbCnt'] == '0' || bf_order_map[key]['selectRiceCd'] == null){
@@ -300,8 +270,6 @@ function ordConf() {
                                 data_sub_item_id[cnt][ORDERMADE_SUBMENU_CD].push(bf_order_map[key]['addHbCd']);
                                 data_sub_count[cnt][ORDERMADE_SUBMENU_CD].push(bf_order_map[key]['addHbCnt']);
                             }
-                            // data_sub_item_id[cnt][ORDERMADE_SUBMENU_CD].push(bf_order_map[key]['addHbCd']);
-                            // data_sub_count[cnt][ORDERMADE_SUBMENU_CD].push(bf_order_map[key]['addHbCnt']);
                         }
                         // ライス
                         if(bf_order_map[key]['selectRiceCd'] != null){
@@ -318,10 +286,8 @@ function ordConf() {
                     
                     // オーダーメイドの場合
                     if(bf_order_map[key]["orderMadeFlg"] == '1'){
-                        // data_item_id[cnt] = ORDERMADE_BASE_CD;
                         data_item_id[cnt] = bf_order_map[key]["ordBaseCode"];
 
-                        // var subCnt = 0;
                         data_sub_item_id[cnt] = {};
                         data_sub_count[cnt] = {};
 
@@ -381,13 +347,8 @@ function ordConf() {
                     }
                     cnt = cnt + 1;
                 }
-                // } else {
-                //     cnt = cnt + 1;
-                // }
             }
         }
-        // console.log(data_sub_item_id);console.log(data_sub_count);
-        // return;
         // レジ袋の追加
         // ハンバーグ用
         // 枚数表示タグ取得
@@ -419,14 +380,6 @@ function ordConf() {
         }
         // 注文POST送信
         sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_sub_item_id,data_sub_count);
-    } else {
-        // // 品切商品があった場合、確認ポップアップ表示
-        // // 注文失敗ダイアログ表示
-        // document.getElementById('s-dialog7').innerHTML = I_1002.replace("{0}", soldOutGoods);
-        // Data.data['scenes']['dialog7'].onEntry();
-        // ordPostFlg = false;
-        // // プログレスバー解除
-        // document.getElementById('loading').setAttribute("hidden","hidden");
     }
 }
 
@@ -436,7 +389,6 @@ function ordConf() {
  */
 function sendOrderMadeImgPost() {
     if(guiFlg == '1'){return;}
-    // if(window.navigator.userAgent == "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"){return;}
     var tmp_map = [];
     var numList = [];
     var cnt = 0;
@@ -538,34 +490,10 @@ function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_
         ordPostFlg = false;
         return;
     }
-    // sendOrderMadeImgPost();
     // 非同期通信でPOSTを送信
     var response_json = null;
-    // console.log("androidID");
-    // console.log(androidID);
-    // console.log("request_id");
-    // console.log(getCurrentTime());
-    // console.log("item_id");
-    // console.log(data_item_id);
-    // console.log("item_count");
-    // console.log(data_item_count);
-    // console.log("item_payment_type");
-    // console.log(data_item_payment_type);
-    // console.log("sub_item_id");
-    // console.log(data_sub_item_id);
-    // console.log("sub_count");
-    // console.log(data_sub_count);
-
-    // console.log("data_with_item_count");
-    // console.log(data_with_item_count);
-    // console.log("with_disp_option");
-    // console.log(with_disp_option);
 
     var timeoutFlg = false;
-
-    // console.log(androidID);
-    // console.log(termid);
-    // console.log(slipinfo);
 
 	// タイムアウト処理
 	setTimeout(function(){
@@ -578,7 +506,6 @@ function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_
             // プログレスバー解除
             document.getElementById('loading').setAttribute("hidden","hidden");
             ordPostFlg = false;
-            // ordConfFlg = false;
 		}
 	},POST_TIMEOUT_TIME);
 
@@ -659,18 +586,6 @@ function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_
                     }
 
                     var findFlg = false;
-                    // if(targetBfkey != null){
-                    //     //注文確認詳細行を特定
-                    //     for (var afkey in af_order_map) {
-                    //         if(af_order_map[afkey]["nGoodsCode"] == bf_order_map[targetBfkey]["nGoodsCode"] && af_order_map[afkey]["goodsData"]["cGoodsName"] == bf_order_map[targetBfkey]["goodsData"]["cGoodsName"]){
-                    //             af_order_map[afkey]["quantity"] = parseInt(af_order_map[afkey]["quantity"])+parseInt(bf_order_map[targetBfkey]["quantity"]);
-                    //             findFlg = true;
-                    //         }
-                    //     }
-                    // }
-                    // if((!findFlg) && targetBfkey != null){
-                    //     af_order_map[targetBfkey] = JSON.parse(JSON.stringify(bf_order_map[targetBfkey]));
-                    // }
                     delete bf_order_map[targetBfkey];
                 }
 
@@ -682,7 +597,6 @@ function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_
                     //注文確認画面をリフレッシュ
                     createTag(1,null);
                     // 注文失敗ダイアログ表示
-                    // document.getElementById('s-dialog2').innerHTML = "over_item_list:"+JSON.stringify(response_json["result"]["over_item_list"])+"failure_item_list:"+JSON.stringify(response_json["result"]["failure_item_list"])+"empty_item_list:"+JSON.stringify(response_json["result"]["empty_item_list"]);
                     Data.data['scenes']['dialog2'].onEntry();
 
                 }else{
@@ -729,28 +643,15 @@ function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_
                     with_goods_ope_map = [];
                 }
             }
-            // document.getElementById('ord_fix').setAttribute('onclick','ordFix();');
             // プログレスバー解除
             document.getElementById('loading').setAttribute("hidden","hidden");
             ordPostFlg = false;
 
             outOparationLog("注文確定処理終了");
-            // ordConfFlg = false;
         }else{
             timeoutFlg = true;
         }
 	})
-}
-
-/**
- * 注文エラープッシュ通知処理
- * @param リクエスト
- * 　※サンプル {"command": "ORDER_FAIL_NOTIFY","req_time": "2012/09/26 10:01:15","option": {"order_num": "A-001","is_basket_clear": true,"success_item_list": [{"item_id": "item_005","item_count": 1,"item_payment_type": 1,"sub_list": [{"sub_id": "sub_menu_001","sub_item": {"item_id": "sub_item_001","item_count": 1}}]}],"failure_item_list": [{"item_id": "item_006","item_count": 4,"item_payment_type": 0,"sub_list": [{"sub_id": "sub_menu_001","sub_item": {"item_id": "sub_item_001","item_count": 1}}]}],"empty_item_list": [{"item_id": "item_007","item_count": 3,"item_payment_type": 0,"sub_list": [{"sub_id": "sub_menu_002","sub_item": {"item_id": "sub_item_002","item_count": 1}}]}]}}
- */
-function pushOrdErr(request){
-    // // 注文失敗ダイアログ表示
-    // document.getElementById('dialog2').setAttribute('href','#root/home');
-    // Data.data['scenes']['dialog2'].onEntry();
 }
 
 var postParent = function(info){
@@ -771,12 +672,6 @@ var notifySlip = function(slipinfo){
 function cartTakeoutCheck(){
     var takeoutFlg = false;
     for (var oc in bf_order_map) {
-        // if(bf_order_map[oc]["goodsData"]["byMenuType"] == '5'
-        // || bf_order_map[oc]["goodsData"]["byMenuType"] == '6'
-        // || bf_order_map[oc]["goodsData"]["byMenuType"] == '7'){
-        //     takeoutFlg = true;
-        //     break;
-        // }
         if(all_m_goods_map[bf_order_map[oc]["goodsData"]["nGoodsCode"]]["byTakeoutDefaultType"] == "2"){
             takeoutFlg = true;
             break;
@@ -789,8 +684,6 @@ function cartTakeoutCheck(){
  * ご一緒にいかがですか商品情報送信処理
  */
 function withGoodsPost(tmp_with_goods_ope_map){
-    // var timeoutFlg = false;
-    
     // インサートデータフォーマット
     var sendFormat = "((select CASE WHEN COUNT(nWithGoodsSelectCode) = 0 THEN 1 ELSE MAX(nWithGoodsSelectCode) + 1 END from t_withgoodsselect as tmp)"
     +",'{nTableCode}',{nManageDate},cast('{tOperationTime}' as datetime),{nMenuBookCode},{nParent},{nGoodsCode},{nUnitCost},{nSelectCount},{nCount},cast('{tCreateTime}' as datetime),cast('{tUpdateTime}' as datetime),'en_order','en_order')";
@@ -823,19 +716,8 @@ function withGoodsPost(tmp_with_goods_ope_map){
 
     // 対象０件の場合、終了
     if(sendData == ""){
-        // timeoutFlg = true;
         return;
     }
-
-	// // タイムアウト処理
-	// setTimeout(function(){
-	// 	if(!(timeoutFlg)){
-	// 		timeoutFlg = true;
-	// 		// リトライ処理に変更
-	// 		withGoodsPost(tmp_with_goods_ope_map);
-	// 		return false;
-	// 	}
-    // },POST_TIMEOUT_TIME);
 
 	// 非同期通信で情報を取得
 	$.when(
@@ -849,12 +731,6 @@ function withGoodsPost(tmp_with_goods_ope_map){
 				// メニューブックマスタ取得
 				response_json = data;
 				data = null;
-				// if(response_json == false || contains(response_json,CONNECT_ERR_MSG) && !(timeoutFlg)){
-				// 	timeoutFlg = true;
-				// 	// リトライ処理に変更
-				// 	withGoodsPost(tmp_with_goods_ope_map);
-				// 	return false;
-				// }
 			}
 		})
 	).done(function() {
