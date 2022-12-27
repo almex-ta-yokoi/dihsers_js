@@ -150,16 +150,29 @@ var goods_lng_map = new Map();
 var general_lng_map = [];
 
 // php実行結果データ格納先
-var m_menubook_json = null;
-var m_goods_json = null;
-var m_nggoodsgroup_json = null;
-var m_basedishcombo_json = null;
+var menubook_obj = null;
+var goods_obj = null;
+var allergy_obj = null;
+var ng_goods_group_obj = null;
+var with_goods_obj = null;
+var layout_info_obj = null;
+var sidelink_info_obj = null;
+var basedishcombo_obj = null;
+var layout_obj = null;
+var submenu_obj = null;
+var generic_obj = null;
+var alcl_check_obj = null;
+var plasic_bag_obj = null;
+var add_hb_disp_flg_obj = null;
+var reg_menubook_obj = null;
+var quantity_limit_obj = null;
+var time_cash_register_obj = null;
+var time_table_obj = null;
+var file_path_obj = null;
+
 var layoutData_json = null;
 var ordmadeImg_json = null;
 var m_tax_json = null;
-var submenuData_json = null;
-var regMenuBookCd_json = null;
-var plasticBagFunc_json = null;
 var addHbDispFlg_json = null;
 var with_goods_json = null;
 var generic_lng_json = null;
@@ -2493,12 +2506,10 @@ function editAllTableData(pushMenubookChangeFlg) {
 		outOparationLog("取得データ整理処理開始");
 		startMeasuringElapsedTime("tmp_m_menubook_map");
 		// 配列化
-		tmp_m_menubook_map = JSON.parse(m_menubook_json);
-		// m_menubook_json = null;
+		tmp_m_menubook_map = menubook_obj;
 			
 		// 配列化
-		tmp_m_goods_map = JSON.parse(m_goods_json);
-		// m_goods_json = null;
+		tmp_m_goods_map = goods_obj;
 
 		// 配列化
 		if(regFlg != '1'){
@@ -2510,18 +2521,15 @@ function editAllTableData(pushMenubookChangeFlg) {
 
 		if(!(regFlg == '1')){
 			// 配列化
-			tmp_m_basedishcombo_map = JSON.parse(m_basedishcombo_json);
+			tmp_m_basedishcombo_map = basedishcombo_obj;
 
 			logging_tmp_basedishcombo_map("editAllTableData", tmp_m_basedishcombo_map)
-			// m_basedishcombo_json = null;
 
 			// 配列化
-			m_nggoodsgroup_map = JSON.parse(m_nggoodsgroup_json);
-			// m_nggoodsgroup_json = null;
+			m_nggoodsgroup_map = ng_goods_group_obj;
 		}
 
-		submenuData_map = JSON.parse(submenuData_json);
-		// submenuData_json = null;
+		submenuData_map = submenu_obj;
 
 		generic_alclFstOnly_map = JSON.parse(generic_alclFstOnly_json);
 
@@ -2565,8 +2573,8 @@ function editAllTableData(pushMenubookChangeFlg) {
 		stopMeasuringElapsedTime("generic_all_mapCheck", "generic_all_map判定完了");
 
 		startMeasuringElapsedTime("plasticBagFunc_map");
-		var plasticBagFunc_map = JSON.parse(plasticBagFunc_json);
-		// plasticBagFunc_json = null;
+		var plasticBagFunc_map = plasic_bag_obj;
+
 		for(var line in plasticBagFunc_map){
 			plasticBagFlg_tto = plasticBagFunc_map[line]["cValue1"];
 			plasticBagFlg_reg = plasticBagFunc_map[line]["cValue2"];
@@ -2576,8 +2584,8 @@ function editAllTableData(pushMenubookChangeFlg) {
 
 		if(regFlg == '1'){
 			startMeasuringElapsedTime("regMenuBookCd_map");
-			regMenuBookCd_map = JSON.parse(regMenuBookCd_json);
-			// regMenuBookCd_json = null;
+			regMenuBookCd_map = reg_menubook_obj;
+
 			for(var line in regMenuBookCd_map){
 				// 精算機起動用メニューブックコード
 				menubook_cd = regMenuBookCd_map[line]["cValue1"];
@@ -8045,7 +8053,7 @@ function postErrLog(e) {
 	// POST送信
 	var response_json = null;
 	$.when(
-		$.ajax({
+		$.ajax(menubook_obj{
 			type:'POST',
 			url:PHP_EN_ROOT_FOLDER + '/postErrLog.php',
 			data:{
@@ -8631,274 +8639,9 @@ function ordermadeGoodsPrevGUI(goodsCd,getXline,getYLine,getHeight,getWidth,getZ
  * 暫定対策用, 起動時にphpをpost,変数にjsonを格納しておく
  */
 
-var jqueryParams = new Map(); // $ajaxParam格納
-var acquiredData = new Map(); // api取得したデータ格納用
 var response_json_map_interim = {}; // quantityLimit用
 var geneTimeForCashRegister = ""; // レジ起動用
 var geneTimeForTable = "";
-
-/**
- * @param {string} apiName 呼び出すapi名
- */
-function makeJqueryParam(apiName) {
-  var api = PHP_EN_ROOT_FOLDER + '/' + apiName + '.php';
-	var jqueryParam = {
-		type: "POST",
-	  url:api,
-	};
-  return jqueryParam;
-}
-
-function makeJqueryParamForGenericMaster(parameter) {
-  var api = PHP_EN_ROOT_FOLDER + '/getGenericMaster.php';
-	var jqueryParam = {
-    type:'POST',
-	  url:api,
-		data: {
-			'fName': parameter.get('fName'),
-			'uName': parameter.get('uName')
-		},
-  };
-
-  return jqueryParam;
-}
-
-function makeAllParam() {
-	var parameter = new Map();
-  jqueryParams.set("getMenuBookMaster", makeJqueryParam("getMenuBookMaster"));
-	jqueryParams.set("getGoodsMaster", makeJqueryParam("getGoodsMaster"));
-  jqueryParams.set("getGenericMasterAll", makeJqueryParam("getGenericMasterAll"));
-  jqueryParams.set("getAllergyMaster", makeJqueryParam("getAllergyMaster"));
-  jqueryParams.set("getNgGoodsGroup", makeJqueryParam("getNgGoodsGroup"));
-  jqueryParams.set("getWithGoods", makeJqueryParam("getWithGoods"));
-  jqueryParams.set("getLayoutInfo", makeJqueryParam("getLayoutInfo"));
-  jqueryParams.set("getSideLinkInfo", makeJqueryParam("getSideLinkInfo"));
-  jqueryParams.set("getBasedishComboMaster", makeJqueryParam("getBasedishComboMaster"));
-  jqueryParams.set("getLayoutData", makeJqueryParam("getLayoutData"));
-  jqueryParams.set("getSubmenuData", makeJqueryParam("getSubmenuData"));
-  
-	parameter.set('fName', 'alcolFstOnly'),
-	parameter.set('uName', 'onOffFlg'),
-  jqueryParams.set("getAlclCheck", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'plasticBag'),
-	parameter.set('uName', 'onOffFlg'),
-  jqueryParams.set("getPlasticBagFunc", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'addHbDisp'),
-	parameter.set('uName', 'topping'),
-  jqueryParams.set("getAddHbDispTopping", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'regMenuBookCode'),
-	parameter.set('uName', 'menuBookCode'),
-  jqueryParams.set("getRegMenuBookCd", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'ordLimitControl'),
-	parameter.set('uName', ORD_LIMIT_CONTROL_MODE),
-  jqueryParams.set("getQuantityLimit", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'regTimeOut'),
-	parameter.set('uName', 'setTime'),
-  jqueryParams.set("getSetTimeForCashRegister", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'noOpeChk'),
-	parameter.set('uName', 'setTime'),
-  jqueryParams.set("getSetTimeForTable", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-
-	parameter.set('fName', 'noOpeChk'),
-	parameter.set('uName', 'filePath'),
-  jqueryParams.set("getFilePath", makeJqueryParamForGenericMaster(parameter));
-  parameter.clear();
-}
-
-/**
- * @param {string} apiName 呼び出すapi名
- * @param {Map} parameter {"fname": fname, "uName": uName}
- */
-function getJson() {
-	var awaitGetJson = new $.Deferred;
-	startMeasuringElapsedTime("getJson");
-
-  makeAllParam();
-
-  $.when(
-    $.ajax(jqueryParams.get("getMenuBookMaster"))
-    .then(
-      function (data) {
-        acquiredData.delete("getMenuBookMaster");
-        acquiredData.set("getMenuBookMaster", data);
-      }
-    ),
-		$.ajax(jqueryParams.get("getGoodsMaster"))
-		.then(
-			function (data) {
-        acquiredData.delete("getGoodsMaster");
-        acquiredData.set("getGoodsMaster", data);
-			}
-		),
-    $.ajax(jqueryParams.get("getGenericMasterAll"))
-    .then(
-      function (data) {
-        acquiredData.delete("getGenericMasterAll");
-        acquiredData.set("getGenericMasterAll", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getAlclCheck"))
-    .then(
-      function (data) {
-        acquiredData.delete("getAlclCheck");
-        acquiredData.set("getAlclCheck", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getAllergyMaster"))
-    .then(
-      function (data) {
-        acquiredData.delete("getAllergyMaster");
-        acquiredData.set("getAllergyMaster", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getNgGoodsGroup"))
-    .then(
-      function (data) {
-        acquiredData.delete("getNgGoodsGroup");
-        acquiredData.set("getNgGoodsGroup", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getWithGoods"))
-    .then(
-      function (data) {
-        acquiredData.delete("getWithGoods");
-        acquiredData.set("getWithGoods", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getLayoutInfo"))
-    .then(
-      function (data) {
-        acquiredData.delete("getLayoutInfo");
-        acquiredData.set("getLayoutInfo", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getSideLinkInfo"))
-    .then(
-      function (data) {
-        acquiredData.delete("getSideLinkInfo");
-        acquiredData.set("getSideLinkInfo", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getBasedishComboMaster"))
-    .then(
-      function (data) {
-        acquiredData.delete("getBasedishComboMaster");
-        acquiredData.set("getBasedishComboMaster", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getLayoutData"))
-    .then(
-      function (data) {
-        acquiredData.delete("getLayoutData");
-        acquiredData.set("getLayoutData", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getPlasticBagFunc"))
-    .then(
-      function (data) {
-        acquiredData.delete("getPlasticBagFunc");
-        acquiredData.set("getPlasticBagFunc", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getAddHbDispTopping"))
-    .then(
-      function (data) {
-        acquiredData.delete("getAddHbDispTopping");
-        acquiredData.set("getAddHbDispTopping", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getSubmenuData"))
-    .then(
-      function (data) {
-        acquiredData.delete("getSubmenuData");
-        acquiredData.set("getSubmenuData", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getRegMenuBookCd"))
-    .then(
-      function (data) {
-        acquiredData.delete("getRegMenuBookCd");
-        acquiredData.set("getRegMenuBookCd", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getQuantityLimit"))
-    .then(
-      function (data) {
-        acquiredData.delete("getQuantityLimit");
-        acquiredData.set("getQuantityLimit", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getSetTimeForCashRegister"))
-    .then(
-      function (data) {
-        acquiredData.delete("getSetTimeForCashRegister");
-        acquiredData.set("getSetTimeForCashRegister", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getSetTimeForTable"))
-    .then(
-      function (data) {
-        acquiredData.delete("getSetTimeForTable");
-        acquiredData.set("getSetTimeForTable", data);
-      }
-    ),
-    $.ajax(jqueryParams.get("getFilePath"))
-    .then(
-      function (data) {
-        acquiredData.delete("getFilePath");
-        acquiredData.set("getFilePath", data);
-      }
-    ),
-  ).done(function(){
-    setJson();
-  	stopMeasuringElapsedTime("getJson", "起動時暫定処置json取得完了");
-		awaitGetJson.resolve();
-  }).fail(function(){
-		additionMessage("[Retry     ]", "API取得失敗リトライ");
-		awaitGetJson.reject();
-	})
-
-	return awaitGetJson.promise();
-}
-
-function setJson() {
-  m_menubook_json = acquiredData.get("getMenuBookMaster");
-	m_goods_json = acquiredData.get("getGoodsMaster");
-  generic_all_json= acquiredData.get("getGenericMasterAll");
-  generic_alclFstOnly_json = acquiredData.get("getAlclCheck");
-  allergy_json = acquiredData.get("getAllergyMaster");
-  m_nggoodsgroup_json = acquiredData.get("getNgGoodsGroup");
-  m_with_goods_json = acquiredData.get("getWithGoods");
-  layoutInfo_json = acquiredData.get("getLayoutInfo");
-  sideLinkInfo_json = acquiredData.get("getSideLinkInfo");
-  m_basedishcombo_json = acquiredData.get("getBasedishComboMaster");
-  layoutData_json = acquiredData.get("getLayoutData");
-  plasticBagFunc_json = acquiredData.get("getPlasticBagFunc");
-  addHbDispFlg_json = acquiredData.get("getAddHbDispTopping");
-  submenuData_json = acquiredData.get("getSubmenuData");
-  regMenuBookCd_json = acquiredData.get("getRegMenuBookCd");
-  var quantity_limit_json = acquiredData.get("getQuantityLimit");
-  response_json_map_interim = JSON.parse(quantity_limit_json);
-  geneTimeForCashRegister = acquiredData.get("getSetTimeForCashRegister");
-  geneTimeForTable = acquiredData.get("getSetTimeForTable");
-  geneFilePath = acquiredData.get("getFilePath");
-  acquiredData.clear();
-
-	// ExtractGenericMaster();
-}
 
 function retryPromise(func, delay) {
 	var funcName = func.name;
@@ -8968,23 +8711,23 @@ function editAllTableDataStartup() {
 	try{
 		outOparationLog("取得データ整理処理開始");
 		// 配列化
-		tmp_m_menubook_map = JSON.parse(m_menubook_json);
+		tmp_m_menubook_map = menubook_obj;
 			
 		// 配列化
-		tmp_m_goods_map = JSON.parse(m_goods_json);
+		tmp_m_goods_map = goods_obj;
 
 		with_goods_map = JSON.parse(m_with_goods_json);
 
 		addHpDispTpFlg = JSON.parse(addHbDispFlg_json)["1"]["cValue1"] == "1" ? true:false;
 
 		// 配列化
-		tmp_m_basedishcombo_map = JSON.parse(m_basedishcombo_json);
+		tmp_m_basedishcombo_map = basedishcombo_obj;
 		logging_tmp_basedishcombo_map("editAllTableDataStartup", tmp_m_basedishcombo_map)
 
 		// 配列化
-		m_nggoodsgroup_map = JSON.parse(m_nggoodsgroup_json);
+		m_nggoodsgroup_map = ng_goods_group_obj;
 
-		submenuData_map = JSON.parse(submenuData_json);
+		submenuData_map = submenu_obj;
 
 		generic_alclFstOnly_map = JSON.parse(generic_alclFstOnly_json);
 
@@ -9024,7 +8767,7 @@ function editAllTableDataStartup() {
 			}
 		}
 
-		var plasticBagFunc_map = JSON.parse(plasticBagFunc_json);
+		var plasticBagFunc_map = plasic_bag_obj;
 		for(var line in plasticBagFunc_map){
 			plasticBagFlg_tto = plasticBagFunc_map[line]["cValue1"];
 			plasticBagFlg_reg = plasticBagFunc_map[line]["cValue2"];
@@ -9113,39 +8856,6 @@ function getAccountKbnCheckIn() {
 	return awaitGetAccountKbn.promise();
 }
 
-
-function updateGoodsStatus() {
-	var awaitUpdateGoodsStatus = new $.Deferred;
-	startMeasuringElapsedTime("updateGoodsStatus");
-
-  makeAllParam();
-
-	$.when(
-		$.ajax(jqueryParams.get("getGoodsMaster"))
-			.then(
-				function (data) {
-        	acquiredData.delete("getGoodsMaster");
-        	acquiredData.set("getGoodsMaster", data);
-			}
-		),
-	).done(function(){
-		m_goods_json = acquiredData.get("getGoodsMaster");
-		acquiredData.clear();
-		tmp_m_goods_map = JSON.parse(m_goods_json);
-
-		stopMeasuringElapsedTime("updateGoodsStatus", "チェックイン時商品ステータス更新処理完了");
-		// メニューブックマスタのデータ整理
-		menuBookMstEdit();
-
-		// 商品マスタのデータ整理
-		goodsMstEdit();
-		awaitUpdateGoodsStatus.resolve();
-	}).fail(function(){
-		awaitUpdateGoodsStatus.reject();
-	})
-
-	return awaitUpdateGoodsStatus.promise();
-}
 
 nHierarchyCodeToastList = {
 	cheese: 105901,
