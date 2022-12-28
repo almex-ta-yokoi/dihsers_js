@@ -565,7 +565,6 @@ function getMsgLanguage(){
 			ChangeMsgLanguage('jp');
 			getLayoutDataFst();
 			firstTimeoutFlg = false;
-			init();
 			window.removeEventListener('error',loadError);
 			window.removeEventListener('onerror',loadError);
 		}else{
