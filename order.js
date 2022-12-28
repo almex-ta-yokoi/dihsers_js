@@ -7,9 +7,9 @@ if(regFlg == '1'){
 }else{
 	// オーダ端末起動の場合
 	//androidID = 'f44cdd20974f4de3';
-	//androidID = 'e2895de3f847f456';
+	androidID = 'e2895de3f847f456';
 	//androidID = 'e2895dajifgjaifjaie3f847f456';
-	androidID = WuicTermInfo.getAndroidId();
+	//androidID = WuicTermInfo.getAndroidId();
 }
 // alert(window.navigator.appVersion);
 
@@ -20,8 +20,6 @@ var tmp_m_menubook_map = [];
 var m_menubook_map = [];
 
 // ------オーダーメイドディッシュ用データ------
-// 組み合わせ不可商品マスタ
-//var m_nggoodsgroup_map = [];
 
 // 商品マスタ
 var m_goods_map = [];
