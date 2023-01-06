@@ -5,7 +5,7 @@ function editLayoutInfo() {
 
   initLayout();
 
-  var dispTypeMap = makeDispTypeMap();
+  var detailDispTypeMap = makeDetailDispTypeMap();
   //var nTypeMap = {}; ↑に変更
   // 初回さんドリンクバーフラグ
   var fstSidekinFlg = true;
@@ -21,7 +21,8 @@ function editLayoutInfo() {
     } else if(info["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == "1")){
       // 人数入力画面の場合　※アプリ起動時の初回のみ　※設定ツール起動の場合は毎回処理
       var peopleDisp = document.getElementById("peopleDisp");
-      if(info["nDispType"] == 3){
+      var nDispType = info["nDispType"];
+      if (nDispType == DISP_TYPE_MAP['image']) {
         // 画像の場合
         var new_img = document.createElement("img");
         // 選択中言語の画像をセット
@@ -55,7 +56,7 @@ function editLayoutInfo() {
 
         peopleDisp.appendChild(new_img);
 
-      } else if(info["nDispType"] == 4){
+      } else if (nDispType == DISP_TYPE_MAP['back_ground_image']) {
         // 背景の場合
         var new_bg_img = document.createElement("img");
         new_bg_img.id = "levelItem_"+info["nDispId"]+"_"+info["nItemId"];
@@ -66,16 +67,16 @@ function editLayoutInfo() {
         peopleDisp.appendChild(new_bg_img);
       }
 
-    } else if(info["nDispId"] == ORD_FIX_DISP_ID){
+    } else if (info["nDispId"] == ORD_FIX_DISP_ID) {
       // 注文確定画面の場合
-      if(info["nDispType"] == 4){
+      if (nDispType == DISP_TYPE_MAP['back_ground_image']) {
         // 背景の場合
         var new_bg_img = document.getElementById("ord-fix-bg");
         new_bg_img.style.width = "100%";
         new_bg_img.style.height = "100%";
         //new_bg_img.style.backgroundImage = "url(./"+lis_fact_map[generateLangImgPath(info["cDefaultImagePath"])]+")";
         new_bg_img.style.backgroundImage = lis_fact_map[generateLangImgPath(info["cDefaultImagePath"])];
-      } else if(info["nDispType"] == 10){
+      } else if (nDispType == DISP_TYPE_MAP['transition_disp']) {
         // 遷移先候補画面の場合
         ordFixAfDispList = [];
         for(var f1 = 1;f1 <= 5;f1++){
@@ -103,17 +104,19 @@ function editLayoutInfo() {
         // 既にある場合、取得
         homeDisp = tgtElem;
       }
-      if(info["nDispType"] == 1 || info["nDispType"] == 5){
+      if (nDispType == DISP_TYPE_MAP['button']
+        || nDispType == DISP_TYPE_MAP['goods']) {
         // ボタンの場合
         var new_btn = document.createElement("a");
         // メモ：階層遷移ボタンにも品切れ&準備中表示が必要となったため、判定名称を商品コード⇒階層マスタキー値に変更
         new_btn.classList.add("level_so_"+info["nHierarchyCode"]);
 
-        if(info["nDispType"] == 5){
+        if(nDispType == DISP_TYPE_MAP['goods']){
           new_btn.classList.add("level_goods");
           new_btn.setAttribute("goodsCd",info["nGoodsCode"]);
         }
-        if(info["nDispType"] == 1){
+
+        if(nDispType == DISP_TYPE_MAP['button']){
           new_btn.classList.add("level_move");
           new_btn.setAttribute("goodsCd",info["nSoldOutIcon_condition_cd"]);
           new_btn.setAttribute("goodsType",info["nSoldOutIcon_condition_type"]);
@@ -136,9 +139,10 @@ function editLayoutInfo() {
         styleAf.appendChild(document.createTextNode(cssAf));
         document.getElementsByTagName('head')[0].appendChild(styleAf);
 
-        if(info["nDispType"] == 1){
+        if(nDispType == DISP_TYPE_MAP['button']){
           // 画面切替ボタンの場合
-          if(nTypeMap[info["nMenuBookCode"]+"_"+info["nAfDispId"]] == 5){
+          var detailDispType = detailDispTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]];
+          if(detailDispType == DETAIL_DISP_TYPE_MAP['hierarchy']){
             // 画面遷移ボタンの場合
             new_btn.setAttribute("onclick","cngLevel = "+info['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(300); checkHierarchyCode("+info['nHierarchyCode']+");");
 
@@ -173,8 +177,7 @@ function editLayoutInfo() {
               new_btn.classList.add("comsoon");
               new_btn.classList.add("off");
             }
-          } else if(nTypeMap[info["nMenuBookCode"]+"_"+info["nAfDispId"]] != 5
-          && nTypeMap[info["nMenuBookCode"]+"_"+info["nAfDispId"]] != 0){
+          } else {
             // 商品詳細表示ボタンの場合
             new_btn.setAttribute("onclick","touch();levelDispGoodsDetail("+info['nAfDispId']+");");
             // "準備中です"表示判定実施
@@ -209,7 +212,7 @@ function editLayoutInfo() {
               new_btn.classList.add("off");
             }
           }
-        } else if(info["nDispType"] == 5) {
+        } else if(nDispType == DISP_TYPE_MAP['goods']) {
           // 商品ボタンの場合
           // オーダーメイド化設定のチェック
           var ordmadeGoodsFlg = false;
@@ -313,21 +316,7 @@ function editLayoutInfo() {
         new_btn.id = "levelItem_"+info["nDispId"]+"_"+info["nItemId"];
         new_btn.classList.add("levelItems");
 
-        if(info["nDispFlg"] == 0){
-          // 表示無効の場合
-          new_btn.style.display = "none";
-        } else {
-          new_btn.style.display = "block";
-        }
-
-        // 高さ
-        new_btn.style.height = info["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-        // 幅
-        new_btn.style.width = info["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-        // Y軸
-        new_btn.style.top = info["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-        // X軸
-        new_btn.style.left = info["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+        setBtnStyle(new_btn, info);
 
         if(info["cDefaultImagePath"] != null && info["cDefaultImagePath"] != ""){
 
@@ -342,7 +331,7 @@ function editLayoutInfo() {
         var size = parseInt(info["nDispSize"+MSG_CSS_LANG]) * 0.01;
         new_btn.setAttribute("size",size);
 
-        if(info["nDispType"] == 1) {
+        if(nDispType == DISP_TYPE_MAP['button']) {
           // 画面遷移ボタンの場合
           // ボタン通常時サイズ
           var dfcss = '#'+"levelItem_"+info["nDispId"]+"_"+info["nItemId"]+'{transform: scale('+size+');transition-duration: .3s}';
@@ -357,9 +346,7 @@ function editLayoutInfo() {
           document.getElementsByTagName('head')[0].appendChild(style);
         }
 
-        // 透過率
-        new_btn.style.opacity = info["dOpacity"];
-      } else if(info["nDispType"] == 2){
+      } else if(nDispType == DETAIL_DISP_TYPE_MAP['text']){
         // テキスト文言の場合
         var new_txt = document.createElement("div");
         // 選択中言語のテキストをセット
@@ -406,7 +393,7 @@ function editLayoutInfo() {
         new_txt.style.left = info["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
         homeDisp.appendChild(new_txt);
 
-      } else if(info["nDispType"] == 3){
+      } else if(nDispType == DISP_TYPE_MAP['image']){
         // 画像の場合
         var new_img = document.createElement("img");
         // 選択中言語の画像をセット
@@ -440,7 +427,7 @@ function editLayoutInfo() {
 
         homeDisp.appendChild(new_img);
 
-      } else if(info["nDispType"] == 4){
+      } else if(nDispType == DISP_TYPE_MAP['back_ground_image']){
         // 背景の場合
         var new_bg_img = document.createElement("img");
         new_bg_img.id = "levelItem_"+info["nDispId"]+"_"+info["nItemId"];
@@ -472,13 +459,13 @@ function editLayoutInfo() {
           new_bg_img.src = lis_fact_map[generateLangImgPath(info["cDefaultImagePath"])];
         }
         homeDisp.appendChild(new_bg_img);
-      } else if(info["nDispType"] == 6){
+      } else if(nDispType == DISP_TYPE_MAP[66]){
         // サイドリンクバーの場合
         for(var sm in sideLinkInfo_map){
           if(sideLinkInfo_map[sm]["nMenuBookCode"] == menubook_cd
           && sideLinkInfo_map[sm]["nSideLinkId"] == info["nSideLinkId"]){
             // 画面に紐づくサイドリンクバー情報行の場合
-            if(sideLinkInfo_map[sm]["nAfDispId"] == 0 && nTypeMap[sideLinkInfo_map[sm]["nAfDispId"]] != 5){
+            if(sideLinkInfo_map[sm]["nAfDispId"] == 0 && detailDispTypeMap[sideLinkInfo_map[sm]["nAfDispId"]] != 5){
               // 遷移先なし(タイトル画像等)の場合
               var titleLine = document.createElement("h2");
               titleLine.classList.add("sidelinkKey_"+sideLinkInfo_map[sm]["nItemId"]);
@@ -497,7 +484,7 @@ function editLayoutInfo() {
               } else {
                 sideLinkBar.appendChild(titleLine);
               }
-            } else if(nTypeMap[sideLinkInfo_map[sm]["nMenuBookCode"]+"_"+sideLinkInfo_map[sm]["nAfDispId"]] == 5){
+            } else if(detailDispTypeMap[sideLinkInfo_map[sm]["nMenuBookCode"]+"_"+sideLinkInfo_map[sm]["nAfDispId"]] == 5){
               // 遷移先　階層画面の場合
               var levelLine = document.createElement("a");
               levelLine.classList.add("sidelinkKey_"+sideLinkInfo_map[sm]["nItemId"]);
@@ -551,7 +538,7 @@ function editLayoutInfo() {
               }
 
               sideLinkBar.appendChild(levelLine);
-            } else if(nTypeMap[sideLinkInfo_map[sm]["nMenuBookCode"]+"_"+sideLinkInfo_map[sm]["nAfDispId"]] != 5){
+            } else if(detailDispTypeMap[sideLinkInfo_map[sm]["nMenuBookCode"]+"_"+sideLinkInfo_map[sm]["nAfDispId"]] != 5){
               // 遷移先　商品詳細画面の場合
               var levelLine = document.createElement("a");
               levelLine.classList.add("sidelinkKey_"+sideLinkInfo_map[sm]["nItemId"]);
@@ -644,19 +631,30 @@ function initLayout() {
   }
 }
 
-function makeDispTypeMap() {
+function makeDetailDispTypeMap() {
   // 画面種別のマップを作成
-  var dispTypeMap = {};
+  var detailDispTypeMap = {};
   for(var line in layoutInfo_map){
-    if(layoutInfo_map[line]["nDetailDispType"] != 0){
+    var nDetailDispType = layoutInfo_map[line]["nDetailDispType"]
+    if(nDetailDispType != 0){
       // 遷移設定可能画面の場合
-      dispTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nDispId"]] = layoutInfo_map[line]["nDetailDispType"];
+      detailDispTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nDispId"]] = nDetailDispType;
     }
   }
   // オーダーメイドディッシュのパターンを追加セット
-  dispTypeMap[99999] = 1;
+  detailDispTypeMap[99999] = 1;
 
-  return dispTypeMap;
+  /*
+  nDetailDispType:
+  0: デフォルト⇒意味のない値
+  1: オーダーメイドメニュー
+  2: 汎用メニュー
+  3: ドリンクメニュー
+  4: 汎用メニュー(限定)
+  5: 階層画面
+  */
+
+  return detailDispTypeMap;
 }
 
 function editHomeDispLayout(layoutInfo) {
@@ -680,18 +678,20 @@ function editHomeDispLayout(layoutInfo) {
     // 他
     // TOP画面タグ取得
     var homeDisp = document.getElementById("levelItem_10000_1");
-    if (layoutInfo["nDispType"] == 1 || layoutInfo["nDispType"] == 5) {
+    var nDispType = layoutInfo["nDispType"];
+    if (nDispType == DISP_TYPE_MAP['button'] 
+      || nDispType == DISP_TYPE_MAP['goods']) {
       // ボタンの場合
       var new_btn = document.createElement("a");
       // メモ：階層遷移ボタンにも品切れ&準備中表示が必要となったため、判定名称を商品コード⇒階層マスタキー値に変更
       new_btn.classList.add("level_so_"+layoutInfo["nHierarchyCode"]);
   
-      if (layoutInfo["nDispType"] == 5) {
+      if (nDispType == DISP_TYPE_MAP['goods']) {
         new_btn.classList.add("level_goods");
         new_btn.setAttribute("goodsCd",layoutInfo["nGoodsCode"]);
       }
 
-      if (layoutInfo["nDispType"] == 1) {
+      if (nDispType == DISP_TYPE_MAP['button']) {
         new_btn.classList.add("level_move");
         new_btn.setAttribute("goodsCd",layoutInfo["nSoldOutIcon_condition_cd"]);
         new_btn.setAttribute("goodsType",layoutInfo["nSoldOutIcon_condition_type"]);
@@ -716,9 +716,11 @@ function editHomeDispLayout(layoutInfo) {
       styleAf.appendChild(document.createTextNode(cssAf));
       document.getElementsByTagName('head')[0].appendChild(styleAf);
   
-      if (layoutInfo["nDispType"] == 1) {
+      if (nDispType == DISP_TYPE_MAP['button']) {
+        new_btn.classList.add("level_move");
         // 画面切替ボタンの場合
-        if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] == 5){
+        var detailDispType = detailDispTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]];
+        if(detailDispType == DETAIL_DISP_TYPE_MAP['hierarchy']){
           // 画面遷移ボタンの場合
           new_btn.setAttribute("onclick","startMeasuringElapsedTime("+layoutInfo['nHierarchyCode']+ "); cngLevel = "+layoutInfo['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(300); checkHierarchyCode("+layoutInfo['nHierarchyCode']+");");
           // "準備中です"表示判定実施
@@ -754,9 +756,7 @@ function editHomeDispLayout(layoutInfo) {
                 new_btn.classList.add("off");
               }
               // allGoodsMenutypes
-          } else if (nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 5
-            && nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 0)
-          {
+          } else {
             // 商品詳細表示ボタンの場合
             new_btn.setAttribute("onclick","touch();levelDispGoodsDetail("+layoutInfo['nAfDispId']+");");
             // "準備中です"表示判定実施
@@ -797,7 +797,7 @@ function editHomeDispLayout(layoutInfo) {
             new_btn.classList.add("off");
           }
         }
-      } else if (layoutInfo["nDispType"] == 5) {
+      } else if (nDispType == DISP_TYPE_MAP['goods']) {
         // 商品ボタンの場合
         // オーダーメイド化設定のチェック
         var ordmadeGoodsFlg = false;
@@ -812,7 +812,7 @@ function editHomeDispLayout(layoutInfo) {
           }
         }
 
-        if (layoutInfo["nDispType"] == 5 
+        if (nDispType == DISP_TYPE_MAP['goods']
           && (m_goods_map[layoutInfo["nGoodsCode"]] == null 
             || m_goods_map[layoutInfo["nGoodsCode"]]["bySalesStatusType"] == '2'))
         {
@@ -905,22 +905,8 @@ function editHomeDispLayout(layoutInfo) {
         new_btn.style.zIndex = 1;
         new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
         new_btn.classList.add("levelItems");
-  
-        if (layoutInfo["nDispFlg"] == 0) {
-          // 表示無効の場合
-          new_btn.style.display = "none";
-        } else {
-          new_btn.style.display = "block";
-        }
-  
-        // 高さ
-        new_btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-        // 幅
-        new_btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-        // Y軸
-        new_btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-        // X軸
-        new_btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+ 
+        setBtnStyle(new_btn, layoutInfo);
   
         if (layoutInfo["cDefaultImagePath"] != null 
         && layoutInfo["cDefaultImagePath"] != "")
@@ -951,9 +937,7 @@ function editHomeDispLayout(layoutInfo) {
           document.getElementsByTagName('head')[0].appendChild(style);
         }
   
-        // 透過率
-        new_btn.style.opacity = layoutInfo["dOpacity"];
-      } else if (layoutInfo["nDispType"] == 2) {
+      } else if (nDispType == DISP_TYPE_MAP['text']) {
         // テキスト文言の場合
         var new_txt = document.createElement("div");
         // 選択中言語のテキストをセット
@@ -1001,7 +985,7 @@ function editHomeDispLayout(layoutInfo) {
         new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
         homeDisp.appendChild(new_txt);
 
-      } else if (layoutInfo["nDispType"] == 3) {
+      } else if (nDispType == DISP_TYPE_MAP['image']) {
         // 画像の場合
         var new_img = document.createElement("img");
         // 選択中言語の画像をセット
@@ -1094,12 +1078,14 @@ function editHomeOtherBtn(layoutInfo) {
   new_btn.classList.add(MSG_CSS_LANG);
   setHomeOtherBtnCss(layoutInfo);
 
-  if (layoutInfo["nDispType"] == 5) {
+  var nDispType = layoutInfo["nDispType"];
+
+  if (nDispType == DISP_TYPE_MAP['goods']) {
     new_btn.classList.add("level_goods");
     new_btn.setAttribute("goodsCd",layoutInfo["nGoodsCode"]);
   }
 
-  if (layoutInfo["nDispType"] == 1) {
+  if (nDispType == DISP_TYPE_MAP['button']) {
     new_btn.classList.add("level_move");
     new_btn.setAttribute("goodsCd",layoutInfo["nSoldOutIcon_condition_cd"]);
     new_btn.setAttribute("goodsType",layoutInfo["nSoldOutIcon_condition_type"]);
@@ -1107,9 +1093,10 @@ function editHomeOtherBtn(layoutInfo) {
 
   
 
-  if (layoutInfo["nDispType"] == 1) {
+  if (nDispType == DISP_TYPE_MAP['button']) {
     // 画面切替ボタンの場合
-    if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] == 5){
+    var detailDispType = detailDispTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]];
+    if(detailDispType == DETAIL_DISP_TYPE_MAP['hierarchy']){
       // 画面遷移ボタンの場合
       var onClickString = "";
 
@@ -1136,7 +1123,7 @@ function editHomeOtherBtn(layoutInfo) {
 
       var goodsCds = layoutInfo['nSoldOutIcon_condition_cd'];
 
-      comingSoonFlg = checkComingSoonByGoodsCds(goodsCds);
+      comingSoonFlg = checkComingSoonByGoodsCode(goodsCds);
 
       if (comingSoonFlg) {
         // 準備中アイコン有効化
@@ -1144,9 +1131,7 @@ function editHomeOtherBtn(layoutInfo) {
         new_btn.classList.add("off");
       }
           // allGoodsMenutypes
-    } else if (nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 5
-        && nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 0)
-    {
+    } else {
         // 商品詳細表示ボタンの場合
         new_btn.setAttribute("onclick","touch();levelDispGoodsDetail("+layoutInfo['nAfDispId']+");");
         // "準備中です"表示判定実施
@@ -1187,7 +1172,7 @@ function editHomeOtherBtn(layoutInfo) {
         new_btn.classList.add("off");
       }
     }
-  } else if (layoutInfo["nDispType"] == 5) {
+  } else if (nDispType == DISP_TYPE_MAP['goods']) {
     // 商品ボタンの場合
     // オーダーメイド化設定のチェック
     var ordmadeGoodsFlg = false;
@@ -1295,22 +1280,8 @@ function editHomeOtherBtn(layoutInfo) {
     new_btn.style.zIndex = 1;
     new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
     new_btn.classList.add("levelItems");
-  
-    if (layoutInfo["nDispFlg"] == 0) {
-      // 表示無効の場合
-      new_btn.style.display = "none";
-    } else {
-      new_btn.style.display = "block";
-    }
-  
-    // 高さ
-    new_btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-    // 幅
-    new_btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-    // Y軸
-    new_btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-    // X軸
-    new_btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+ 
+    setBtnStyle(new_btn, layoutInfo);
   
     if (layoutInfo["cDefaultImagePath"] != null 
     && layoutInfo["cDefaultImagePath"] != "")
@@ -1326,7 +1297,7 @@ function editHomeOtherBtn(layoutInfo) {
     var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
     new_btn.setAttribute("size",size);
   
-    if (layoutInfo["nDispType"] == 1) {
+    if (nDispType == DISP_TYPE_MAP['button']) {
       // 画面遷移ボタンの場合
       // ボタン通常時サイズ
       var dfcss = '#'+"levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"]+'{transform: scale('+size+');transition-duration: .3s}';
@@ -1341,19 +1312,17 @@ function editHomeOtherBtn(layoutInfo) {
       document.getElementsByTagName('head')[0].appendChild(style);
     }
   
-    // 透過率
-    new_btn.style.opacity = layoutInfo["dOpacity"];
 }
 
 function editHomeMoveButton(btn, layoutInfo) {
   btn.classList.add("level_move");
-  btn.setAttribute("goodsCd",layoutInfo["nSoldOutIcon_condition_cd"]);
-  btn.setAttribute("goodsType",layoutInfo["nSoldOutIcon_condition_type"]);
+  btn.setAttribute("goodsCd", layoutInfo["nSoldOutIcon_condition_cd"]);
+  btn.setAttribute("goodsType", layoutInfo["nSoldOutIcon_condition_type"]);
 }
 
 function editHomeGoodsButton(btn, layoutInfo) {
   btn.classList.add("level_goods");
-  btn.setAttribute("goodsCd",layoutInfo["nGoodsCode"]);
+  btn.setAttribute("goodsCd", layoutInfo["nGoodsCode"]);
 }
 
 function setHomeOtherBtnCss(layoutInfo) {

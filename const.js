@@ -73,6 +73,28 @@ var CAL_DISP_FLG = true;
 // 明示的に下記リストに記載されたidタグのbackGroundImageを書き換える
 var EXP_CNG_IMG = ["ord-fix-bga"];
 
+var DISP_TYPE_MAP = {
+  button: 1,
+  text: 2,
+  image: 3,
+  back_ground_image: 4,
+  goods: 5,
+  side_link_bar: 6,
+  menu_title: 7,
+  cup_image: 8,
+  board_image: 9,
+  transition_disp: 10
+};
+
+var DETAIL_DISP_TYPE_MAP = {
+  default: 0,
+  ordermade: 1,
+  general: 2,
+  drink: 3,
+  limited: 4,
+  hierarchy: 5
+};
+
 /*            運用保守ツール関連               */
 // 画面階層管理マスタ jsonテンプレート
 const baseSendFormat = "({nHierarchyCode}, {nMenuBookCode}, {nDefaultFlg}, {nDispId}, {cDispName}, {nItemId}, {cItemName}, {nDispType}, {cDefaultImagePath}, {nDispPosition_Xjp}, {nDispPosition_Xen}, {nDispPosition_Xkr}, {nDispPosition_Xcn}, {nDispPosition_Yjp}, {nDispPosition_Yen}, {nDispPosition_Ykr}, {nDispPosition_Ycn}, {nDispSizejp}, {nDispSizeen}, {nDispSizekr}, {nDispSizecn}, {nWidthjp}, {nWidthen}, {nWidthkr}, {nWidthcn}, {nHeightjp}, {nHeighten}, {nHeightkr}, {nHeightcn}, {cTextjp}, {cTexten}, {cTextkr}, {cTextcn}, {nItalicjp}, {nItalicen}, {nItalickr}, {nItaliccn}, {nFontSizejp}, {nFontSizeen}, {nFontSizekr}, {nFontSizecn}, {cColorjp}, {cColoren}, {cColorkr}, {cColorcn}, {nFontWeightjp}, {nFontWeighten}, {nFontWeightkr}, {nFontWeightcn}, {nVerticalFlg}, {nAfDispId}, {nGoodsCode}, {nDetailDispType}, {nDispMenuType}, {nDispFlg}, {dOpacity}, {nAfDispId1}, {nAfDispId2}, {nAfDispId3}, {nAfDispId4}, {nAfDispId5}, {nSoldOutIcon_X}, {nSoldOutIcon_Y}, {nSoldOutIcon_width}, {nSoldOutIcon_height}, {nSoldOutIcon_radius}, {nSoldOutIcon_condition_type}, {nSoldOutIcon_condition_cd}, {nSideLinkId}, {tCreateTime}, {tUpdateTime}, {cCreateId}, {cUpdateId})";
