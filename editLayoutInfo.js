@@ -956,8 +956,8 @@ function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
           zIndex: 1
         };
 
-        new_btn.style.position = "absolute";
-        new_btn.style.zIndex = 1;
+        //new_btn.style.position = "absolute";
+        //new_btn.style.zIndex = 1;
         new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
         new_btn.classList.add("levelItems");
   
