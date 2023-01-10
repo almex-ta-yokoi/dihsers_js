@@ -950,8 +950,12 @@ function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
         }
 
         new_btn.href = "javascript:void(0)";
-  
-        new_btn.style.display = "block";
+ 
+        var arrangement = {
+          position: "absolute",
+          zIndex: 1
+        };
+
         new_btn.style.position = "absolute";
         new_btn.style.zIndex = 1;
         new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
@@ -959,19 +963,19 @@ function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
   
         if(layoutInfo["nDispFlg"] == 0){
            // 表示無効の場合
-           new_btn.style.display = "none";
+           arrangement["display"] = "none";
         }else{
-          new_btn.style.display = "block";
+          arrangement["display"] = "block";
         }
   
         // 高さ
-        new_btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+        arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
         // 幅
-        new_btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+        arrangement["width"] = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
         // Y軸
-        new_btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+        arrangement["top"] = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
         // X軸
-        new_btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+        arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
   
         if(layoutInfo["cDefaultImagePath"] != null && layoutInfo["cDefaultImagePath"] != ""){
           var new_btn_img = document.createElement("img");
@@ -985,23 +989,18 @@ function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
         var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
         new_btn.setAttribute("size",size);
   
+        // 透過率
+        arrangement["opacity"] = layoutInfo["dOpacity"];
+        setComponentStyle(new_btn, arrangement);
+
         if(layoutInfo["nDispType"] == 1) {
           // 画面遷移ボタンの場合
           // ボタン通常時サイズ
-          var dfcss = '#'+"levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"]+'{transform: scale('+size+');transition-duration: .3s}';
-          var dfstyle = document.createElement('style');
-          dfstyle.appendChild(document.createTextNode(dfcss));
-          document.getElementsByTagName('head')[0].appendChild(dfstyle);
-  
-          // ボタン拡大時サイズ
-          var css = '#'+"levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"]+':hover{transform: scale('+size*1.05+');transition-duration: .3s}';
-          var style = document.createElement('style');
-          style.appendChild(document.createTextNode(css));
-          document.getElementsByTagName('head')[0].appendChild(style);
+          var buttonId = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+          var magnification = 1.05;
+
+          makeButtonSizeCss(buttonId, size, magnification);
         }
-  
-        // 透過率
-        new_btn.style.opacity = layoutInfo["dOpacity"];
 }
 
 function editHomeDispText(layoutInfo, homeDisp) {
@@ -1122,7 +1121,6 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
 
 function setComponentStyle(component, arrangement) {
   for(const [key, value] of Object.entries(arrangement)) {
-    console.log(`${key}: ${value}`)
     component.style[key] = value;
   }
 }
@@ -1140,3 +1138,4 @@ function makeButtonSizeCss(buttonId, size, magnification) {
   style.appendChild(document.createTextNode(css));
   document.getElementsByTagName('head')[0].appendChild(style);
 }
+
