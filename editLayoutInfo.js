@@ -333,14 +333,15 @@ function editLayoutInfo() {
           new_btn.style.display = "block";
         }
 
-        // 高さ
-        new_btn.style.height = layoutInfo_map[line]["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-        // 幅
-        new_btn.style.width = layoutInfo_map[line]["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-        // Y軸
-        new_btn.style.top = layoutInfo_map[line]["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-        // X軸
-        new_btn.style.left = layoutInfo_map[line]["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+        var arrangement = {
+          height: layoutInfo_map[line]["nHeight"+MSG_CSS_LANG]+DISP_UNIT,
+          width: layoutInfo_map[line]["nWidth"+MSG_CSS_LANG]+DISP_UNIT,
+          top: layoutInfo_map[line]["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT,
+          left: layoutInfo_map[line]["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT,
+          opacity: layoutInfo_map[line]["dOpacity"]
+        };
+
+        setComponentStyle(new_btn, arrangement);
 
         if(layoutInfo_map[line]["cDefaultImagePath"] != null && layoutInfo_map[line]["cDefaultImagePath"] != ""){
 
@@ -370,8 +371,6 @@ function editLayoutInfo() {
           document.getElementsByTagName('head')[0].appendChild(style);
         }
 
-        // 透過率
-        new_btn.style.opacity = layoutInfo_map[line]["dOpacity"];
       } else if(layoutInfo_map[line]["nDispType"] == 2){
         // テキスト文言の場合
         var new_txt = document.createElement("div");
@@ -736,20 +735,7 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
     opacity: layoutInfo["dOpacity"]
   }
 
-  settingPartsArrangement(btn, arrangement)
-  /*
-  // 高さ
-  btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-  // 幅
-  btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-  // Y軸
-  btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-  // X軸
-  btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-
-  // 透過率
-  btn.style.opacity = layoutInfo["dOpacity"];
-  */
+  setComponentStyle(btn, arrangement)
 
   // ボタンサイズ　スケール値化
   var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
@@ -1143,15 +1129,8 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
   }
 }
 
-function settingPartsArrangement(btn, arrangement) {
-  // 高さ
-  btn.style.height = arrangement["height"];
-  // 幅
-  btn.style.width = arrangement["width"];
-  // Y軸
-  btn.style.top = arrangement["top"];
-  // X軸
-  btn.style.left = arrangement["left"];
-  // 透過率
-  btn.style.opacity = arrangement["opacity"];
+function setComponentStyle(component, arrangement) {
+  for(const [key, value] of Object.entries(arrangement)) {
+    component.style[key] = value;
+  }
 }
