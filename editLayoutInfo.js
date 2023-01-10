@@ -16,7 +16,7 @@ function editLayoutInfo() {
 	sideLinkBar.innerHTML = null;
 	var sideLinkBarTitle = document.getElementById("side-default-title");
 	sideLinkBarTitle.innerHTML = null;
-	if(guiFlg == "1"){
+	if(guiFlg == guiCode){
 		// 設定ツール起動の場合、人数入力画面リフレッシュ
 		var peopleAddItems = document.getElementsByClassName("peopleAddItems");
 		for(var i = 0; i < peopleAddItems.length; i++){
@@ -425,7 +425,7 @@ function editLayoutInfo() {
 					// 作成済みの画像切替処理で対応されるため、処理なし
 				}
 			}
-		} else if(layoutInfo_map[line]["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == "1")){
+		} else if(layoutInfo_map[line]["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == guiCode)){
 			// 人数入力画面の場合　※アプリ起動時の初回のみ　※設定ツール起動の場合は毎回処理
 			var peopleDisp = document.getElementById("peopleDisp");
 			if(layoutInfo_map[line]["nDispType"] == 3){

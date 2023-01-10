@@ -435,7 +435,7 @@ function ordConf() {
  * 　非同期通信で注文POSTを送信する
  */
 function sendOrderMadeImgPost() {
-    if(guiFlg == '1'){return;}
+    if(guiFlg == guiCode){return;}
     // if(window.navigator.userAgent == "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"){return;}
     var tmp_map = [];
     var numList = [];
@@ -533,7 +533,7 @@ function zeroPadding(num,length){
  * @param 支払種別配列
  */
 function sendOrderPost(data_item_id,data_item_count,data_item_payment_type,data_sub_item_id,data_sub_count) {
-    if(guiFlg == '1'){
+    if(guiFlg == guiCode){
         document.getElementById('loading').setAttribute("hidden","hidden");
         ordPostFlg = false;
         return;

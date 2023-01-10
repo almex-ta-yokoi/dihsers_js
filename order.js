@@ -1304,7 +1304,7 @@ function getSubmenuData(pushMenubookChangeFlg) {
  */
 function getAccountKbn(pushMenubookChangeFlg) {
 	startMeasuringElapsedTime("getAccountKbnStart");
-	if(guiFlg == "1"){
+	if(guiFlg == guiCode){
 		load(pushMenubookChangeFlg);
 		return;
 	}
@@ -2890,7 +2890,7 @@ function editAllTableData(pushMenubookChangeFlg) {
 			layoutDataPreload();
 			fstDispCheckFlg = false;
 
-			if(guiFlg == "1"){
+			if(guiFlg == guiCode){
 				document.getElementById("people_tbNo").innerHTML = '1<span class="people_tbNo2">卓</span>';
 				location.href = "#root/people";
 			}
@@ -7670,7 +7670,7 @@ function poeple_btn(){
 	// 多重タップ防止
 	if(checkInFlg){return;}
 	checkInFlg = true;
-	if(guiFlg == "1"){
+	if(guiFlg == guiCode){
 		touch();
 		location.href = "#root/home";
 		return;
@@ -8985,7 +8985,7 @@ function bassingEndPost() {
  * 店員呼び出し確認ポップアップ処理
  */
 function callClerkCheck() {
-	if(guiFlg == '1'){return;}
+	if(guiFlg == guiCode){return;}
 	document.getElementById('s-dialog21').innerHTML = I_1027;
 	document.getElementById('callCheck_ok').innerHTML = MSG_COMMON_2;
 	document.getElementById('callCheck_cancel').innerHTML = MSG_COMMON_3;
