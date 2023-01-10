@@ -12,6 +12,9 @@ const DISP_TYPE = {
   item_button:5
 };
 
+const SCREEN_TRANSITION_BUTTON = 5;
+const NOT_SET_BUTTON = 0;
+
 // エラー検出文言
 const CONNECT_ERR_MSG = "<b>Warning</b>:  mysql_connect()";
 
