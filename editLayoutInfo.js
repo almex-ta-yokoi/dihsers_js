@@ -6,38 +6,12 @@ function editLayoutInfo() {
 	startMeasuringElapsedTime("editLayoutInfoStart");
 	outOparationLog("レイアウト調整情報反映処理開始");
 	// 一旦初期化
-	var levelItems = document.getElementsByClassName("levelItems");
-	for(var i=0 ;i < levelItems.length;i++){
-		levelItems[i].parentNode.removeChild(levelItems[i]);
-		i--;
-	}
-	document.getElementById("levelAll").innerHTML = null;
-	var sideLinkBar = document.getElementById("sideNav_eatin");
-	sideLinkBar.innerHTML = null;
-	var sideLinkBarTitle = document.getElementById("side-default-title");
-	sideLinkBarTitle.innerHTML = null;
-	if(guiFlg == GUI_CODE){
-		// 設定ツール起動の場合、人数入力画面リフレッシュ
-		var peopleAddItems = document.getElementsByClassName("peopleAddItems");
-		for(var i = 0; i < peopleAddItems.length; i++){
-			peopleAddItems[i].parentNode.removeChild(peopleAddItems[i]);
-			i--;
-		}
-	}
+  var initInfo = initLayoutInfo(nTypeMap);
+  var fstSidekinFlg = initInfo['fstSidekinFlg'];
+  var nTypeMap = initInfo['nTypeMap'];
+	var sideLinkBar = initInfo['sideLinkBar'];
+	var sideLinkBarTitle = initInfo['sideLinkBarTitle'];
 
-	// 初回さんドリンクバーフラグ
-	var fstSidekinFlg = true;
-
-	// 画面種別のマップを作成
-	var nTypeMap = {};
-	for(var line in layoutInfo_map){
-		if(layoutInfo_map[line]["nDetailDispType"] != 0){
-			// 遷移設定可能画面の場合
-			nTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nDispId"]] = layoutInfo_map[line]["nDetailDispType"];
-		}
-	}
-	// オーダーメイドディッシュのパターンを追加セット
-	nTypeMap[99999] = 1;
 
 	for(var line in layoutInfo_map){
 		if(layoutInfo_map[line]["nMenuBookCode"] != menubook_cd && layoutInfo_map[line]["nMenuBookCode"] != MENUBOOK_ALL){
@@ -1036,4 +1010,57 @@ function editLayoutInfo() {
 	fstCreateFlg = true;
 	outOparationLog("レイアウト調整情報反映処理終了");
 	stopMeasuringElapsedTime("editLayoutInfoStart", "editLayoutInfo完了");
+}
+
+/**
+ * LayoutInfoを初期化
+ * ※editLayoutInfoが長すぎるため別関数化
+ */
+function initLayoutInfo() {
+	var levelItems = document.getElementsByClassName("levelItems");
+
+	for(var i=0 ;i < levelItems.length;i++){
+		levelItems[i].parentNode.removeChild(levelItems[i]);
+		i--;
+	}
+
+	document.getElementById("levelAll").innerHTML = null;
+
+	var sideLinkBar = document.getElementById("sideNav_eatin");
+	sideLinkBar.innerHTML = null;
+	var sideLinkBarTitle = document.getElementById("side-default-title");
+	sideLinkBarTitle.innerHTML = null;
+	if(guiFlg == GUI_CODE){
+		// 設定ツール起動の場合、人数入力画面リフレッシュ
+		var peopleAddItems = document.getElementsByClassName("peopleAddItems");
+		for(var i = 0; i < peopleAddItems.length; i++){
+			peopleAddItems[i].parentNode.removeChild(peopleAddItems[i]);
+			i--;
+		}
+	}
+
+	// 初回さんドリンクバーフラグ
+	var fstSidekinFlg = true;
+
+	// 画面種別のマップを作成
+	var nTypeMap = {};
+	for(var line in layoutInfo_map){
+		if(layoutInfo_map[line]["nDetailDispType"] != 0){
+			// 遷移設定可能画面の場合
+			nTypeMap[layoutInfo_map[line]["nMenuBookCode"]+"_"+layoutInfo_map[line]["nDispId"]] = layoutInfo_map[line]["nDetailDispType"];
+		}
+	}
+	// オーダーメイドディッシュのパターンを追加セット
+	nTypeMap[99999] = 1;
+
+
+  var initInfo = {
+    nTypeMap: nTypeMap,
+    fstSidekinFlg: fstSidekinFlg,
+	  sideLinkBar: sideLinkBar,
+	  sideLinkBarTitle: sideLinkBarTitle
+  }
+
+  return initInfo;
+
 }
