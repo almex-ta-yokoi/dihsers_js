@@ -2,7 +2,7 @@
  * 定数定義
  */
 
-const guiCode = 1;
+const GUI_CODE = 1;
 
 // エラー検出文言
 const CONNECT_ERR_MSG = "<b>Warning</b>:  mysql_connect()";

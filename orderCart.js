@@ -1585,7 +1585,7 @@ function iconRef() {
  * @param １：会計、２：注文履歴
  */
 function getAccountInfoPost(type) {
-    if(guiFlg == guiCode){return;}
+    if(guiFlg == GUI_CODE){return;}
     if (singleFlg) {return;};
 
     if(type == 1){
