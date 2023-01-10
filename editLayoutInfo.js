@@ -721,9 +721,6 @@ function checkHomeDispSpecific4Button(itemName) {
 }
 
 function editHomeDispSpecific4Button(layoutInfo, btn) {
-  var itemName = layoutInfo["cItemname"];
-
-
   if(layoutInfo["nDispFlg"] == 0){
     // 表示無効の場合
     btn.style.display = "none";
@@ -731,6 +728,16 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
     btn.style.display = "block";
   }
 
+  var arrangement = {
+    height: layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT,
+    width: layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT,
+    top: layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT,
+    left: layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT,
+    opacity: layoutInfo["dOpacity"]
+  }
+
+  settingPartsArrangement(btn, arrangement)
+  /*
   // 高さ
   btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
   // 幅
@@ -739,6 +746,10 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
   btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
   // X軸
   btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+  // 透過率
+  btn.style.opacity = layoutInfo["dOpacity"];
+  */
 
   // ボタンサイズ　スケール値化
   var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
@@ -754,9 +765,6 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
   var style = document.createElement('style');
   style.appendChild(document.createTextNode(css));
   document.getElementsByTagName('head')[0].appendChild(style);
-
-  // 透過率
-  btn.style.opacity = layoutInfo["dOpacity"];
 }
 
 function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
@@ -1133,4 +1141,17 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
     default:
       console.log("unknownDispType: " + dispType);
   }
+}
+
+function settingPartsArrangement(btn, arrangement) {
+  // 高さ
+  btn.style.height = arrangement["height"];
+  // 幅
+  btn.style.width = arrangement["width"];
+  // Y軸
+  btn.style.top = arrangement["top"];
+  // X軸
+  btn.style.left = arrangement["left"];
+  // 透過率
+  btn.style.opacity = arrangement["opacity"];
 }
