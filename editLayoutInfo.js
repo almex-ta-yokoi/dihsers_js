@@ -704,50 +704,7 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
       editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp)
     }else if(layoutInfo["nDispType"] == 2){
       // テキスト文言の場合
-      var new_txt = document.createElement("div");
-      // 選択中言語のテキストをセット
-      new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
-
-      new_txt.style.display = "block";
-      new_txt.style.position = "absolute";
-      if(layoutInfo["nVerticalFlg"] == "1"){
-        // 縦文字設定の場合
-        new_txt.style.writingMode = "vertical-rl";
-      }
-      new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-      new_txt.classList.add("levelItems");
-
-      if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
-        // 斜体ONの場合
-        new_txt.style.fontStyle = "italic";
-      } else {
-        new_txt.style.fontStyle = "";
-      }
-
-      if(layoutInfo["nDispFlg"] == 0){
-        // 表示無効の場合
-        new_txt.style.display = "none";
-      } else {
-        new_txt.style.display = "block";
-      }
-
-      // フォントサイズ
-      new_txt.style.fontSize = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
-      // フォントカラー
-      new_txt.style.color = layoutInfo["cColor"+MSG_CSS_LANG];
-      // フォント太さ
-      new_txt.style.fontWeight = layoutInfo["nFontWeight"+MSG_CSS_LANG];
-
-      // 高さ
-      new_txt.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-      // 幅
-      new_txt.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-      // Y軸
-      new_txt.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-      // X軸
-      new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-      homeDisp.appendChild(new_txt);
-
+      editHomeDispText(layoutInfo, homeDisp)
     }else if(layoutInfo["nDispType"] == 3){
       // 画像の場合
       var new_img = document.createElement("img");
@@ -782,9 +739,6 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
 
       homeDisp.appendChild(new_img);
 
-    } else if(layoutInfo["nDispType"] == 4){
-      // 背景の場合
-      // 作成済みの画像切替処理で対応されるため、処理なし
     }
   }
 }
@@ -1107,4 +1061,53 @@ function editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp) {
   
         // 透過率
         new_btn.style.opacity = layoutInfo["dOpacity"];
+}
+
+function editHomeDispText(layoutInfo, homeDisp) {
+
+      // テキスト文言の場合
+      var new_txt = document.createElement("div");
+      // 選択中言語のテキストをセット
+      new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
+
+      new_txt.style.display = "block";
+      new_txt.style.position = "absolute";
+      if(layoutInfo["nVerticalFlg"] == "1"){
+        // 縦文字設定の場合
+        new_txt.style.writingMode = "vertical-rl";
+      }
+      new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+      new_txt.classList.add("levelItems");
+
+      if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
+        // 斜体ONの場合
+        new_txt.style.fontStyle = "italic";
+      } else {
+        new_txt.style.fontStyle = "";
+      }
+
+      if(layoutInfo["nDispFlg"] == 0){
+        // 表示無効の場合
+        new_txt.style.display = "none";
+      } else {
+        new_txt.style.display = "block";
+      }
+
+      // フォントサイズ
+      new_txt.style.fontSize = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
+      // フォントカラー
+      new_txt.style.color = layoutInfo["cColor"+MSG_CSS_LANG];
+      // フォント太さ
+      new_txt.style.fontWeight = layoutInfo["nFontWeight"+MSG_CSS_LANG];
+
+      // 高さ
+      new_txt.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+      // 幅
+      new_txt.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+      // Y軸
+      new_txt.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+      // X軸
+      new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+      homeDisp.appendChild(new_txt);
+
 }
