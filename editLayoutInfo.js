@@ -701,6 +701,155 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
     // TOP画面タグ取得
     var homeDisp = document.getElementById("levelItem_10000_1");
     if(layoutInfo["nDispType"] == 1 || layoutInfo["nDispType"] == 5){
+      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp)
+    }else if(layoutInfo["nDispType"] == 2){
+      // テキスト文言の場合
+      var new_txt = document.createElement("div");
+      // 選択中言語のテキストをセット
+      new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
+
+      new_txt.style.display = "block";
+      new_txt.style.position = "absolute";
+      if(layoutInfo["nVerticalFlg"] == "1"){
+        // 縦文字設定の場合
+        new_txt.style.writingMode = "vertical-rl";
+      }
+      new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+      new_txt.classList.add("levelItems");
+
+      if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
+        // 斜体ONの場合
+        new_txt.style.fontStyle = "italic";
+      } else {
+        new_txt.style.fontStyle = "";
+      }
+
+      if(layoutInfo["nDispFlg"] == 0){
+        // 表示無効の場合
+        new_txt.style.display = "none";
+      } else {
+        new_txt.style.display = "block";
+      }
+
+      // フォントサイズ
+      new_txt.style.fontSize = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
+      // フォントカラー
+      new_txt.style.color = layoutInfo["cColor"+MSG_CSS_LANG];
+      // フォント太さ
+      new_txt.style.fontWeight = layoutInfo["nFontWeight"+MSG_CSS_LANG];
+
+      // 高さ
+      new_txt.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+      // 幅
+      new_txt.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+      // Y軸
+      new_txt.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+      // X軸
+      new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+      homeDisp.appendChild(new_txt);
+
+    }else if(layoutInfo["nDispType"] == 3){
+      // 画像の場合
+      var new_img = document.createElement("img");
+      // 選択中言語の画像をセット
+      new_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
+
+      new_img.style.display = "block";
+      new_img.style.position = "absolute";
+      new_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+      new_img.classList.add("levelItems");
+
+      if(layoutInfo["nDispFlg"] == 0){
+        // 表示無効の場合
+        new_img.style.display = "none";
+      } else {
+        new_img.style.display = "block";
+      }
+
+      // 高さ
+      new_img.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+      // 幅
+      new_img.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+      // Y軸
+      new_img.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+      // X軸
+      new_img.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+      // 表示サイズ
+      var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
+      new_img.style.transform = "scale("+size+", "+size+")";
+      new_img.setAttribute("size",size);
+
+      homeDisp.appendChild(new_img);
+
+    } else if(layoutInfo["nDispType"] == 4){
+      // 背景の場合
+      // 作成済みの画像切替処理で対応されるため、処理なし
+    }
+  }
+}
+
+function checkHomeDispSpecific4Button(itemName) {
+  var btn = null;
+  switch(itemName) {
+    case "お会計ボタン":
+      btn = document.getElementById("home_btn3");
+      return btn;
+    case "注文履歴ボタン":
+      btn = document.getElementById("top_history_btn");
+      return btn;
+    case "店員呼び出しボタン":
+      btn = document.getElementById("top_call_btn");
+      return btn;
+    case "Laguageボタン":
+      btn = document.getElementById("top_language_btn");
+      return btn;
+    default:
+      console.log("ERROR itemName: " + itemName);
+      return false;
+  }
+}
+
+function editHomeDispSpecific4Button(layoutInfo, btn) {
+  var itemName = layoutInfo["cItemname"];
+
+
+  if(layoutInfo["nDispFlg"] == 0){
+    // 表示無効の場合
+    btn.style.display = "none";
+  }else{
+    btn.style.display = "block";
+  }
+
+  // 高さ
+  btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+  // 幅
+  btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+  // Y軸
+  btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+  // X軸
+  btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+  // ボタンサイズ　スケール値化
+  var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
+
+  // ボタン通常時サイズ
+  var dfcss = '#'+btn.id+'{transform: scale('+size+');transition-duration: .3s}';
+  var dfstyle = document.createElement('style');
+  dfstyle.appendChild(document.createTextNode(dfcss));
+  document.getElementsByTagName('head')[0].appendChild(dfstyle);
+
+  // ボタン拡大時サイズ
+  var css = '#'+btn.id+':hover{transform: scale('+size*1.05+');transition-duration: .3s}';
+  var style = document.createElement('style');
+  style.appendChild(document.createTextNode(css));
+  document.getElementsByTagName('head')[0].appendChild(style);
+
+  // 透過率
+  btn.style.opacity = layoutInfo["dOpacity"];
+}
+
+function editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp) {
       // ボタンの場合
       var new_btn = document.createElement("a");
       // メモ：階層遷移ボタンにも品切れ&準備中表示が必要となったため、判定名称を商品コード⇒階層マスタキー値に変更
@@ -958,149 +1107,4 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
   
         // 透過率
         new_btn.style.opacity = layoutInfo["dOpacity"];
-    }else if(layoutInfo["nDispType"] == 2){
-      // テキスト文言の場合
-      var new_txt = document.createElement("div");
-      // 選択中言語のテキストをセット
-      new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
-
-      new_txt.style.display = "block";
-      new_txt.style.position = "absolute";
-      if(layoutInfo["nVerticalFlg"] == "1"){
-        // 縦文字設定の場合
-        new_txt.style.writingMode = "vertical-rl";
-      }
-      new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-      new_txt.classList.add("levelItems");
-
-      if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
-        // 斜体ONの場合
-        new_txt.style.fontStyle = "italic";
-      } else {
-        new_txt.style.fontStyle = "";
-      }
-
-      if(layoutInfo["nDispFlg"] == 0){
-        // 表示無効の場合
-        new_txt.style.display = "none";
-      } else {
-        new_txt.style.display = "block";
-      }
-
-      // フォントサイズ
-      new_txt.style.fontSize = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
-      // フォントカラー
-      new_txt.style.color = layoutInfo["cColor"+MSG_CSS_LANG];
-      // フォント太さ
-      new_txt.style.fontWeight = layoutInfo["nFontWeight"+MSG_CSS_LANG];
-
-      // 高さ
-      new_txt.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-      // 幅
-      new_txt.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-      // Y軸
-      new_txt.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-      // X軸
-      new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-      homeDisp.appendChild(new_txt);
-
-    }else if(layoutInfo["nDispType"] == 3){
-      // 画像の場合
-      var new_img = document.createElement("img");
-      // 選択中言語の画像をセット
-      new_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
-
-      new_img.style.display = "block";
-      new_img.style.position = "absolute";
-      new_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-      new_img.classList.add("levelItems");
-
-      if(layoutInfo["nDispFlg"] == 0){
-        // 表示無効の場合
-        new_img.style.display = "none";
-      } else {
-        new_img.style.display = "block";
-      }
-
-      // 高さ
-      new_img.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-      // 幅
-      new_img.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-      // Y軸
-      new_img.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-      // X軸
-      new_img.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-
-      // 表示サイズ
-      var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
-      new_img.style.transform = "scale("+size+", "+size+")";
-      new_img.setAttribute("size",size);
-
-      homeDisp.appendChild(new_img);
-
-    } else if(layoutInfo["nDispType"] == 4){
-      // 背景の場合
-      // 作成済みの画像切替処理で対応されるため、処理なし
-    }
-  }
-}
-
-function checkHomeDispSpecific4Button(itemName) {
-  var btn = null;
-  switch(itemName) {
-    case "お会計ボタン":
-      btn = document.getElementById("home_btn3");
-      return btn;
-    case "注文履歴ボタン":
-      btn = document.getElementById("top_history_btn");
-      return btn;
-    case "店員呼び出しボタン":
-      btn = document.getElementById("top_call_btn");
-      return btn;
-    case "Laguageボタン":
-      btn = document.getElementById("top_language_btn");
-      return btn;
-    default:
-      console.log("ERROR itemName: " + itemName);
-      return false;
-  }
-}
-
-function editHomeDispSpecific4Button(layoutInfo, btn) {
-  var itemName = layoutInfo["cItemname"];
-
-
-  if(layoutInfo["nDispFlg"] == 0){
-    // 表示無効の場合
-    btn.style.display = "none";
-  }else{
-    btn.style.display = "block";
-  }
-
-  // 高さ
-  btn.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-  // 幅
-  btn.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-  // Y軸
-  btn.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-  // X軸
-  btn.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-
-  // ボタンサイズ　スケール値化
-  var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
-
-  // ボタン通常時サイズ
-  var dfcss = '#'+btn.id+'{transform: scale('+size+');transition-duration: .3s}';
-  var dfstyle = document.createElement('style');
-  dfstyle.appendChild(document.createTextNode(dfcss));
-  document.getElementsByTagName('head')[0].appendChild(dfstyle);
-
-  // ボタン拡大時サイズ
-  var css = '#'+btn.id+':hover{transform: scale('+size*1.05+');transition-duration: .3s}';
-  var style = document.createElement('style');
-  style.appendChild(document.createTextNode(css));
-  document.getElementsByTagName('head')[0].appendChild(style);
-
-  // 透過率
-  btn.style.opacity = layoutInfo["dOpacity"];
 }
