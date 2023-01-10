@@ -1091,25 +1091,22 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
 
   var dispType = parseInt(layoutInfo["nDispType"]);
 
-  const button = 1;
-  const text = 2;
-  const img = 3;
-  const background = 4;
-  const item = 5;
+  console.log(DISP_TYPE)
+  console.log(DISP_TYPE["button"])
   switch(dispType) {
-    case button:
+    case DISP_TYPE["button"]:
       editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
       break;
-    case item:
+    case DISP_TYPE["item"]:
       editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
       break;
-    case text:
+    case DISP_TYPE["text"]:
       editHomeDispText(layoutInfo, homeDisp);
       break;
-    case img:
+    case DISP_TYPE["img"]:
       editHomeDispImg(layoutInfo, homeDisp);
       break;
-    case background:
+    case DISP_TYPE["background"]:
       // 何もしない
       break;
     default:
@@ -1136,4 +1133,3 @@ function makeButtonSizeCss(buttonId, size, magnification) {
   style.appendChild(document.createTextNode(css));
   document.getElementsByTagName('head')[0].appendChild(style);
 }
-

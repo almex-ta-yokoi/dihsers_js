@@ -4,6 +4,14 @@
 
 const GUI_CODE = 1;
 
+const DISP_TYPE = {
+  button: 1,
+  text: 2,
+  img: 3,
+  background: 4,
+  item_button:5
+};
+
 // エラー検出文言
 const CONNECT_ERR_MSG = "<b>Warning</b>:  mysql_connect()";
 
