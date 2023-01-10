@@ -720,13 +720,6 @@ function checkHomeDispSpecific4Button(itemName) {
 }
 
 function editHomeDispSpecific4Button(layoutInfo, btn) {
-  if(layoutInfo["nDispFlg"] == 0){
-    // 表示無効の場合
-    btn.style.display = "none";
-  }else{
-    btn.style.display = "block";
-  }
-
   var arrangement = {
     height: layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT,
     width: layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT,
@@ -734,6 +727,16 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
     left: layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT,
     opacity: layoutInfo["dOpacity"]
   }
+
+  if(layoutInfo["nDispFlg"] == 0){
+    // 表示無効の場合
+    //btn.style. = "none";
+    arrangement["display"] = "none";
+  }else{
+    //btn.style.display = "block";
+    arrangement["display"] = "block";
+  }
+
 
   setComponentStyle(btn, arrangement)
 
@@ -1131,6 +1134,7 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
 
 function setComponentStyle(component, arrangement) {
   for(const [key, value] of Object.entries(arrangement)) {
+    console.log(`${key}: ${value}`)
     component.style[key] = value;
   }
 }
