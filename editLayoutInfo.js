@@ -21,8 +21,6 @@ function editLayoutInfo() {
     if(layoutInfo_map[line]["nDispId"] == HOME_DISP_ID){
       // TOP画面の場合
       var layoutInfo = layoutInfo_map[line];
-      console.log("AAAAAAAAA")
-      console.log(layoutInfo['nHierarchyCode'])
       editHomeDispLayoutInfo(layoutInfo, nTypeMap);
     } else if(layoutInfo_map[line]["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == GUI_CODE)){
       // 人数入力画面の場合　※アプリ起動時の初回のみ　※設定ツール起動の場合は毎回処理
@@ -695,34 +693,10 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
   var btn = checkHomeDispSpecific4Button(layoutInfo["cItemName"]);
 
   if(btn) {
-   editHomeDispSpecific4Button(layoutInfo, btn)
-  }
+   editHomeDispSpecific4Button(layoutInfo, btn);
+  } 
 
-  // TOP画面タグ取得
-  var homeDisp = document.getElementById("levelItem_10000_1");
-
-  var dispType = parseInt(layoutInfo["nDispType"]);
-  const button = 1;
-  const text = 2;
-  const img = 3;
-  const item = 5;
-
-  switch(dispType) {
-    case button:
-      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp);
-      break;
-    case item:
-      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp);
-      break;
-    case text:
-      editHomeDispText(layoutInfo, homeDisp);
-      break;
-    case img:
-      editHomeDispImg(layoutInfo, homeDisp);
-      break;
-    default:
-      console.log("unknownDispType: " + dispType);
-  }
+  editHomeDispOther(layoutInfo, nTypeMap);
 }
 
 function checkHomeDispSpecific4Button(itemName) {
@@ -785,7 +759,7 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
   btn.style.opacity = layoutInfo["dOpacity"];
 }
 
-function editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp) {
+function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
       // ボタンの場合
       var new_btn = document.createElement("a");
       // メモ：階層遷移ボタンにも品切れ&準備中表示が必要となったため、判定名称を商品コード⇒階層マスタキー値に変更
@@ -1127,4 +1101,36 @@ function editHomeDispImg(layoutInfo, homeDisp) {
 
       homeDisp.appendChild(new_img);
 
+}
+
+function editHomeDispOther(layoutInfo, nTypeMap) {
+  // TOP画面タグ取得
+  var homeDisp = document.getElementById("levelItem_10000_1");
+
+  var dispType = parseInt(layoutInfo["nDispType"]);
+
+  const button = 1;
+  const text = 2;
+  const img = 3;
+  const background = 4;
+  const item = 5;
+  switch(dispType) {
+    case button:
+      editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
+      break;
+    case item:
+      editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
+      break;
+    case text:
+      editHomeDispText(layoutInfo, homeDisp);
+      break;
+    case img:
+      editHomeDispImg(layoutInfo, homeDisp);
+      break;
+    case background:
+      // 何もしない
+      break;
+    default:
+      console.log("unknownDispType: " + dispType);
+  }
 }
