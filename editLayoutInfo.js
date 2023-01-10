@@ -696,19 +696,32 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
 
   if(btn) {
    editHomeDispSpecific4Button(layoutInfo, btn)
-  }else{
-    // 他
-    // TOP画面タグ取得
-    var homeDisp = document.getElementById("levelItem_10000_1");
-    if(layoutInfo["nDispType"] == 1 || layoutInfo["nDispType"] == 5){
-      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp)
-    }else if(layoutInfo["nDispType"] == 2){
-      // テキスト文言の場合
-      editHomeDispText(layoutInfo, homeDisp)
-    }else if(layoutInfo["nDispType"] == 3){
-      // 画像の場合
-      editHomeDispImg(layoutInfo, homeDisp)
-    }
+  }
+
+  // TOP画面タグ取得
+  var homeDisp = document.getElementById("levelItem_10000_1");
+
+  var dispType = parseInt(layoutInfo["nDispType"]);
+  const button = 1;
+  const text = 2;
+  const img = 3;
+  const item = 5;
+
+  switch(dispType) {
+    case button:
+      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp);
+      break;
+    case item:
+      editHomeDispAnchor(layoutInfo, nTypeMap, homeDisp);
+      break;
+    case text:
+      editHomeDispText(layoutInfo, homeDisp);
+      break;
+    case img:
+      editHomeDispImg(layoutInfo, homeDisp);
+      break;
+    default:
+      console.log("unknownDispType: " + dispType);
   }
 }
 
