@@ -730,30 +730,18 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
 
   if(layoutInfo["nDispFlg"] == 0){
     // 表示無効の場合
-    //btn.style. = "none";
     arrangement["display"] = "none";
   }else{
-    //btn.style.display = "block";
     arrangement["display"] = "block";
   }
-
 
   setComponentStyle(btn, arrangement)
 
   // ボタンサイズ　スケール値化
   var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
-
-  // ボタン通常時サイズ
-  var dfcss = '#'+btn.id+'{transform: scale('+size+');transition-duration: .3s}';
-  var dfstyle = document.createElement('style');
-  dfstyle.appendChild(document.createTextNode(dfcss));
-  document.getElementsByTagName('head')[0].appendChild(dfstyle);
-
-  // ボタン拡大時サイズ
-  var css = '#'+btn.id+':hover{transform: scale('+size*1.05+');transition-duration: .3s}';
-  var style = document.createElement('style');
-  style.appendChild(document.createTextNode(css));
-  document.getElementsByTagName('head')[0].appendChild(style);
+  // 拡大倍率
+  var magnification = 1.05;
+  makeButtonSizeCss(btn.id, size, magnification);
 }
 
 function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
@@ -1137,4 +1125,18 @@ function setComponentStyle(component, arrangement) {
     console.log(`${key}: ${value}`)
     component.style[key] = value;
   }
+}
+
+function makeButtonSizeCss(buttonId, size, magnification) {
+  // ボタン通常時サイズ
+  var dfcss = '#'+buttonId+'{transform: scale('+size+');transition-duration: .3s}';
+  var dfstyle = document.createElement('style');
+  dfstyle.appendChild(document.createTextNode(dfcss));
+  document.getElementsByTagName('head')[0].appendChild(dfstyle);
+
+  // ボタン拡大時サイズ
+  var css = '#'+buttonId+':hover{transform: scale('+size*magnification+');transition-duration: .3s}';
+  var style = document.createElement('style');
+  style.appendChild(document.createTextNode(css));
+  document.getElementsByTagName('head')[0].appendChild(style);
 }
