@@ -745,51 +745,16 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
 }
 
 function editHomeDispText(layoutInfo, homeDisp) {
-      // テキスト文言の場合
-      var new_txt = document.createElement("div");
-      // 選択中言語のテキストをセット
-      new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
+  // テキスト文言の場合
+  var new_txt = document.createElement("div");
+  new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+  // 選択中言語のテキストをセット
+  new_txt.innerHTML = layoutInfo["cText"+MSG_CSS_LANG];
+  new_txt.classList.add("levelItems");
 
-      new_txt.style.display = "block";
-      new_txt.style.position = "absolute";
-      if(layoutInfo["nVerticalFlg"] == "1"){
-        // 縦文字設定の場合
-        new_txt.style.writingMode = "vertical-rl";
-      }
-      new_txt.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-      new_txt.classList.add("levelItems");
-
-      if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
-        // 斜体ONの場合
-        new_txt.style.fontStyle = "italic";
-      } else {
-        new_txt.style.fontStyle = "";
-      }
-
-      if(layoutInfo["nDispFlg"] == 0){
-        // 表示無効の場合
-        new_txt.style.display = "none";
-      } else {
-        new_txt.style.display = "block";
-      }
-
-      // フォントサイズ
-      new_txt.style.fontSize = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
-      // フォントカラー
-      new_txt.style.color = layoutInfo["cColor"+MSG_CSS_LANG];
-      // フォント太さ
-      new_txt.style.fontWeight = layoutInfo["nFontWeight"+MSG_CSS_LANG];
-
-      // 高さ
-      new_txt.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-      // 幅
-      new_txt.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-      // Y軸
-      new_txt.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-      // X軸
-      new_txt.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-      homeDisp.appendChild(new_txt);
-
+  var arrangement = setArrangementForHomeDispText(layoutInfo);
+  setComponentStyle(new_txt, arrangement);
+  homeDisp.appendChild(new_txt);
 }
 
 function editHomeDispImg(layoutInfo, homeDisp) {
@@ -1136,4 +1101,47 @@ function isComeSoonByGoodsCode(comeSoonString) {
     }
   }
   return true;
+}
+
+function setArrangementForHomeDispText(layoutInfo) {
+  var arrangement = {};
+  arrangement["display"] = "block";
+  arrangement["position"] = "absolute";
+
+  if(layoutInfo["nVerticalFlg"] == "1"){
+    // 縦文字設定の場合
+    arrangement["writingMode"] = "vertical-rl";
+  }
+
+  if(layoutInfo["nItalic"+MSG_CSS_LANG] == 1){
+    // 斜体ONの場合
+    arrangement["fontStyle"] = "italic";
+  } else {
+    arrangement["fontStyle"] = "";
+  }
+
+  if(layoutInfo["nDispFlg"] == 0){
+    // 表示無効の場合
+    arrangement["display"] = "none";
+  } else {
+    arrangement["display"] = "block";
+  }
+
+  // フォントサイズ
+  arrangement["fontSize"] = layoutInfo["nFontSize"+MSG_CSS_LANG]+DISP_UNIT;
+  // フォントカラー
+  arrangement["color"] = layoutInfo["cColor"+MSG_CSS_LANG];
+  // フォント太さ
+  arrangement["fontWeight"] = layoutInfo["nFontWeight"+MSG_CSS_LANG];
+
+  // 高さ
+  arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+  // 幅
+  arrangement["width"] = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+  // Y軸
+  arrangement["top"] = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+  // X軸
+  arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+  return arrangement;
 }
