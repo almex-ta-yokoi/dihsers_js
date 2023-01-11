@@ -758,38 +758,19 @@ function editHomeDispText(layoutInfo, homeDisp) {
 }
 
 function editHomeDispImg(layoutInfo, homeDisp) {
-      var new_img = document.createElement("img");
-      // 選択中言語の画像をセット
-      new_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
+  var new_img = document.createElement("img");
+  new_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+  // 選択中言語の画像をセット
+  new_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
+  new_img.classList.add("levelItems");
 
-      new_img.style.display = "block";
-      new_img.style.position = "absolute";
-      new_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-      new_img.classList.add("levelItems");
-
-      if(layoutInfo["nDispFlg"] == 0){
-        // 表示無効の場合
-        new_img.style.display = "none";
-      } else {
-        new_img.style.display = "block";
-      }
-
-      // 高さ
-      new_img.style.height = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-      // 幅
-      new_img.style.width = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-      // Y軸
-      new_img.style.top = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-      // X軸
-      new_img.style.left = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-
-      // 表示サイズ
-      var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
-      new_img.style.transform = "scale("+size+", "+size+")";
-      new_img.setAttribute("size",size);
-
-      homeDisp.appendChild(new_img);
-
+  // 表示サイズ
+  var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
+  new_img.style.transform = "scale("+size+", "+size+")";
+  new_img.setAttribute("size",size);
+  var arrangement = setArrangementForHomeDispImg(layoutInfo);
+  setComponentStyle(new_img, arrangement);
+  homeDisp.appendChild(new_img);
 }
 
 function editHomeDispOther(layoutInfo, nTypeMap) {
@@ -1133,6 +1114,31 @@ function setArrangementForHomeDispText(layoutInfo) {
   arrangement["color"] = layoutInfo["cColor"+MSG_CSS_LANG];
   // フォント太さ
   arrangement["fontWeight"] = layoutInfo["nFontWeight"+MSG_CSS_LANG];
+
+  // 高さ
+  arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+  // 幅
+  arrangement["width"] = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+  // Y軸
+  arrangement["top"] = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+  // X軸
+  arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+  return arrangement;
+}
+
+function setArrangementForHomeDispImg(layoutInfo) {
+  var arrangement = {};
+  arrangement["display"] = "block";
+
+  arrangement["position"] = "absolute";
+
+  if(layoutInfo["nDispFlg"] == 0){
+    // 表示無効の場合
+    arrangement["display"] = "none";
+  } else {
+    arrangement["display"] = "block";
+  }
 
   // 高さ
   arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
