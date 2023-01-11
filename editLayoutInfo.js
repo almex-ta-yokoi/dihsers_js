@@ -692,10 +692,10 @@ function editHomeDispLayoutInfo(layoutInfo, nTypeMap) {
   var btn = checkHomeDispSpecific4Button(layoutInfo["cItemName"]);
 
   if(btn) {
-   editHomeDispSpecific4Button(layoutInfo, btn);
-  } 
-
-  editHomeDispOther(layoutInfo, nTypeMap);
+    editHomeDispSpecific4Button(layoutInfo, btn);
+  }else{
+    editHomeDispOther(layoutInfo, nTypeMap);
+  }
 }
 
 function checkHomeDispSpecific4Button(itemName) {
@@ -744,265 +744,7 @@ function editHomeDispSpecific4Button(layoutInfo, btn) {
   makeButtonSizeCss(btn.id, size, magnification);
 }
 
-function editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap) {
-      // ボタンの場合
-      var new_btn = document.createElement("a");
-      // メモ：階層遷移ボタンにも品切れ&準備中表示が必要となったため、判定名称を商品コード⇒階層マスタキー値に変更
-      new_btn.classList.add("level_so_"+layoutInfo["nHierarchyCode"]);
-  
-      if(layoutInfo["nDispType"] == 5){
-        new_btn.classList.add("level_goods");
-        new_btn.setAttribute("goodsCd",layoutInfo["nGoodsCode"]);
-      }
-
-      if(layoutInfo["nDispType"] == 1){
-        new_btn.classList.add("level_move");
-        new_btn.setAttribute("goodsCd",layoutInfo["nSoldOutIcon_condition_cd"]);
-        new_btn.setAttribute("goodsType",layoutInfo["nSoldOutIcon_condition_type"]);
-      }
-  
-      new_btn.classList.add(MSG_CSS_LANG);
-  
-      // 品切れアイコンサイズ位置
-      var css = ".levelItems.off.level_so_"+layoutInfo["nHierarchyCode"]
-        +'::before{left:'+layoutInfo["nSoldOutIcon_X"]+'px;top:'+layoutInfo["nSoldOutIcon_Y"]
-        +'px;width:'+layoutInfo["nSoldOutIcon_width"]+'%;height:'+layoutInfo["nSoldOutIcon_height"]
-        +'%;border-radius:'+layoutInfo["nSoldOutIcon_radius"]+'px;}';
-      var style = document.createElement('style');
-      style.appendChild(document.createTextNode(css));
-      document.getElementsByTagName('head')[0].appendChild(style);
-  
-      var cssAf = ".levelItems.off.level_so_"+layoutInfo["nHierarchyCode"]
-        +'::after{left:'+layoutInfo["nSoldOutIcon_X"]+'px;width:'+layoutInfo["nSoldOutIcon_width"]+'%;}';
-      var styleAf = document.createElement('style');
-      styleAf.appendChild(document.createTextNode(cssAf));
-      document.getElementsByTagName('head')[0].appendChild(styleAf);
-  
-      if(layoutInfo["nDispType"] == 1){
-        // 画面切替ボタンの場合
-        if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] == 5){
-          // 画面遷移ボタンの場合
-          new_btn.setAttribute("onclick","startMeasuringElapsedTime("+layoutInfo['nHierarchyCode']+ "); cngLevel = "+layoutInfo['nAfDispId']+";touch();Data.data['scenes']['level'].onEntry(300); checkHierarchyCode("+layoutInfo['nHierarchyCode']+");");
-              
-          // "準備中です"表示判定実施
-          var comsoonFlg = true;
-          if(layoutInfo['nSoldOutIcon_condition_type'] != ""){
-            // 商品区分のチェック
-            var comsoonTypeMap = layoutInfo['nSoldOutIcon_condition_type'].split(',');
-
-            for(var tp in comsoonTypeMap){
-              if(allGoodsMenutypes[comsoonTypeMap[tp]] != null){
-                // 該当する商品区分の商品が１つでもあったら、非準備中
-                comsoonFlg = false;
-              }
-            }
-          }
-
-          if(layoutInfo['nSoldOutIcon_condition_cd'] != ""){
-            // 商品コードのチェック
-            var comsoonGoodsMap = layoutInfo['nSoldOutIcon_condition_cd'].split(',');
-
-            for(var tp in comsoonGoodsMap){
-              if(m_goods_map[comsoonGoodsMap[tp]] != null && m_goods_map[comsoonGoodsMap[tp]]["bySalesStatusType"] != "2"){
-                // 商品情報がありかつ、販売可能な商品が１つでもあったら、非準備中
-                comsoonFlg = false;
-              }
-            }
-          }
-
-          if(layoutInfo['nSoldOutIcon_condition_type'] == "" && layoutInfo['nSoldOutIcon_condition_cd'] == ""){
-            // 単に設定がない場合は、非準備中判定
-            comsoonFlg = false;
-          }
-
-          if(comsoonFlg){
-            // 準備中アイコン有効化
-            new_btn.classList.add("comsoon");
-            new_btn.classList.add("off");
-          }
-
-        }else if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 5
-          && nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 0){
-
-          // 商品詳細表示ボタンの場合
-          new_btn.setAttribute("onclick","touch();levelDispGoodsDetail("+layoutInfo['nAfDispId']+");");
-          // "準備中です"表示判定実施
-          var comsoonFlg = true;
-          if(layoutInfo['nSoldOutIcon_condition_type'] != ""){
-            // 商品区分のチェック
-            var comsoonTypeMap = layoutInfo['nSoldOutIcon_condition_type'].split(',');
-            for(var tp in comsoonTypeMap){
-              if(allGoodsMenutypes[comsoonTypeMap[tp]] != null){
-                // 該当する商品区分の商品が１つでもあったら、非準備中
-                comsoonFlg = false;
-              }
-            }
-          }
-
-          if(layoutInfo['nSoldOutIcon_condition_cd'] != ""){
-            // 商品コードのチェック
-            var comsoonGoodsMap = layoutInfo['nSoldOutIcon_condition_cd'].split(',');
-            for(var tp in comsoonGoodsMap){
-              if(m_goods_map[comsoonGoodsMap[tp]] != null && m_goods_map[comsoonGoodsMap[tp]]["bySalesStatusType"] != "2"){
-                // 商品情報がありかつ、販売可能な商品が１つでもあったら、非準備中
-                comsoonFlg = false;
-              }
-            }
-          }
-          
-          if(layoutInfo['nSoldOutIcon_condition_type'] == "" && layoutInfo['nSoldOutIcon_condition_cd'] == ""){
-            // 単に設定がない場合は、非準備中判定
-            comsoonFlg = false;
-          }
-          if(comsoonFlg){
-            // 準備中アイコン有効化
-            new_btn.classList.add("comsoon");
-            new_btn.classList.add("off");
-          }
-        }
-      }else if(layoutInfo["nDispType"] == 5){
-        // 商品ボタンの場合
-        // オーダーメイド化設定のチェック
-        var ordmadeGoodsFlg = false;
-        var tgtBasedishcomboKey = "";
-
-        for(var mbm in m_basedishcombo_map){
-          if(m_basedishcombo_map[mbm]["nGoodsCode"] == layoutInfo["nGoodsCode"]){
-            additionMessage("[OrderMade?]", layoutInfo["nGoodsCode"] + ": オーダーメイド商品");
-            ordmadeGoodsFlg = true;
-            tgtBasedishcomboKey = mbm;
-            break;
-          }
-        }
-
-        if(layoutInfo["nDispType"] == 5 && (m_goods_map[layoutInfo["nGoodsCode"]] == null || m_goods_map[layoutInfo["nGoodsCode"]]["bySalesStatusType"] == '2')){
-          // ベース商品の情報がそもそもない場合
-          ordmadeGoodsFlg = false;
-          additionMessage("[OrderMade?]", layoutInfo["nGoodsCode"] + ": オーダーメイド商品:False");
-        }
-
-        if(ordmadeGoodsFlg == true){
-          var ordCd = tgtBasedishcomboKey;
-          // オーダーメイド設定ありの場合
-          // ハンバーグの品切れチェック
-          var hbSoldOutFlg = false;
-          if(m_basedishcombo_map[ordCd]["nHamburgGoodsCode"] != null){
-            if(m_goods_map[m_basedishcombo_map[ordCd]["nHamburgGoodsCode"]] == null || 
-              m_goods_map[m_basedishcombo_map[ordCd]["nHamburgGoodsCode"]]["bySalesStatusType"] == '2'){
-              hbSoldOutFlg = true;
-            }
-          }
-
-          // トッピングの品切れチェック
-          var tpSoldOutFlg = false;
-          if(m_basedishcombo_map[ordCd]["nToppingGoodsCode"] != null){
-            if(m_goods_map[m_basedishcombo_map[ordCd]["nToppingGoodsCode"]] == null || 
-              m_goods_map[m_basedishcombo_map[ordCd]["nToppingGoodsCode"]]["bySalesStatusType"] == '2'){
-              tpSoldOutFlg = true;
-            }
-          }
-
-          // ソースの品切れチェック
-          var scSoldOutFlg = false;
-          if(m_basedishcombo_map[ordCd]["nSourceGoodsCode"] != null){
-            if(m_goods_map[m_basedishcombo_map[ordCd]["nSourceGoodsCode"]] == null || 
-              m_goods_map[m_basedishcombo_map[ordCd]["nSourceGoodsCode"]]["bySalesStatusType"] == '2'){
-              scSoldOutFlg = true;
-            }
-          }
-
-          // ライスの品切れチェック
-          var rpSoldOutFlg = false;
-          if(m_basedishcombo_map[ordCd]["nRiceGoodsCode"] != null){
-            if(m_goods_map[m_basedishcombo_map[ordCd]["nRiceGoodsCode"]] == null || 
-              m_goods_map[m_basedishcombo_map[ordCd]["nRiceGoodsCode"]]["bySalesStatusType"] == '2'){
-              rpSoldOutFlg = true;
-            }
-          }
-
-          // サラダの品切れチェック
-          var srSoldOutFlg = false;
-          if(m_basedishcombo_map[ordCd]["nSaladGoodsCode"] != null){
-            if(m_goods_map[m_basedishcombo_map[ordCd]["nSaladGoodsCode"]] == null || 
-              m_goods_map[m_basedishcombo_map[ordCd]["nSaladGoodsCode"]]["bySalesStatusType"] == '2'){
-              rpSoldOutFlg = true;
-            }
-          }
-            // サブ商品品切れチェック結果
-            var ordSoldOutFlg = (hbSoldOutFlg || tpSoldOutFlg || scSoldOutFlg || rpSoldOutFlg || rpSoldOutFlg);
-            // 品切れチェック
-            if(ordSoldOutFlg){
-              new_btn.classList.add("off");
-            }
-            new_btn.setAttribute('onclick','touch(); orderMadeDishBaseSelectCheck('+tgtBasedishcomboKey+');createOerderDish('+tgtBasedishcomboKey+');');
-          } else {
-            if(layoutInfo["nDispType"] == 5 && m_goods_map[layoutInfo["nGoodsCode"]] == null){
-              // 商品情報がない場合準備中アイコン有効化
-              new_btn.classList.add("comsoon");
-              new_btn.classList.add("off");
-            }else if(layoutInfo["nDispType"] == 5 && m_goods_map[layoutInfo["nGoodsCode"]]["bySalesStatusType"] == "2"){
-              // 品切れの場合、品切れ表示
-              new_btn.classList.add("off");
-            }
-            new_btn.setAttribute("onclick","touch();dispLevelPopup("+layoutInfo["nGoodsCode"]+")");
-          }
-
-        }
-
-        new_btn.href = "javascript:void(0)";
- 
-        var arrangement = {
-          position: "absolute",
-          zIndex: 1
-        };
-
-        new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-        new_btn.classList.add("levelItems");
-  
-        if(layoutInfo["nDispFlg"] == 0){
-           // 表示無効の場合
-           arrangement["display"] = "none";
-        }else{
-          arrangement["display"] = "block";
-        }
-  
-        // 高さ
-        arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
-        // 幅
-        arrangement["width"] = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
-        // Y軸
-        arrangement["top"] = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
-        // X軸
-        arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
-  
-        if(layoutInfo["cDefaultImagePath"] != null && layoutInfo["cDefaultImagePath"] != ""){
-          var new_btn_img = document.createElement("img");
-          new_btn_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
-          new_btn.appendChild(new_btn_img);
-        }
-
-        homeDisp.appendChild(new_btn);
-  
-        // ボタンサイズ　スケール値化
-        var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
-        new_btn.setAttribute("size",size);
-  
-        // 透過率
-        arrangement["opacity"] = layoutInfo["dOpacity"];
-        setComponentStyle(new_btn, arrangement);
-
-        if(layoutInfo["nDispType"] == 1) {
-          // 画面遷移ボタンの場合
-          // ボタン通常時サイズ
-          var buttonId = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
-          var magnification = 1.05;
-
-          makeButtonSizeCss(buttonId, size, magnification);
-        }
-}
-
 function editHomeDispText(layoutInfo, homeDisp) {
-
       // テキスト文言の場合
       var new_txt = document.createElement("div");
       // 選択中言語のテキストをセット
@@ -1091,14 +833,12 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
 
   var dispType = parseInt(layoutInfo["nDispType"]);
 
-  console.log(DISP_TYPE)
-  console.log(DISP_TYPE["button"])
   switch(dispType) {
     case DISP_TYPE["button"]:
-      editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
+      editHomeDispButton(layoutInfo, homeDisp, nTypeMap);
       break;
-    case DISP_TYPE["item"]:
-      editHomeDispAnchor(layoutInfo, homeDisp, nTypeMap);
+    case DISP_TYPE["item_button"]:
+      editHomeDispItemButton(layoutInfo, homeDisp);
       break;
     case DISP_TYPE["text"]:
       editHomeDispText(layoutInfo, homeDisp);
@@ -1132,4 +872,268 @@ function makeButtonSizeCss(buttonId, size, magnification) {
   var style = document.createElement('style');
   style.appendChild(document.createTextNode(css));
   document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+function makeSoldOutIconCss(layoutInfo) {
+  // 品切れアイコンサイズ位置
+  var css = ".levelItems.off.level_so_"+layoutInfo["nHierarchyCode"]
+    +'::before{left:'+layoutInfo["nSoldOutIcon_X"]+'px;top:'+layoutInfo["nSoldOutIcon_Y"]
+    +'px;width:'+layoutInfo["nSoldOutIcon_width"]+'%;height:'+layoutInfo["nSoldOutIcon_height"]
+    +'%;border-radius:'+layoutInfo["nSoldOutIcon_radius"]+'px;}';
+  var style = document.createElement('style');
+  style.appendChild(document.createTextNode(css));
+  document.getElementsByTagName('head')[0].appendChild(style);
+  
+  var cssAf = ".levelItems.off.level_so_"+layoutInfo["nHierarchyCode"]
+    +'::after{left:'+layoutInfo["nSoldOutIcon_X"]+'px;width:'+layoutInfo["nSoldOutIcon_width"]+'%;}';
+  var styleAf = document.createElement('style');
+  styleAf.appendChild(document.createTextNode(cssAf));
+  document.getElementsByTagName('head')[0].appendChild(styleAf);
+}
+
+function editHomeDispButton(layoutInfo, homeDisp, nTypeMap) {
+  var btn_info = editHomeDispAnchor(layoutInfo, homeDisp);
+  var btn = btn_info[0];
+  var arrangement = btn_info[1];
+  setComponentStyle(btn, arrangement);
+
+  btn.classList.add("level_move");
+  btn.setAttribute("goodsCd",layoutInfo["nSoldOutIcon_condition_cd"]);
+  btn.setAttribute("goodsType",layoutInfo["nSoldOutIcon_condition_type"]);
+
+  checkHomeDispButtonComingSoon(btn, layoutInfo);
+
+  // 画面切替ボタンの場合
+  if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] == 5){
+    var onclickMessage = "cngLevel = "+layoutInfo['nAfDispId']+ "; ";
+    onclickMessage += "touch();Data.data['scenes']['level'].onEntry(300); ";
+    onclickMessage += "checkHierarchyCode("+layoutInfo['nHierarchyCode']+");";
+    btn.setAttribute("onclick", onclickMessage);
+  }else if(nTypeMap[layoutInfo["nMenuBookCode"]+"_"+layoutInfo["nAfDispId"]] != 0){
+    // 商品詳細表示ボタンの場合
+    btn.setAttribute("onclick","touch();levelDispGoodsDetail("+layoutInfo['nAfDispId']+");");
+  }
+}
+
+function editHomeDispItemButton(layoutInfo, homeDisp) {
+  var btn_info = editHomeDispAnchor(layoutInfo, homeDisp);
+  var btn = btn_info[0];
+  var arrangement = btn_info[1];
+  setComponentStyle(btn, arrangement);
+
+  btn.classList.add("level_goods");
+  btn.setAttribute("goodsCd",layoutInfo["nGoodsCode"]);
+
+  // オーダーメイド化設定のチェック
+  var goodsCode = layoutInfo["nGoodsCode"];
+  var orderMadeInfo = isOrderMade(goodsCode);
+
+  if(orderMadeInfo["flg"] == true){
+    var ordCd = orderMadeInfo["basedishcomboKey"];
+    // サブ商品品切れチェック結果
+    var ordSoldOutFlg = isOrderMadeGoodsSoldOut(ordCd);
+    // 品切れチェック
+    if(ordSoldOutFlg){
+      btn.classList.add("off");
+    }
+    btn.setAttribute('onclick','touch(); orderMadeDishBaseSelectCheck('+ordCd+');createOerderDish('+ordCd+');');
+  }else{
+    if(m_goods_map[layoutInfo["nGoodsCode"]] == null){
+      // 商品情報がない場合準備中アイコン有効化
+      btn.classList.add("comsoon");
+      btn.classList.add("off");
+    }else if(m_goods_map[layoutInfo["nGoodsCode"]]["bySalesStatusType"] == "2"){
+      // 品切れの場合、品切れ表示
+      btn.classList.add("off");
+    }
+    btn.setAttribute("onclick","touch();dispLevelPopup("+layoutInfo["nGoodsCode"]+")");
+  }
+}
+
+function makeHomeDispAnchor(layoutInfo, homeDisp) {
+  var new_btn = document.createElement("a");
+  new_btn.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+  new_btn.classList.add("level_so_"+layoutInfo["nHierarchyCode"]);
+  new_btn.classList.add(MSG_CSS_LANG);
+  new_btn.classList.add("levelItems");
+  new_btn.href = "javascript:void(0)";
+  homeDisp.appendChild(new_btn);
+
+  return new_btn;
+}
+
+function makeArrangementForHomeDispAnchor(layoutInfo) {
+  var arrangement = {
+    position: "absolute",
+    zIndex: 1
+  };
+
+  if(layoutInfo["nDispFlg"] == 0){
+    // 表示無効の場合
+    arrangement["display"] = "none";
+  }else{
+    arrangement["display"] = "block";
+  }
+
+  // 高さ
+  arrangement["height"] = layoutInfo["nHeight"+MSG_CSS_LANG]+DISP_UNIT;
+  // 幅
+  arrangement["width"] = layoutInfo["nWidth"+MSG_CSS_LANG]+DISP_UNIT;
+  // Y軸
+  arrangement["top"] = layoutInfo["nDispPosition_Y"+MSG_CSS_LANG]+DISP_UNIT;
+  // X軸
+  arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
+
+  // 透過率
+  arrangement["opacity"] = layoutInfo["dOpacity"];
+
+  return arrangement;
+}
+
+function addButtonImgForHomeDispAnchor(imgPath, btn) {
+  if(imgPath != null && imgPath != ""){
+    var btn_img = document.createElement("img");
+    btn_img.src = lis_fact_map[generateLangImgPath(imgPath)];
+    btn.appendChild(btn_img);
+  }
+}
+
+function editHomeDispAnchor(layoutInfo, homeDisp) {
+  var new_btn = makeHomeDispAnchor(layoutInfo, homeDisp);
+  var arrangement = makeArrangementForHomeDispAnchor(layoutInfo);
+  var imgPath = layoutInfo["cDefaultImagePath"];
+  addButtonImgForHomeDispAnchor(imgPath, new_btn);
+
+  var scale = 0.01;
+  var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * scale;
+  new_btn.setAttribute("size",size);
+
+  makeSoldOutIconCss(layoutInfo);
+
+  return [new_btn, arrangement]
+}
+
+function isOrderMade(goodsCode) {
+  var orderMadeInfo = {
+    flg: false,
+    basedishcomboKey: null
+  };
+
+  if(m_goods_map[goodsCode] == null
+    || m_goods_map[goodsCode]["bySalesStatusType"] == '2'){
+    // ベース商品の情報がそもそもない場合
+    return orderMadeInfo;
+  }
+
+  for(var mbm in m_basedishcombo_map){
+    if(m_basedishcombo_map[mbm]["nGoodsCode"] == layoutInfo["nGoodsCode"]){
+      orderMadeInfo["flg"] = true;
+      orderMadeInfo["basedishcomboKey"] = mbm;
+      return orderMadeInfo;
+    }
+  }
+
+  return orderMadeInfo;
+}
+
+function isOrderMadeGoodsSoldOut(ordCd) {
+  // ハンバーグ,トッピング,ソース,ライス,サラダ
+  // のいずれか一つでも品切れなら品切れ扱い
+
+  // ハンバーグの品切れチェック
+  if(isOrderMadeSubGoodsSoldOut(ordCd, "nHamburgGoodsCode")) {
+    return true
+  }
+  // トッピングの品切れチェック
+  if(isOrderMadeSubGoodsSoldOut(ordCd, "nToppingGoodsCode")) {
+    return true
+  }
+  // ソースの品切れチェック
+  if(isOrderMadeSubGoodsSoldOut(ordCd, "nSourceGoodsCode")) {
+    return true
+  }
+  // ライスの品切れチェック
+  if(isOrderMadeSubGoodsSoldOut(ordCd, "nRiceGoodsCode")) {
+    return true;
+  }
+  // サラダの品切れチェック
+  if(isOrderMadeSubGoodsSoldOut(ordCd, "nSaladGoodsCode")) {
+    return true;
+  }
+
+  return false;
+}
+
+function isOrderMadeSubGoodsSoldOut(ordCd, subGroup) {
+  if(m_basedishcombo_map[ordCd][subGroup] == null){
+    return false;
+  }
+
+  var subGoods = m_goods_map[m_basedishcombo_map[ordCd][subGroup]]
+  // 設定していなければ品切れになることはない
+  if(subGoods == null) {
+    return true;
+  }
+
+  // 品切れチェック
+  var salesStatusType = subGoods["bySalesStatusType"]
+  if (salesStatusType == '2'){
+    return true;
+  }
+
+  return false;
+}
+
+function checkHomeDispButtonComingSoon(btn, layoutInfo) {
+  var soldOutCategoriesString = layoutInfo['nSoldOutIcon_condition_type'];
+  var soldOutGoodsCodeString = layoutInfo['nSoldOutIcon_condition_cd'];
+
+  var comeSoonFlg = isComeSoon(soldOutCategoriesString, soldOutGoodsCodeString);
+  console.log(layoutInfo["nMenuBookCode"])
+  console.log(layoutInfo["nAfDispId"])
+  console.log(`comsoon: ${comeSoonFlg}`)
+  if(comeSoonFlg){
+    // 準備中アイコン有効化
+    btn.classList.add("comsoon");
+    btn.classList.add("off");
+  }
+}
+
+function isComeSoon(categoriesString, goodsCodeString) {
+  var comeSoonFlg = true;
+
+  if(categoriesString != "" && goodsCodeString != "") {
+    return false;
+  }
+
+  comeSoonFlg = isComeSoonByCategories(categoriesString)
+  if(!comeSoonFlg) {
+    return comeSoonFlg;
+  }
+  comeSoonFlg = isComeSoonByGoodsCode(goodsCodeString)
+  return comeSoonFlg
+}
+
+function isComeSoonByCategories(comeSoonString) {
+  var comeSoonCategoryArray = comeSoonString.split(',');
+  for(var comeSoonCategory in comeSoonCategoryArray){
+    if(allGoodsMenutypes[comeSoonCategory] != null){
+      // 該当する商品区分の商品が１つでもあったら、非準備中
+      return false;
+    }
+  }
+  return true;
+}
+
+function isComeSoonByGoodsCode(comeSoonString) {
+    // 商品コードのチェック
+  var comeSoonGoodsCodeArray = comeSoonString.split(',');
+  for(var comeSoonGoodsCode of comeSoonGoodsCodeArray){
+    if(m_goods_map[comeSoonGoodsCode] != null 
+      && m_goods_map[comeSoonGoodsCode]["bySalesStatusType"] != "2"){
+      // 商品情報がありかつ、販売可能な商品が１つでもあったら、非準備中
+      return false;
+    }
+  }
+  return true;
 }
