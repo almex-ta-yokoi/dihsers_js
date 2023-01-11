@@ -14,15 +14,15 @@ function editLayoutInfo() {
 
 
   for(var line in layoutInfo_map){
-    if(layoutInfo_map[line]["nMenuBookCode"] != menubook_cd && layoutInfo_map[line]["nMenuBookCode"] != MENUBOOK_ALL){
+    var layoutInfo = layoutInfo_map[line];
+    if(layoutInfo["nMenuBookCode"] != menubook_cd && layoutInfo_map[line]["nMenuBookCode"] != MENUBOOK_ALL){
       // 対象メニューブック以外スキップ
       continue;
     }
-    if(layoutInfo_map[line]["nDispId"] == HOME_DISP_ID){
+    if(layoutInfo["nDispId"] == HOME_DISP_ID){
       // TOP画面の場合
-      var layoutInfo = layoutInfo_map[line];
       editHomeDispLayoutInfo(layoutInfo, nTypeMap);
-    } else if(layoutInfo_map[line]["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == GUI_CODE)){
+    } else if(layoutInfo["nDispId"] == PEOPLE_DISP_ID && (!fstCreateFlg || guiFlg == GUI_CODE)){
       // 人数入力画面の場合　※アプリ起動時の初回のみ　※設定ツール起動の場合は毎回処理
       var peopleDisp = document.getElementById("peopleDisp");
       if(layoutInfo_map[line]["nDispType"] == 3){
@@ -757,20 +757,21 @@ function editHomeDispText(layoutInfo, homeDisp) {
   homeDisp.appendChild(new_txt);
 }
 
-function editHomeDispImg(layoutInfo, homeDisp) {
+function editImgLayout(layoutInfo, parentDisp, className) {
   var new_img = document.createElement("img");
   new_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
   // 選択中言語の画像をセット
   new_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
-  new_img.classList.add("levelItems");
+  new_img.classList.add(className);
 
   // 表示サイズ
   var size = parseInt(layoutInfo["nDispSize"+MSG_CSS_LANG]) * 0.01;
   new_img.style.transform = "scale("+size+", "+size+")";
   new_img.setAttribute("size",size);
-  var arrangement = setArrangementForHomeDispImg(layoutInfo);
+
+  var arrangement = setArrangementForImg(layoutInfo);
   setComponentStyle(new_img, arrangement);
-  homeDisp.appendChild(new_img);
+  parentDisp.appendChild(new_img);
 }
 
 function editHomeDispOther(layoutInfo, nTypeMap) {
@@ -790,7 +791,7 @@ function editHomeDispOther(layoutInfo, nTypeMap) {
       editHomeDispText(layoutInfo, homeDisp);
       break;
     case DISP_TYPE["img"]:
-      editHomeDispImg(layoutInfo, homeDisp);
+      editImgLayout(layoutInfo, homeDisp, "levelItems");
       break;
     case DISP_TYPE["background"]:
       // 何もしない
@@ -1127,7 +1128,7 @@ function setArrangementForHomeDispText(layoutInfo) {
   return arrangement;
 }
 
-function setArrangementForHomeDispImg(layoutInfo) {
+function setArrangementForImg(layoutInfo) {
   var arrangement = {};
   arrangement["display"] = "block";
 
@@ -1150,4 +1151,42 @@ function setArrangementForHomeDispImg(layoutInfo) {
   arrangement["left"] = layoutInfo["nDispPosition_X"+MSG_CSS_LANG]+DISP_UNIT;
 
   return arrangement;
+}
+
+function editPeopleDispLayoutInfo(layoutInfo, nTypeMap) {
+  // 人数入力画面の場合　※アプリ起動時の初回のみ　※設定ツール起動の場合は毎回処理
+  var peopleDisp = document.getElementById("peopleDisp");
+  var dispType = parseInt(layoutInfo["nDispType"]);
+
+  switch(dispType) {
+    case DISP_TYPE["img"]:
+      editImgLayout(layoutInfo, peopleDisp, "peopleAddItems");
+      break;
+    case DISP_TYPE["background"]:
+      editBackGroundLayout(layoutInfo, peopleDisp, "peopleAddItems");
+      break;
+    case DISP_TYPE["button"]:
+      break;
+    case DISP_TYPE["item_button"]:
+      break;
+    case DISP_TYPE["text"]:
+      break;
+    default:
+      console.log("unknownDispType: " + dispType);
+  }
+}
+
+function editBackGroundLayout(layoutInfo, parentDisp, className) {
+  var new_bg_img = document.createElement("img");
+  new_bg_img.id = "levelItem_"+layoutInfo["nDispId"]+"_"+layoutInfo["nItemId"];
+  new_bg_img.src = lis_fact_map[generateLangImgPath(layoutInfo["cDefaultImagePath"])];
+  new_bg_img.classList.add(className);
+
+  var arrangement = {
+    width: "100%",
+    height: "100%"
+  };
+
+  setComponentStyle(new_bg_img, arrangement);
+  parentDisp.appendChild(new_bg_img);
 }
